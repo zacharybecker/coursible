@@ -81,7 +81,9 @@ export function ActivityPlayer({
               <Zap className="size-4" aria-hidden />+{sessionXp} XP earned
             </p>
           )}
-          <Button render={<Link href={`/courses/${course.id}`} />}>Back to skill map</Button>
+          <Button nativeButton={false} render={<Link href={`/courses/${course.id}`} />}>
+            Back to skill map
+          </Button>
         </CardContent>
       </Card>
     );

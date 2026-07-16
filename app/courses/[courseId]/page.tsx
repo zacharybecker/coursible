@@ -173,6 +173,7 @@ export default function CourseDetailPage({
                           <Button
                             size="sm"
                             variant={done ? "outline" : "default"}
+                            nativeButton={false}
                             render={<Link href={`/courses/${course.id}/lessons/${lesson.id}`} />}
                           >
                             <Play className="size-3.5" aria-hidden />

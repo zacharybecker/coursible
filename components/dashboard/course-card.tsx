@@ -121,7 +121,7 @@ export function CourseCard({
                 )}
               </Button>
             </div>
-            <Button size="sm" render={<Link href={`/courses/${course.id}`} />}>
+            <Button size="sm" nativeButton={false} render={<Link href={`/courses/${course.id}`} />}>
               {course.status === "completed" ? "Review" : completion > 0 ? "Continue" : "Start"}
             </Button>
           </div>

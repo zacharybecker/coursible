@@ -68,10 +68,10 @@ export function CourseWizard() {
   const stepIndex = FORM_STEPS.indexOf(step);
 
   // Mocked "AI generation": staged messages, then the canned preview.
+  // (Stage is reset in next() when entering the generating step.)
   const [stage, setStage] = useState(0);
   useEffect(() => {
     if (step !== "generating") return;
-    setStage(0);
     const interval = setInterval(() => setStage((s) => Math.min(s + 1, GENERATION_STAGES.length - 1)), 700);
     const done = setTimeout(async () => {
       setPreview(await getCustomCoursePreview());
@@ -101,8 +101,12 @@ export function CourseWizard() {
   }
 
   function next() {
-    if (step === "sources") setStep("generating");
-    else setStep(FORM_STEPS[stepIndex + 1]);
+    if (step === "sources") {
+      setStage(0);
+      setStep("generating");
+    } else {
+      setStep(FORM_STEPS[stepIndex + 1]);
+    }
   }
 
   function back() {

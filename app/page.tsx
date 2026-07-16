@@ -70,7 +70,7 @@ export default function MyLearningPage() {
                 : "Nothing archived."}
           </p>
           {tab === "active" && (
-            <Button size="sm" render={<Link href="/catalog" />}>
+            <Button size="sm" nativeButton={false} render={<Link href="/catalog" />}>
               <Compass className="size-4" aria-hidden />
               Browse catalog
             </Button>

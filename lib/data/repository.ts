@@ -163,7 +163,16 @@ export async function addCourseToLibrary(
 export async function duplicateCourse(courseId: string): Promise<Course | null> {
   const existing = await getCourseById(courseId);
   if (!existing) return null;
-  const { id: _id, source: _source, status: _status, cohort: _cohort, ...content } = existing;
+  const content: CourseContent = {
+    contentId: existing.contentId,
+    title: existing.title,
+    description: existing.description,
+    outcome: existing.outcome,
+    tags: existing.tags,
+    estimatedHours: existing.estimatedHours,
+    skillNodes: existing.skillNodes,
+    lessons: existing.lessons,
+  };
   return addCourseToLibrary(content, "shared");
 }
 
