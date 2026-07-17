@@ -24,7 +24,7 @@ import {
   setCourseStatus,
   type Db,
 } from "./core";
-import { seedStarterCourses } from "./seed-content";
+import { seedStarterCourses, STARTER_COURSES } from "./seed-content";
 import { computeAverageMastery, computeCourseCompletion } from "./derive";
 
 let db: Db;
@@ -61,16 +61,16 @@ beforeEach(async () => {
 });
 
 describe("starter catalog", () => {
-  it("exposes the five seeded starter courses", async () => {
+  it("exposes all seeded starter courses", async () => {
     const catalog = await getStarterCatalog(db);
-    expect(catalog.length).toBe(5);
-    expect(catalog[0].title).toBe("Docker Fundamentals");
+    expect(catalog.length).toBe(STARTER_COURSES.length);
+    expect(catalog.map((c) => c.title)).toContain("Docker Fundamentals");
     expect(catalog.map((c) => c.contentId)).toContain("content-git-essentials");
   });
 
   it("is idempotent to re-seed", async () => {
     await seedStarterCourses(db);
-    expect((await getStarterCatalog(db)).length).toBe(5);
+    expect((await getStarterCatalog(db)).length).toBe(STARTER_COURSES.length);
   });
 });
 

@@ -11,13 +11,21 @@ import { gitEssentials } from "@/lib/mock/courses/git-essentials";
 import { sqlAnalytics } from "@/lib/mock/courses/sql-analytics";
 import { pythonAutomation } from "@/lib/mock/courses/python-automation";
 import { markdownBasics } from "@/lib/mock/courses/markdown-basics";
+import { ciCdPipelines } from "@/lib/mock/courses/ci-cd-pipelines";
+import { webDevFoundations } from "@/lib/mock/courses/web-dev-foundations";
+import { linuxCommandLine } from "@/lib/mock/courses/linux-command-line";
+import { kubernetesBasics } from "@/lib/mock/courses/kubernetes-basics";
 
-const STARTER_COURSES = [
+export const STARTER_COURSES = [
   dockerFundamentals,
   gitEssentials,
   sqlAnalytics,
   pythonAutomation,
   markdownBasics,
+  ciCdPipelines,
+  webDevFoundations,
+  linuxCommandLine,
+  kubernetesBasics,
 ];
 
 export async function seedStarterCourses(db: Db): Promise<void> {
