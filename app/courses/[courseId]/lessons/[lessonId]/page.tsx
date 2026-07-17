@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import type { Course, CourseProgress } from "@/lib/types";
-import { getCourseById, getCourseProgress } from "@/lib/data/repository";
+import { getCourseById, getCourseProgress } from "@/lib/data/actions";
 import { ActivityPlayer } from "@/components/lesson/activity-player";
 
 export default function LessonPage({

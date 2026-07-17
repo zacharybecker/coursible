@@ -5,12 +5,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Circle, CircleDot, Clock, Lock, Play, Share2, Users } from "lucide-react";
 import type { Course, CourseProgress } from "@/lib/types";
-import {
-  computeAverageMastery,
-  computeCourseCompletion,
-  getCourseById,
-  getCourseProgress,
-} from "@/lib/data/repository";
+import { getCourseById, getCourseProgress } from "@/lib/data/actions";
+import { computeAverageMastery, computeCourseCompletion } from "@/lib/data/derive";
 import { useAppStore } from "@/lib/store/app-store";
 import { getNodeState, SkillTree } from "@/components/skill-map/skill-tree";
 import { MasteryRing } from "@/components/gamification/mastery-ring";

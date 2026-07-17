@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, FileText, Sparkles, Upload, X } from "lucide-react";
 import type { CourseContent } from "@/lib/types";
-import { getCustomCoursePreview } from "@/lib/data/repository";
+import { getCustomCoursePreview } from "@/lib/data/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";

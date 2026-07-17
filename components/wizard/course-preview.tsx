@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { BookOpen, Clock, Plus, Sparkles, Target } from "lucide-react";
 import type { Course, CourseContent } from "@/lib/types";
-import { addCourseToLibrary } from "@/lib/data/repository";
+import { addCourseToLibrary } from "@/lib/data/actions";
 import { useAppStore } from "@/lib/store/app-store";
 import { SkillTree } from "@/components/skill-map/skill-tree";
 import { Badge } from "@/components/ui/badge";

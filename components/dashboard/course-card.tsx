@@ -4,12 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Archive, ArchiveRestore, CalendarClock, Copy, Share2, Users } from "lucide-react";
 import type { Course, CourseProgress } from "@/lib/types";
-import {
-  computeAverageMastery,
-  computeCourseCompletion,
-  duplicateCourse,
-  setCourseStatus,
-} from "@/lib/data/repository";
+import { duplicateCourse, setCourseStatus } from "@/lib/data/actions";
+import { computeAverageMastery, computeCourseCompletion } from "@/lib/data/derive";
 import { useAppStore } from "@/lib/store/app-store";
 import { MasteryRing } from "@/components/gamification/mastery-ring";
 import { Badge } from "@/components/ui/badge";

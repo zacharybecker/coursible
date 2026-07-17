@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Compass, GraduationCap } from "lucide-react";
 import type { CourseStatus, UserStats } from "@/lib/types";
-import { getUserStats } from "@/lib/data/repository";
+import { getUserStats } from "@/lib/data/actions";
 import { useLibrary } from "@/lib/hooks/use-library";
 import { useAppStore } from "@/lib/store/app-store";
 import { CourseCard } from "@/components/dashboard/course-card";
@@ -20,7 +20,7 @@ const TABS: { value: CourseStatus; label: string }[] = [
 ];
 
 export default function MyLearningPage() {
-  const { courses, progressByCourse, loaded } = useLibrary();
+  const { courses, progressByCourse, loaded, error, retry } = useLibrary();
   const dataVersion = useAppStore((s) => s.dataVersion);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [tab, setTab] = useState<CourseStatus>("active");
@@ -59,7 +59,16 @@ export default function MyLearningPage() {
         </TabsList>
       </Tabs>
 
-      {loaded && visible.length === 0 ? (
+      {error ? (
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
+          <p className="text-sm text-muted-foreground">
+            Something went wrong loading your courses.
+          </p>
+          <Button size="sm" variant="outline" onClick={retry}>
+            Retry
+          </Button>
+        </div>
+      ) : loaded && visible.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
           <GraduationCap className="size-8 text-muted-foreground" aria-hidden />
           <p className="text-sm text-muted-foreground">

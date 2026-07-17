@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, PartyPopper, Zap } from "lucide-react";
 import type { ActivityOutcome, Course, Lesson } from "@/lib/types";
-import { completeActivity } from "@/lib/data/repository";
+import { completeActivity } from "@/lib/data/actions";
 import { useAppStore } from "@/lib/store/app-store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

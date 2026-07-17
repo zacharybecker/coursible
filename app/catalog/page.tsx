@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Clock, Plus, SearchX, Sparkles } from "lucide-react";
 import type { CourseContent } from "@/lib/types";
-import { addCourseToLibrary, getStarterCatalog } from "@/lib/data/repository";
+import { addCourseToLibrary, getStarterCatalog } from "@/lib/data/actions";
 import { useAppStore } from "@/lib/store/app-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
