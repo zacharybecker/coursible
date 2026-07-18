@@ -13,6 +13,7 @@
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.112.3",
     "@base-ui/react": "^1.6.0",
     "@neondatabase/serverless": "^1.1.0",
     "better-auth": "^1.6.23",
