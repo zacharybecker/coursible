@@ -1,6 +1,7 @@
 // Regenerates the starter-course catalog through the real generation
 // pipeline and checks the output into the repo as JSON. Requires
-// ANTHROPIC_API_KEY. Run everything or a subset:
+// MOONSHOT_API_KEY (default Kimi provider) or, with
+// GENERATION_PROVIDER=anthropic, ANTHROPIC_API_KEY. Run all or a subset:
 //   npx tsx scripts/generate-starters.ts
 //   npx tsx scripts/generate-starters.ts git-essentials docker-fundamentals
 
@@ -115,8 +116,10 @@ const BRIEFS: StarterBrief[] = [
 const OUT_DIR = path.join(process.cwd(), "lib", "data", "starter-courses");
 
 async function main() {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error("ANTHROPIC_API_KEY is not set. Add it to .env or the environment.");
+  const requiredKey =
+    process.env.GENERATION_PROVIDER === "anthropic" ? "ANTHROPIC_API_KEY" : "MOONSHOT_API_KEY";
+  if (!process.env[requiredKey]) {
+    console.error(`${requiredKey} is not set. Add it to .env or the environment.`);
     process.exit(1);
   }
   const requested = process.argv.slice(2);

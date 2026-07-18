@@ -14,6 +14,24 @@ export interface PedagogyIssue {
   message: string;
 }
 
+/** Whole-string values (case-insensitive) that signal a generator gave up. */
+const LOW_EFFORT_MISCONCEPTIONS = new Set([
+  "placeholder",
+  "n/a",
+  "na",
+  "none",
+  "tbd",
+  "todo",
+  "unknown",
+  "-",
+]);
+
+/** True if a misconception string is too short or a known filler value. */
+function isLowEffortMisconception(text: string): boolean {
+  const trimmed = text.trim();
+  return trimmed.length < 10 || LOW_EFFORT_MISCONCEPTIONS.has(trimmed.toLowerCase());
+}
+
 /** Concept ids taught by a lesson's content pages. */
 export function conceptsTaughtIn(lesson: Lesson): Set<string> {
   const taught = new Set<string>();
@@ -85,6 +103,11 @@ export function lessonPedagogyIssues(
           issues.push({
             path: ["pages", i, "options", j],
             message: `incorrect option "${option.id}" is missing a misconception`,
+          });
+        } else if (!isCorrect && isLowEffortMisconception(option.misconception!)) {
+          issues.push({
+            path: ["pages", i, "options", j],
+            message: `incorrect option "${option.id}" has a low-effort misconception; explain the specific confusion`,
           });
         }
         if (isCorrect && option.misconception !== undefined) {

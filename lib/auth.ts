@@ -10,17 +10,17 @@ import { Resend } from "resend";
 import { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
 
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "Ember <onboarding@resend.dev>";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "Coursible <onboarding@resend.dev>";
 
 async function sendMagicLinkEmail(email: string, url: string): Promise<void> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const { error } = await resend.emails.send({
     from: EMAIL_FROM,
     to: email,
-    subject: "Your Ember sign-in link",
+    subject: "Your Coursible sign-in link",
     html: `
-      <p>Click the link below to sign in to Ember:</p>
-      <p><a href="${url}">Sign in to Ember</a></p>
+      <p>Click the link below to sign in to Coursible:</p>
+      <p><a href="${url}">Sign in to Coursible</a></p>
       <p>This link expires in 5 minutes. If you didn't request it, you can ignore this email.</p>
     `,
   });

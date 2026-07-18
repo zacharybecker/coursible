@@ -120,7 +120,10 @@ export const courseContent = pgTable("course_content", {
   /** Pre-provisioned for slice-3 publish-updates. */
   version: integer("version").default(1).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
 });
 
 /** Minimal pre-provision for slice-3 sharing/cohorts. */

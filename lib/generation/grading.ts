@@ -1,7 +1,8 @@
-// Open-ended answer grading: Claude Haiku 4.5 + the page's rubric, via
-// structured outputs. The rubric was fixed at generation time; the model
-// only applies it. gradeWithFallback never throws — a provider outage must
-// never block lesson progress (the UI degrades to self-assessment).
+// Open-ended answer grading: a fast model (GRADING_MODEL, see client.ts)
+// applies the page's rubric via structured output. The rubric was fixed at
+// generation time; the model only applies it. gradeWithFallback never
+// throws — a provider outage must never block lesson progress (the UI
+// degrades to self-assessment).
 
 import { z } from "zod";
 import type { GradeResponse, OpenEndedGrade, OpenEndedPage } from "@/lib/types";

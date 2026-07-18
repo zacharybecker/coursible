@@ -31,8 +31,8 @@ export function ShareCourseDialog({
 
   const links = useMemo(
     () => ({
-      copy: `https://ember.app/share/${course.contentId}?mode=copy`,
-      cohort: `https://ember.app/share/${course.contentId}?mode=cohort&join=${course.id.slice(-6)}`,
+      copy: `https://coursible.dev/share/${course.contentId}?mode=copy`,
+      cohort: `https://coursible.dev/share/${course.contentId}?mode=cohort&join=${course.id.slice(-6)}`,
     }),
     [course],
   );

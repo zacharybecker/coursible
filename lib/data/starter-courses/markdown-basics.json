@@ -2143,7 +2143,7 @@
             {
               "id": "d",
               "text": "\"It should be noted that the application, due to a missing config file, is unable to start.\"",
-              "misconception": "placeholder"
+              "misconception": "You added hedging filler ('It should be noted that') and passive voice ('is unable to start'), making the sentence wordier than the original instead of more concise."
             }
           ],
           "correctOptionId": "a"

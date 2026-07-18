@@ -52,7 +52,7 @@ export default function SignInPage() {
         <span className="flex size-12 items-center justify-center rounded-2xl bg-brand/10">
           <Flame className="size-6 text-brand" aria-hidden />
         </span>
-        <h1 className="text-2xl font-bold tracking-tight">Welcome to Ember</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Welcome to Coursible</h1>
         <p className="text-sm text-muted-foreground">
           Sign in to keep your streaks, XP, and courses in sync everywhere.
         </p>

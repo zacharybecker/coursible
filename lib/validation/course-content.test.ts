@@ -178,4 +178,18 @@ describe("distractor shape", () => {
     mc.options[0].misconception = "should not be here";
     expectInvalid(c, 'correct option "o1" must not have a misconception');
   });
+
+  it("rejects a low-effort misconception string", () => {
+    const c = clone();
+    const mc = c.lessons[0].pages[2] as MultipleChoicePage;
+    mc.options[1].misconception = "placeholder";
+    expectInvalid(c, 'incorrect option "o2" has a low-effort misconception');
+  });
+
+  it("rejects a too-short misconception", () => {
+    const c = clone();
+    const mc = c.lessons[0].pages[2] as MultipleChoicePage;
+    mc.options[1].misconception = "wrong";
+    expectInvalid(c, 'incorrect option "o2" has a low-effort misconception');
+  });
 });

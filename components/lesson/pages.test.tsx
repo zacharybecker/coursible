@@ -29,16 +29,16 @@ const mcPage = l1.pages[2];
 const typingPage = l1.pages[3];
 const matchingPage = l2.pages[2];
 const openEndedPage = l2.pages[3];
-if (
-  textPage.type !== "text" ||
-  diagramPage.type !== "diagram" ||
-  mcPage.type !== "multiple_choice" ||
-  typingPage.type !== "typing" ||
-  matchingPage.type !== "matching" ||
-  openEndedPage.type !== "open_ended"
-) {
+if (textPage.type !== "text") throw new Error("fixture shape changed — update pages.test.tsx");
+if (diagramPage.type !== "diagram")
   throw new Error("fixture shape changed — update pages.test.tsx");
-}
+if (mcPage.type !== "multiple_choice")
+  throw new Error("fixture shape changed — update pages.test.tsx");
+if (typingPage.type !== "typing") throw new Error("fixture shape changed — update pages.test.tsx");
+if (matchingPage.type !== "matching")
+  throw new Error("fixture shape changed — update pages.test.tsx");
+if (openEndedPage.type !== "open_ended")
+  throw new Error("fixture shape changed — update pages.test.tsx");
 
 describe("TextPageView", () => {
   it("renders the body and continues", () => {
@@ -162,13 +162,13 @@ describe("TypingPageView", () => {
 });
 
 describe("OpenEndedPageView", () => {
-  function renderWithGrade(result: GradeResponse, onComplete = vi.fn()) {
+  const renderWithGrade = (result: GradeResponse, onComplete = vi.fn()) => {
     const onGrade = vi.fn().mockResolvedValue(result);
     render(<OpenEndedPageView page={openEndedPage} onGrade={onGrade} onComplete={onComplete} />);
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "Push then pull." } });
     fireEvent.click(screen.getByRole("button", { name: /submit/i }));
     return { onGrade, onComplete };
-  }
+  };
 
   it("completes correct on a pass verdict", async () => {
     const { onGrade, onComplete } = renderWithGrade({

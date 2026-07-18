@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-/** The mocked "AI" course preview + skill map, with Add to My Learning. */
+/** The generated course preview + skill map, with Add to My Learning. */
 export function CoursePreview({
   content,
   answers,

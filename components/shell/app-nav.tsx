@@ -27,7 +27,7 @@ export function TopNav() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-1.5 text-lg font-bold tracking-tight">
             <Flame className="size-5 text-brand" aria-hidden />
-            Ember
+            Coursible
           </Link>
           <nav className="flex items-center gap-1">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
@@ -61,7 +61,7 @@ export function MobileNav() {
       <header className="sticky top-0 z-40 flex h-12 items-center justify-between border-b bg-background/80 px-4 backdrop-blur md:hidden">
         <Link href="/" className="flex items-center gap-1.5 font-bold tracking-tight">
           <Flame className="size-5 text-brand" aria-hidden />
-          Ember
+          Coursible
         </Link>
         <HeaderStats />
       </header>

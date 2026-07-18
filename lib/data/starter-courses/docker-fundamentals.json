@@ -1,0 +1,1979 @@
+{
+  "contentId": "content-docker-fundamentals",
+  "schemaVersion": 2,
+  "title": "Docker for Beginners: Build, Run & Debug Team Services",
+  "description": "Go from zero to confidently containerizing your team's services. You'll build optimized images, run containers reliably, and debug issues like a seasoned DevOps engineer.",
+  "outcome": "Confidently build, run, and debug Docker containers for my team's services.",
+  "tags": [
+    "docker",
+    "containers",
+    "devops"
+  ],
+  "estimatedHours": 5,
+  "concepts": [
+    {
+      "id": "c-images-vs-containers",
+      "name": "Images vs Containers"
+    },
+    {
+      "id": "c-docker-engine",
+      "name": "Docker Engine & Daemon"
+    },
+    {
+      "id": "c-docker-cli",
+      "name": "Docker CLI Basics"
+    },
+    {
+      "id": "c-dockerfile-intro",
+      "name": "Dockerfile Purpose"
+    },
+    {
+      "id": "c-base-images",
+      "name": "Base Images"
+    },
+    {
+      "id": "c-dockerfile-instructions",
+      "name": "Core Dockerfile Instructions"
+    },
+    {
+      "id": "c-layers-caching",
+      "name": "Image Layers & Build Cache"
+    },
+    {
+      "id": "c-build-context",
+      "name": "Build Context"
+    },
+    {
+      "id": "c-image-tags",
+      "name": "Image Tagging & Registries"
+    },
+    {
+      "id": "c-run-command",
+      "name": "docker run"
+    },
+    {
+      "id": "c-container-lifecycle",
+      "name": "Container Lifecycle"
+    },
+    {
+      "id": "c-port-mapping",
+      "name": "Port Mapping"
+    },
+    {
+      "id": "c-env-vars",
+      "name": "Environment Variables"
+    },
+    {
+      "id": "c-logs-inspect",
+      "name": "Logs & Inspect"
+    },
+    {
+      "id": "c-exec-shell",
+      "name": "Executing Commands in Containers"
+    },
+    {
+      "id": "c-debug-commands",
+      "name": "Debug & Monitoring Commands"
+    },
+    {
+      "id": "c-health-checks",
+      "name": "Container Health Checks"
+    },
+    {
+      "id": "c-bridge-networks",
+      "name": "Bridge Networks"
+    },
+    {
+      "id": "c-named-volumes",
+      "name": "Named Volumes"
+    },
+    {
+      "id": "c-bind-mounts",
+      "name": "Bind Mounts"
+    },
+    {
+      "id": "c-compose-intro",
+      "name": "Docker Compose Purpose"
+    },
+    {
+      "id": "c-compose-services",
+      "name": "Defining Compose Services"
+    },
+    {
+      "id": "c-debug-workflow",
+      "name": "Structured Debugging Workflow"
+    }
+  ],
+  "skillNodes": [
+    {
+      "id": "node-basics",
+      "title": "Docker Foundations",
+      "description": "Understand what Docker is and get the tools running on your machine.",
+      "prereqIds": [],
+      "lessonIds": [
+        "lesson-core-concepts",
+        "lesson-install-cli"
+      ],
+      "position": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-images",
+      "title": "Building Images",
+      "description": "Learn to write Dockerfiles and build images efficiently.",
+      "prereqIds": [
+        "node-basics"
+      ],
+      "lessonIds": [
+        "lesson-dockerfile-basics",
+        "lesson-build-tag"
+      ],
+      "position": {
+        "col": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-containers",
+      "title": "Running Containers",
+      "description": "Master running, configuring, and managing containers.",
+      "prereqIds": [
+        "node-basics"
+      ],
+      "lessonIds": [
+        "lesson-run-lifecycle",
+        "lesson-configure"
+      ],
+      "position": {
+        "col": 1,
+        "row": 1
+      }
+    },
+    {
+      "id": "node-debug",
+      "title": "Debugging & Inspection",
+      "description": "Inspect logs, execute debug commands, and monitor container health.",
+      "prereqIds": [
+        "node-images",
+        "node-containers"
+      ],
+      "lessonIds": [
+        "lesson-inspect-exec",
+        "lesson-health-monitor"
+      ],
+      "position": {
+        "col": 2,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-networks",
+      "title": "Networking & Storage",
+      "description": "Connect containers and persist data with networks and volumes.",
+      "prereqIds": [
+        "node-containers"
+      ],
+      "lessonIds": [
+        "lesson-networking",
+        "lesson-volumes"
+      ],
+      "position": {
+        "col": 2,
+        "row": 1
+      }
+    },
+    {
+      "id": "node-compose",
+      "title": "Multi-Container Workflow",
+      "description": "Orchestrate multi-container setups and apply a structured debugging workflow.",
+      "prereqIds": [
+        "node-debug",
+        "node-networks"
+      ],
+      "lessonIds": [
+        "lesson-compose-basics",
+        "lesson-workflow"
+      ],
+      "position": {
+        "col": 3,
+        "row": 0
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "lesson-core-concepts",
+      "title": "Why Docker & Core Concepts",
+      "description": "Learn the difference between images and containers and how the Docker engine works.",
+      "skillNodeId": "node-basics",
+      "estimatedMinutes": 20,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-core-concepts-p1",
+          "title": "Images Are Blueprints, Containers Are the Houses",
+          "teaches": [
+            "c-images-vs-containers"
+          ],
+          "body": "Imagine you are building a neighborhood. An **architect’s blueprint** specifies every detail—the floor plan, the wiring, the fixtures—but it is not a house you can live in. A Docker **image** works the same way. It is a read-only template that contains everything your application needs: a lightweight operating system, your code, runtime, libraries, and environment variables.\n\nWhen you want to actually run the application, Docker creates a **container** from that image. The container is a live, runnable instance. Think of it as the actual house built from the blueprint. You can build many identical houses from one blueprint, and you can run many containers from one image. Each container has its own filesystem layer for writes, so if one container saves a log file, the others are unaffected.\n\nFor example, when you run:\n\n`docker run my-api:1.2`\n\nDocker takes the read-only image `my-api:1.2` and spins up a new container. The image itself never changes; the container is where the work happens."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-core-concepts-p2",
+          "prompt": "Which statement accurately describes the relationship between the image and the three containers?",
+          "tests": [
+            "c-images-vs-containers"
+          ],
+          "explanation": "An image is a read-only blueprint. When you run `docker run`, Docker creates a new container layer on top of the image’s read-only layers. Each container is isolated and tracks its own runtime state, while the underlying image remains unchanged and can be reused.",
+          "xp": 10,
+          "context": "You have built a Docker image named `payment-service:2.0`. Your team needs three instances running on a single server for load balancing.",
+          "options": [
+            {
+              "id": "a",
+              "text": "The image is a single read-only template; each container is a separate runnable instance with its own state."
+            },
+            {
+              "id": "b",
+              "text": "Each container is an independent copy of the image, so updating the image automatically updates all running containers.",
+              "misconception": "Containers do not auto-update when the image changes; they are created from a snapshot of the image at startup and remain independent."
+            },
+            {
+              "id": "c",
+              "text": "The image is a running process, and containers are saved snapshots of that process.",
+              "misconception": "This reverses the relationship—the image is the static template, and the container is the live process."
+            },
+            {
+              "id": "d",
+              "text": "You must build a new image for every container, because one image can only be used to start a single container.",
+              "misconception": "Images are reusable templates; a single image can spawn an unlimited number of containers."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-core-concepts-p3",
+          "title": "The Docker Engine Is the Middle Manager",
+          "teaches": [
+            "c-docker-engine"
+          ],
+          "body": "Every time you type a `docker` command, you are talking to the **Docker Engine**. The Engine is the software that makes containers possible. It has two main parts: the **client** and the **daemon**.\n\nYou interact with the **client**—the `docker` command-line tool you type into your terminal. The client sends your instructions to the **Docker daemon** (`dockerd`), a persistent background process that does the heavy lifting. The daemon is responsible for building images, pulling them from registries, creating containers, and managing their lifecycle.\n\nFor example, when you run:\n\n`docker run nginx`\n\nThe client sends a request to the daemon. The daemon checks if the `nginx` image exists locally. If not, it pulls it from a registry. Then it creates a container from that image and starts it. You never talk to the daemon directly; the client handles the communication for you."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-core-concepts-p4",
+          "title": "From Command to Running Container",
+          "teaches": [
+            "c-docker-engine"
+          ],
+          "intro": "Here is what happens behind the scenes when you type a command.",
+          "mermaid": "flowchart LR\n    A[Docker Client] -->|docker run| B[Docker Daemon]\n    B --> C{Image exists?}\n    C -->|No| D[Pull from Registry]\n    C -->|Yes| E[Create Container]\n    D --> E\n    E --> F[Running Container]",
+          "caption": "Notice that your command always flows through the Docker Daemon. The daemon manages images, networks, and storage; the client is just the messenger."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-core-concepts-p5",
+          "prompt": "Match each Docker Engine component to its responsibility.",
+          "tests": [
+            "c-docker-engine"
+          ],
+          "explanation": "The Docker Client is the command-line interface you use. It forwards your instructions to `dockerd`, the Docker Daemon, which handles building, pulling, and running containers.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "Docker Client",
+              "right": "The CLI tool you type commands into"
+            },
+            {
+              "id": "p2",
+              "left": "Docker Daemon",
+              "right": "The background process that manages containers and images"
+            },
+            {
+              "id": "p3",
+              "left": "docker run",
+              "right": "A command sent by the client to start a container"
+            },
+            {
+              "id": "p4",
+              "left": "dockerd",
+              "right": "The name of the Docker daemon process"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-core-concepts-p6",
+          "prompt": "You type `docker run my-app` in your terminal. What is the name of the background process that actually creates and starts the container?",
+          "tests": [
+            "c-docker-engine"
+          ],
+          "explanation": "The Docker Daemon (`dockerd`) is the background process that receives commands from the Docker Client and performs all container operations.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "dockerd",
+            "Docker daemon",
+            "the Docker daemon",
+            "docker daemon"
+          ],
+          "hint": "It is the persistent background service, not the command-line tool."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-core-concepts-p7",
+          "prompt": "Explain the difference between a Docker image and a Docker container, and describe the role of the Docker daemon when you run `docker run`.",
+          "tests": [
+            "c-images-vs-containers",
+            "c-docker-engine"
+          ],
+          "explanation": "A strong answer should clearly separate the static image from the running container and identify the daemon as the background process that orchestrates the work.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "The image is a read-only template or blueprint containing the application and its dependencies.",
+              "The container is a live, runnable instance created from that image.",
+              "Multiple containers can be created from a single image, each isolated with its own state.",
+              "The Docker daemon (dockerd) is the background process that receives the command from the client and handles building, pulling, and starting the container."
+            ],
+            "commonMisconceptions": [
+              "Confusing the image and container (e.g., saying the image is running).",
+              "Believing the client directly creates the container instead of the daemon.",
+              "Stating that containers are copies of the image that update automatically when the image changes."
+            ],
+            "sampleAnswer": "A Docker image is a read-only template that packages my application code, runtime, and dependencies. A container is a live instance of that image—like a house built from a blueprint. I can run many containers from one image, and each has its own isolated filesystem and state. When I type `docker run`, the Docker client sends the instruction to the Docker daemon (`dockerd`), a background process that checks for the image, pulls it if necessary, and actually creates and starts the container."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-install-cli",
+      "title": "Installing Docker & First Commands",
+      "description": "Install Docker and run your first commands to verify the setup.",
+      "skillNodeId": "node-basics",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-install-cli-p1",
+          "title": "The Docker CLI Is Your Control Panel",
+          "teaches": [
+            "c-docker-cli"
+          ],
+          "body": "After you install Docker, your first step is to verify it from the terminal. The Docker CLI is the command-line tool you type into every day to control Docker.\n\nTry running `docker --version`. You should see output like `Docker version 24.0.2`. Then run `docker info` to see how many containers are running and what storage driver your system uses.\n\nEvery command follows the pattern `docker <command> [options]`. For example, `docker run hello-world` asks the Docker daemon to start a container from the `hello-world` image and print a welcome message. If you see that greeting, your CLI and daemon are talking to each other correctly."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-install-cli-p2",
+          "prompt": "Which command checks whether the Docker daemon is responding and shows system-wide information?",
+          "tests": [
+            "c-docker-cli",
+            "c-docker-engine"
+          ],
+          "explanation": "`docker info` queries the Docker daemon and returns system-wide details such as the number of containers, images, storage driver, and network configuration. The other commands perform different tasks: `docker --version` only prints version strings, `docker build` creates images, and `docker run hello-world` starts a specific container.",
+          "xp": 10,
+          "context": "You just installed Docker on your laptop and opened a terminal.",
+          "options": [
+            {
+              "id": "a",
+              "text": "`docker --version`",
+              "misconception": "You might think this checks the daemon, but it only prints the client and engine version strings without verifying daemon responsiveness or resources."
+            },
+            {
+              "id": "b",
+              "text": "`docker info`"
+            },
+            {
+              "id": "c",
+              "text": "`docker build`",
+              "misconception": "This is for building images from a Dockerfile; if the daemon is down, it simply errors rather than summarizing system state."
+            },
+            {
+              "id": "d",
+              "text": "`docker run hello-world`",
+              "misconception": "This verifies that a container can start, but it does not display system-wide details like the storage driver, network config, or daemon status."
+            }
+          ],
+          "correctOptionId": "b"
+        },
+        {
+          "type": "text",
+          "id": "lesson-install-cli-p3",
+          "title": "Meet the Dockerfile",
+          "teaches": [
+            "c-dockerfile-intro"
+          ],
+          "body": "When your team wants to package a service, you need a reproducible way to build it. A **Dockerfile** is a text file containing step-by-step instructions for creating an image. Think of it like a recipe.\n\nInstead of manually installing Python, copying code, and installing libraries inside a container every time, you write instructions such as:\n\n- `FROM python:3.11` — start from an official Python base image\n- `COPY . /app` — copy your team's source code into the image\n- `RUN pip install -r requirements.txt` — install dependencies\n- `CMD [\"python\", \"app.py\"]` — define what runs when the container starts\n\nOnce the Dockerfile is written, anyone on your team can build the exact same image with `docker build`."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-install-cli-p4",
+          "prompt": "Match each Docker artifact to its role.",
+          "tests": [
+            "c-dockerfile-intro",
+            "c-images-vs-containers",
+            "c-docker-engine"
+          ],
+          "explanation": "The Dockerfile is the build recipe. The image is the read-only blueprint produced from that recipe. The container is the runnable instance created from the image. The Docker Engine is the persistent background service that manages the entire lifecycle.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "Dockerfile",
+              "right": "A text recipe that defines how to build an image"
+            },
+            {
+              "id": "p2",
+              "left": "Image",
+              "right": "A read-only blueprint used to create containers"
+            },
+            {
+              "id": "p3",
+              "left": "Container",
+              "right": "A runnable instance of an image"
+            },
+            {
+              "id": "p4",
+              "left": "Docker Engine",
+              "right": "The background daemon that manages containers"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "lesson-install-cli-p5",
+          "title": "Your First Dockerfile Example",
+          "teaches": [],
+          "body": "Imagine you join a new team and clone their repository. Inside you see a file named `Dockerfile` (no extension). Opening it, you read:\n\n- `FROM node:18-alpine`\n- `WORKDIR /usr/src/app`\n- `COPY package*.json ./`\n- `RUN npm install`\n- `COPY . .`\n- `EXPOSE 3000`\n- `CMD [\"node\", \"server.js\"]`\n\nThis tells Docker to start from a lightweight Node.js image, set a working directory, copy dependency lists, install them, copy the rest of the code, expose port 3000, and start the server. You do not need to install Node.js on your laptop; Docker handles the environment identically on every machine."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-install-cli-p6",
+          "prompt": "You open a terminal and want to confirm that the Docker command-line tool is installed. Type the command that prints the Docker version.",
+          "tests": [
+            "c-docker-cli"
+          ],
+          "explanation": "Both `docker --version` and `docker -v` print the client and engine versions, confirming the CLI is installed and executable from your shell.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "docker --version",
+            "docker -v"
+          ],
+          "hint": "It starts with `docker` and includes a flag about the version."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-install-cli-p7",
+          "prompt": "Explain why a team would prefer to build an image from a Dockerfile instead of manually installing software inside a container every time.",
+          "tests": [
+            "c-dockerfile-intro"
+          ],
+          "explanation": "A Dockerfile turns environment setup into code. That makes builds repeatable, shareable, and version-controlled.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Dockerfiles make builds repeatable or automated",
+              "They can be committed to version control",
+              "They ensure every team member and environment uses the same setup",
+              "They save time by avoiding manual configuration"
+            ],
+            "commonMisconceptions": [
+              "Thinking Dockerfiles are required to run any container (existing images can be run without one)",
+              "Confusing the Dockerfile with the image or container itself"
+            ],
+            "sampleAnswer": "A Dockerfile acts as a reproducible recipe. By checking it into version control, every teammate and CI pipeline can build the exact same image without manually clicking through installs, which eliminates 'works on my machine' problems."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-dockerfile-basics",
+      "title": "Writing Dockerfiles",
+      "description": "Write a Dockerfile using core instructions and understand image layers.",
+      "skillNodeId": "node-images",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-dockerfile-basics-p1",
+          "title": "Every Dockerfile Starts with a Base Image",
+          "teaches": [
+            "c-base-images"
+          ],
+          "body": "Think of a base image as the starting operating system and runtime for your container. Every Dockerfile begins with one.\n\nWhen you write `FROM node:18-alpine`, you are telling Docker to start from a lightweight Linux image that already has Node.js version 18 installed. You do not need to install Alpine Linux or Node.js yourself.\n\nCommon base images include:\n- `python:3.11-slim` for Python applications\n- `ubuntu:22.04` for general Linux tools\n- `node:18-alpine` for small Node.js services\n\nChoosing a specific tagged version, like `18-alpine` instead of `latest`, keeps your builds predictable. Your teammates will build the exact same environment every time."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-dockerfile-basics-p2",
+          "prompt": "Which instruction should be the very first line?",
+          "tests": [
+            "c-base-images"
+          ],
+          "explanation": "The `FROM` instruction is always first because it defines the base image that provides the operating system and runtime for everything that follows.",
+          "xp": 10,
+          "context": "You are containerizing a Python web API. You open a new file named `Dockerfile`.",
+          "options": [
+            {
+              "id": "from",
+              "text": "`FROM python:3.11-slim`"
+            },
+            {
+              "id": "run",
+              "text": "`RUN pip install flask`",
+              "misconception": "You might think installing dependencies comes first, but Docker needs a base image with Python before it can run pip."
+            },
+            {
+              "id": "copy",
+              "text": "`COPY . /app`",
+              "misconception": "You might think copying code is the first step, but there is no destination filesystem or base operating system until you set a base image."
+            },
+            {
+              "id": "cmd",
+              "text": "`CMD [\"python\", \"app.py\"]`",
+              "misconception": "You might think the runtime command starts the build, but CMD only defines what runs when a container starts, not what the image contains."
+            }
+          ],
+          "correctOptionId": "from"
+        },
+        {
+          "type": "text",
+          "id": "lesson-dockerfile-basics-p3",
+          "title": "The Core Instructions That Build Your Image",
+          "teaches": [
+            "c-dockerfile-instructions"
+          ],
+          "body": "Once you have chosen a base image, you transform it with core instructions. Here is a concrete example you might write for a Node.js service.\n\nStart with `FROM node:18-alpine` to set the foundation. Then use `WORKDIR /app` to create and switch to the `/app` directory. This keeps paths clean so you do not repeat absolute directories later.\n\nNext, copy only your dependency files with `COPY package*.json ./`. Run `RUN npm install` to install libraries. This creates a new layer containing `node_modules`.\n\nAfter that, copy the rest of your source code with `COPY . .`. Finally, `CMD [\"node\", \"server.js\"]` defines the default command that runs when a container starts from this image.\n\nThese instructions are the building blocks of most production Dockerfiles you will write."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-dockerfile-basics-p4",
+          "prompt": "Match each Dockerfile instruction to its primary job during the build.",
+          "tests": [
+            "c-dockerfile-instructions"
+          ],
+          "explanation": "`FROM` establishes the foundation, `WORKDIR` sets the directory, `COPY` moves files in, `RUN` executes commands to build, and `CMD` specifies what runs when the container launches.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "from",
+              "left": "FROM",
+              "right": "Sets the base image for subsequent instructions"
+            },
+            {
+              "id": "workdir",
+              "left": "WORKDIR",
+              "right": "Creates and changes to a working directory"
+            },
+            {
+              "id": "copy",
+              "left": "COPY",
+              "right": "Copies files from the build context into the image"
+            },
+            {
+              "id": "run",
+              "left": "RUN",
+              "right": "Executes a command and commits the result as a new layer"
+            },
+            {
+              "id": "cmd",
+              "left": "CMD",
+              "right": "Defines the default command for a running container"
+            }
+          ]
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-dockerfile-basics-p5",
+          "title": "How Docker Stacks Image Layers",
+          "teaches": [
+            "c-layers-caching"
+          ],
+          "intro": "Each instruction creates a read-only layer that Docker can reuse.",
+          "mermaid": "flowchart TD\n    Base[\"FROM base image\"] --> Work[\"WORKDIR /app\"]\n    Work --> CopyPkg[\"COPY package files\"]\n    CopyPkg --> Run[\"RUN npm install\"]\n    Run --> CopySrc[\"COPY source code\"]\n    CopySrc --> Cmd[\"CMD node server.js\"]",
+          "caption": "Docker builds from bottom to top. The base image is the first layer. Every instruction after FROM adds a new layer on top. Because layers are cached independently, if you change a source file that is copied in layer five, Docker reuses the unchanged layers below it and rebuilds only layer five and everything above it. This is why you copy dependency files early and source code late: the expensive `npm install` layer stays cached even when your application code changes."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-dockerfile-basics-p6",
+          "prompt": "You fix a typo in `server.js`, but your Dockerfile itself does not change. How does Docker's build cache behave?",
+          "tests": [
+            "c-layers-caching"
+          ],
+          "explanation": "Docker computes a cache key for each layer. When `server.js` changes, the `COPY` layer that includes it gets a new cache key, so Docker rebuilds that layer and all subsequent layers. Earlier layers remain cached.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "all",
+              "text": "Docker rebuilds every layer from `FROM` onward.",
+              "misconception": "You might think any file change invalidates the entire image, but Docker only invalidates layers from the first affected instruction down."
+            },
+            {
+              "id": "changed-and-after",
+              "text": "Docker reuses cached layers up to the first `COPY` that includes `server.js`, then rebuilds that layer and every layer after it."
+            },
+            {
+              "id": "only-changed",
+              "text": "Docker rebuilds only the single layer where `server.js` is copied.",
+              "misconception": "You might think layers are completely independent, but later layers like CMD depend on earlier ones, so they must be rebuilt too."
+            },
+            {
+              "id": "none",
+              "text": "Docker rebuilds no layers because the Dockerfile itself is unchanged.",
+              "misconception": "You might think the cache depends only on the Dockerfile text, but Docker also hashes the files copied by COPY instructions."
+            }
+          ],
+          "correctOptionId": "changed-and-after"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-dockerfile-basics-p7",
+          "prompt": "In your own words, explain why the order of `COPY` and `RUN` instructions in a Dockerfile matters for build performance. Use a specific example involving dependency installation.",
+          "tests": [
+            "c-layers-caching",
+            "c-dockerfile-instructions"
+          ],
+          "explanation": "The goal is to place instructions that change frequently as late as possible, so earlier layers stay cached.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Each Dockerfile instruction creates a cached layer",
+              "Dependencies change less often than source code",
+              "COPYing package files before RUNning install allows the install layer to be cached across code changes",
+              "Putting COPY . . before RUN npm install would force reinstall on every code change"
+            ],
+            "commonMisconceptions": [
+              "Docker caches the entire image as one unit rather than per layer",
+              "The order of instructions does not matter for caching",
+              "Docker automatically detects which files are dependencies without explicit COPY order"
+            ],
+            "sampleAnswer": "Docker caches each instruction as a layer. If I COPY package.json first and then RUN npm install, Docker caches the installed dependencies. When I later change my application source code, the package.json layer has not changed, so Docker reuses the cached npm install layer and only rebuilds from the COPY . . instruction onward. If I had copied all source code before running npm install, every small code change would invalidate the cache and force npm install to run again."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-build-tag",
+      "title": "Building and Tagging Images",
+      "description": "Build images with proper context, tag them, and push to a registry.",
+      "skillNodeId": "node-images",
+      "estimatedMinutes": 20,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-build-tag-p1",
+          "title": "Your Build Context Is Everything You Send to the Daemon",
+          "teaches": [
+            "c-build-context"
+          ],
+          "body": "When you run `docker build`, the Docker CLI does not send only the Dockerfile to the Daemon. It packages the entire **build context**—every file and folder in the path you specify—and streams it to the Docker Daemon.\n\nImagine your project lives in a folder named `~/projects/api`. Inside that folder you have a `Dockerfile`, a `src` folder, a `tests` folder, a `README.md`, and a `.git` folder.\n\nIf you run `docker build -t api:latest .`, the `.` tells the CLI to use the current directory as the build context. That means **all** of those files are sent to the Daemon, even if your Dockerfile only copies `src`. The bigger the context, the longer the transfer and the more work the Daemon does.\n\nIf your context includes large log files, dependency caches, or version-control history, your builds slow down for no reason. Keeping the context lean is essential for fast team builds."
+        },
+        {
+          "type": "text",
+          "id": "lesson-build-tag-p2",
+          "title": "Tag, Name, and Push Your Image to a Registry",
+          "teaches": [
+            "c-image-tags"
+          ],
+          "body": "A Docker image name is not just a name. It is a path that tells Docker where the image lives and which version you mean. The full format is:\n\n`[REGISTRYHOST/][USERNAME/]NAME[:TAG]`\n\nFor example, if your team uses a private registry at `registry.internal.io`, your username is `team-alpha`, and your app is called `payments-api`, you might tag a release as:\n\n`registry.internal.io/team-alpha/payments-api:v1.2.0`\n\nThe `latest` tag is just a default string. If you build without specifying a tag, Docker applies `latest` automatically, but that does not make it special. Many teams treat `latest` as unstable and reserve numbered tags for releases.\n\nOnce an image is tagged with a registry path, you can push it with `docker push` so your teammates and production hosts can pull it down."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-build-tag-p3",
+          "prompt": "You are in the `~/projects/api` directory. It contains `Dockerfile`, `src/`, `tests/`, `node_modules/`, and `.git/`. You run `docker build -t api .`. What does the Docker Daemon receive?",
+          "tests": [
+            "c-build-context"
+          ],
+          "explanation": "The `.` sets the build context to the current directory, so the Daemon receives every file and folder inside it, including files the Dockerfile never uses. Only the `.dockerignore` file can exclude items from this transfer.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "only-dockerfile",
+              "text": "Only the Dockerfile, because the Daemon reads instructions and fetches files separately.",
+              "misconception": "Believing the Daemon pulls files on demand rather than receiving the whole context upfront."
+            },
+            {
+              "id": "src-only",
+              "text": "Only the `src` folder, because the Dockerfile later runs `COPY src /app`.",
+              "misconception": "Thinking Docker analyzes the Dockerfile before sending the context and selectively sends only referenced paths."
+            },
+            {
+              "id": "current-dir",
+              "text": "The entire current directory, including `tests`, `node_modules`, and `.git`."
+            },
+            {
+              "id": "dockerignore-default",
+              "text": "Everything except hidden folders like `.git`, which Docker ignores by default.",
+              "misconception": "Assuming Docker automatically excludes hidden directories without a `.dockerignore` file."
+            }
+          ],
+          "correctOptionId": "current-dir"
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-build-tag-p4",
+          "title": "From Context to Registry",
+          "teaches": [],
+          "intro": "A build turns local files into a shareable image. Here is the flow.",
+          "mermaid": "flowchart LR\n    A[Build Context] --> B[Docker Daemon]\n    C[Dockerfile] --> B\n    B --> D[Image]\n    D --> E[Tag]\n    E --> F[Registry]",
+          "caption": "Notice that the Build Context and the Dockerfile both travel to the Daemon. The Daemon produces the image, which you then tag and push to a registry."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-build-tag-p5",
+          "prompt": "Match each image reference part to its meaning.",
+          "tests": [
+            "c-image-tags"
+          ],
+          "explanation": "A full image reference breaks down into registry host, username/namespace, repository name, and tag. If the registry is omitted, Docker Hub is assumed. If the tag is omitted, `latest` is used.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "registry",
+              "left": "`registry.internal.io`",
+              "right": "The registry host where the image is stored"
+            },
+            {
+              "id": "username",
+              "left": "`team-alpha`",
+              "right": "The namespace or account on that registry"
+            },
+            {
+              "id": "repo",
+              "left": "`payments-api`",
+              "right": "The repository or image name"
+            },
+            {
+              "id": "tag",
+              "left": "`v1.2.0`",
+              "right": "The specific version label for this image"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-build-tag-p6",
+          "prompt": "Your registry is at `registry.example.com`, your team's namespace is `backend`, and the image name is `orders`. You want to tag release `2.0`. Type the full image reference you would use in `docker build -t` or `docker tag`.",
+          "tests": [
+            "c-image-tags"
+          ],
+          "explanation": "The full reference follows the format `REGISTRY/NAMESPACE/IMAGE:TAG`. Here that is `registry.example.com/backend/orders:2.0`. Omitting any part would point to a different location or tag.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "registry.example.com/backend/orders:2.0"
+          ],
+          "hint": "Use the format `registry/namespace/image:tag`."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-build-tag-p7",
+          "prompt": "In your own words, explain why a large build context slows down Docker builds and give one concrete way to reduce it.",
+          "tests": [
+            "c-build-context"
+          ],
+          "explanation": "A large build context forces the CLI to send more data to the Daemon, increasing network overhead and build time. You can reduce this by creating a `.dockerignore` file that excludes files not needed for the build, such as `node_modules`, `.git`, or test data.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "States that the entire build context is sent to the Docker Daemon.",
+              "Explains that more files mean more data to transfer and process, which slows the build.",
+              "Mentions using a `.dockerignore` file (or equivalent exclusion) to keep the context small.",
+              "Provides a concrete example of what to exclude (e.g., `.git`, log files, dependency caches, tests)."
+            ],
+            "commonMisconceptions": [
+              "Believing the Daemon only copies files referenced by COPY/ADD instructions.",
+              "Suggesting that using a smaller base image reduces the build context.",
+              "Claiming that tags or registry choices affect build context size."
+            ],
+            "sampleAnswer": "A large build context slows down builds because the Docker CLI sends every file in the context directory to the Daemon, even files the Dockerfile never uses. More data means a longer transfer and more work for the Daemon. To reduce the context, I would add a `.dockerignore` file to exclude folders like `.git` and `node_modules`, which are not needed to compile or run the application."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-run-lifecycle",
+      "title": "Starting and Managing Containers",
+      "description": "Create, start, stop, and remove containers using docker run.",
+      "skillNodeId": "node-containers",
+      "estimatedMinutes": 20,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-run-lifecycle-p1",
+          "title": "Containers Are Born, Run, and Retire",
+          "teaches": [
+            "c-container-lifecycle"
+          ],
+          "body": "Every container moves through a clear set of states. Think of it like launching a virtual machine, but lighter.\n\nWhen you type `docker create nginx`, Docker sets up the container filesystem and configuration from the `nginx` image. At this moment the container exists but is not executing. It is in the **Created** state.\n\nTo move it into the **Running** state, you use `docker start`. While running, your service is active and responding.\n\nWhen you are done, `docker stop` sends a shutdown signal and moves the container into the **Exited** state. The container is still on disk; you could restart it later.\n\nFinally, `docker rm` deletes the container permanently. At that point it enters the **Removed** state and releases its resources.\n\nYou can check these transitions yourself with `docker ps` for running containers and `docker ps -a` to see stopped ones too."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-run-lifecycle-p2",
+          "title": "From Image to Removal",
+          "teaches": [
+            "c-container-lifecycle"
+          ],
+          "intro": "This flow shows the journey of a single container.",
+          "mermaid": "flowchart LR\n    A[Docker Image] -->|docker create| B[Created]\n    B -->|docker start| C[Running]\n    C -->|docker stop| D[Exited]\n    D -->|docker rm| E[Removed]\n    A -->|docker run| C",
+          "caption": "Notice that `docker run` is a shortcut: it jumps directly from the image to the Running state by combining create and start. Once stopped, a container stays on disk until you explicitly remove it."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-run-lifecycle-p3",
+          "prompt": "You type `docker create --name web nginx` on your machine. What is the current state of the `web` container?",
+          "tests": [
+            "c-container-lifecycle"
+          ],
+          "explanation": "`docker create` prepares the container from the image but does not start it. The container is in the Created state. You would need `docker start web` to move it to Running.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "running",
+              "text": "Running",
+              "misconception": "Confusing `docker create` with `docker run`, which does start the container."
+            },
+            {
+              "id": "created",
+              "text": "Created"
+            },
+            {
+              "id": "exited",
+              "text": "Exited",
+              "misconception": "Believing that `docker create` briefly starts the container and then it immediately exits."
+            },
+            {
+              "id": "removed",
+              "text": "Removed",
+              "misconception": "Thinking that `docker create` cleans up after itself rather than leaving the container on disk."
+            }
+          ],
+          "correctOptionId": "created"
+        },
+        {
+          "type": "text",
+          "id": "lesson-run-lifecycle-p4",
+          "title": "One Command to Create and Start",
+          "teaches": [
+            "c-run-command"
+          ],
+          "body": "Instead of typing two separate commands, you can use `docker run` to create and start a container in one step.\n\nImagine you want to serve a website. You type:\n\n`docker run -d --name homepage -p 8080:80 nginx`\n\nHere is what happens under the hood:\n\n- Docker checks for the `nginx` image locally. If it is missing, Docker Engine pulls it from a registry.\n- Docker creates a new container named `homepage`.\n- Docker starts the container immediately.\n- The `-d` flag runs it in **detached** mode so your terminal stays free.\n- The `-p 8080:80` flag maps port 8080 on your host to port 80 inside the container.\n\nBy default, `docker run` stays in the foreground and attaches your terminal to the container's output. That is useful for debugging, but for long-running services you usually want `-d`.\n\nIf you only want a temporary container that deletes itself after it finishes, add `--rm`. This keeps your system clean."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-run-lifecycle-p5",
+          "prompt": "Match each `docker run` flag to what it does when you start a container.",
+          "tests": [
+            "c-run-command"
+          ],
+          "explanation": "These flags control how a container is instantiated and how it behaves. `-d` and `--rm` are especially common in daily workflows.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "detach",
+              "left": "-d",
+              "right": "Run the container in the background (detached mode)"
+            },
+            {
+              "id": "name",
+              "left": "--name",
+              "right": "Assign a custom name to the container"
+            },
+            {
+              "id": "port",
+              "left": "-p",
+              "right": "Map a port on the host to a port in the container"
+            },
+            {
+              "id": "autoremove",
+              "left": "--rm",
+              "right": "Automatically remove the container when it exits"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "lesson-run-lifecycle-p6",
+          "title": "Stopping and Cleaning Up",
+          "teaches": [],
+          "body": "Containers that you start without `--rm` will stick around after they stop. Over time, exited containers and their logs consume disk space.\n\nTo stop a running container gracefully, you use `docker stop <name>`. The container moves to the Exited state but is still listed in `docker ps -a`.\n\nIf you know you will not need a container again, remove it with `docker rm <name>`. If it is still running, you must either stop it first or use `docker rm -f <name>` to force removal.\n\nThis is why many developers use `docker run --rm` for one-off tasks like running tests or database migrations. The container runs, does its job, and vanishes without cluttering your system."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-run-lifecycle-p7",
+          "prompt": "You want to run a one-off container from the `alpine` image that deletes itself as soon as it exits. Type the `docker run` flag that enables this automatic cleanup.",
+          "tests": [
+            "c-run-command"
+          ],
+          "explanation": "The `--rm` flag tells Docker to remove the container automatically after it stops. This is perfect for temporary tasks.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "--rm"
+          ],
+          "hint": "It starts with two dashes."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-run-lifecycle-p8",
+          "prompt": "You execute `docker run alpine echo 'hello'` and the command finishes. What is left on your Docker host?",
+          "tests": [
+            "c-images-vs-containers",
+            "c-container-lifecycle"
+          ],
+          "explanation": "By default, `docker run` leaves both the underlying image (`alpine`) and the stopped container on disk. The container enters the Exited state and remains visible in `docker ps -a` until you run `docker rm`.",
+          "xp": 10,
+          "context": "Assume you did not use any extra flags like `--rm`.",
+          "options": [
+            {
+              "id": "image-and-stopped",
+              "text": "The `alpine` image and a stopped container"
+            },
+            {
+              "id": "image-only",
+              "text": "Only the `alpine` image remains on disk",
+              "misconception": "Forgetting that a container is preserved in the Exited state after it finishes unless `--rm` was used."
+            },
+            {
+              "id": "container-only",
+              "text": "Only a stopped container remains; the image is temporary",
+              "misconception": "Thinking Docker discards the image after launching a container, rather than caching it for reuse."
+            },
+            {
+              "id": "nothing",
+              "text": "Nothing remains because Docker performs automatic cleanup",
+              "misconception": "Confusing Docker's default behavior with the `--rm` flag, which is required for automatic removal."
+            }
+          ],
+          "correctOptionId": "image-and-stopped"
+        }
+      ]
+    },
+    {
+      "id": "lesson-configure",
+      "title": "Configuring Containers",
+      "description": "Expose ports, set environment variables, and configure runtime behavior.",
+      "skillNodeId": "node-containers",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-configure-p1",
+          "title": "From Image to Running Service",
+          "teaches": [],
+          "body": "When you bake a cake, the recipe is fixed, but you can still choose the frosting when you serve it. Docker images are similar: they package your application, but the running container often needs last-minute details—like which network port to expose or which database password to use.\n\nIn this lesson, you will learn how to punch holes in the container’s isolation so traffic can reach your app, and how to inject configuration without rebuilding the image."
+        },
+        {
+          "type": "text",
+          "id": "lesson-configure-p2",
+          "title": "Port Mapping: Open the Door",
+          "teaches": [
+            "c-port-mapping"
+          ],
+          "body": "By default, a container lives on its own private network. If your Node.js app listens on port `3000` inside the container, your laptop cannot reach it directly.\n\nPort mapping bridges the gap. When you run a container, you tell Docker to forward traffic from a port on your host machine to a port inside the container.\n\nFor example, imagine you want to run Nginx. You would run `docker run -d -p 8080:80 nginx`. The `-p 8080:80` flag means two things:\n\n- `8080` is the port on your host (your laptop or server)\n- `80` is the port inside the container where Nginx is listening\n\nNow you can open `http://localhost:8080` in your browser. If you had started the container without `-p`, Nginx would still run, but the port would be invisible from the outside.\n\nYou can map multiple ports, and the host port does not have to match the container port. Choosing a high host port like `8080` also lets you avoid permission issues, since ports below `1024` often require administrator rights."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-configure-p3",
+          "prompt": "Which URL reaches the container from your laptop?",
+          "tests": [
+            "c-port-mapping"
+          ],
+          "explanation": "The `-p 9000:3000` flag forwards host port 9000 to container port 3000. Because you are browsing from the host machine, you use the host port (9000) and `localhost`.",
+          "xp": 10,
+          "context": "You just ran the following command on your laptop: `docker run -d -p 9000:3000 my-api`. Inside the container, the application is listening on port 3000.",
+          "options": [
+            {
+              "id": "a",
+              "text": "`http://localhost:3000`",
+              "misconception": "This confuses the container's internal port with the host port; port 3000 is not exposed on your laptop unless you map it to host port 3000."
+            },
+            {
+              "id": "b",
+              "text": "`http://localhost:9000`"
+            },
+            {
+              "id": "c",
+              "text": "`http://3000:9000`",
+              "misconception": "This reverses the host and container ports and uses an invalid URL format; the host port always comes first in the `-p` flag and is the one you browse to."
+            },
+            {
+              "id": "d",
+              "text": "`http://127.0.0.1:80`",
+              "misconception": "This ignores the mapping entirely and assumes the default HTTP port 80 is exposed on the host, which it is not in this command."
+            }
+          ],
+          "correctOptionId": "b"
+        },
+        {
+          "type": "text",
+          "id": "lesson-configure-p4",
+          "title": "Environment Variables: Inject Config at Runtime",
+          "teaches": [
+            "c-env-vars"
+          ],
+          "body": "Hard-coding a database password or API endpoint into your image is risky. Anyone who pulls the image can read those values, and changing them means rebuilding from scratch.\n\nEnvironment variables let you pass configuration when the container starts, keeping secrets and settings out of the image layers.\n\nFor example, to start a PostgreSQL container with a custom superuser password, you run `docker run -e POSTGRES_PASSWORD=secret123 postgres`. The `-e` flag sets an environment variable inside the container. Your application code can read `POSTGRES_PASSWORD` the same way it would on a normal Linux machine—through `process.env` in Node.js or `os.environ` in Python.\n\nYou can stack multiple variables in a single command, such as `docker run -e NODE_ENV=production -e API_KEY=sk-123 my-app`.\n\nBecause these values are supplied at runtime, the same image can behave differently across development, staging, and production without a single Dockerfile change."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-configure-p5",
+          "prompt": "Match each Docker concept or flag to its primary role.",
+          "tests": [
+            "c-port-mapping",
+            "c-env-vars",
+            "c-dockerfile-intro",
+            "c-run-command"
+          ],
+          "explanation": "`-p` maps host ports to container ports; `-e` injects environment variables at runtime; the Dockerfile defines how an image is built; `docker run` creates and starts a new container from an image.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "1",
+              "left": "`-p 8080:80`",
+              "right": "Maps a host port to a container port"
+            },
+            {
+              "id": "2",
+              "left": "`-e API_KEY=123`",
+              "right": "Sets an environment variable at runtime"
+            },
+            {
+              "id": "3",
+              "left": "`Dockerfile`",
+              "right": "Defines instructions to build an image"
+            },
+            {
+              "id": "4",
+              "left": "`docker run`",
+              "right": "Creates and starts a container from an image"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-configure-p6",
+          "prompt": "You need to start a container from the `redis` image and set the environment variable `REDIS_PASSWORD` to `hunter2` so the Redis server can read it at startup. Type the exact `docker run` flag and variable assignment (not the full command).",
+          "tests": [
+            "c-env-vars"
+          ],
+          "explanation": "The `-e` (or `--env`) flag is used with `docker run` to inject an environment variable. You write it as `-e REDIS_PASSWORD=hunter2`.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "-e REDIS_PASSWORD=hunter2",
+            "--env REDIS_PASSWORD=hunter2"
+          ],
+          "hint": "It starts with a single hyphen, followed by the letter `e`, a space, the variable name, an equals sign, and the value."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-configure-p7",
+          "prompt": "In your own words, explain why port mapping is necessary even if a Dockerfile contains an `EXPOSE 80` instruction, and describe why passing a database password via an environment variable with `-e` is safer than baking it into the image with an `ENV` instruction in the Dockerfile.",
+          "tests": [
+            "c-port-mapping",
+            "c-env-vars",
+            "c-dockerfile-intro"
+          ],
+          "explanation": "EXPOSE documents which ports the container uses but does not actually publish them to the host; `-p` is required to create the bridge. Environment variables passed at runtime stay out of the image layers, so secrets are not shipped with the image and can be changed without rebuilding.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "EXPOSE in a Dockerfile is documentation or metadata and does not automatically publish the port to the host.",
+              "Port mapping (`-p`) is required to forward traffic from the host into the container.",
+              "Environment variables set via `-e` at runtime are not stored in the image.",
+              "Hard-coded ENV values in a Dockerfile become permanent layers in the image, exposing secrets to anyone who pulls it.",
+              "Runtime env vars allow the same image to be reused across environments such as dev, staging, and production."
+            ],
+            "commonMisconceptions": [
+              "Thinking that EXPOSE alone makes a service reachable from localhost.",
+              "Believing that `-p` and EXPOSE are interchangeable.",
+              "Claiming that Dockerfile ENV values are private or can be changed at runtime without rebuilding."
+            ],
+            "sampleAnswer": "EXPOSE 80 only tells Docker that the container intends to use port 80; it does not open that port on my laptop. I still need `-p 8080:80` to forward traffic. Passing a password with `-e` keeps it out of the image. If I put it in the Dockerfile with ENV, the secret is baked into the image layer forever, and anyone who downloads the image can see it. Using `-e` also lets me use the same image in dev and prod with different passwords."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-inspect-exec",
+      "title": "Logs, Inspect, and Exec",
+      "description": "View logs, inspect container metadata, and open interactive shells.",
+      "skillNodeId": "node-debug",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-inspect-exec-p1",
+          "title": "Viewing Logs Without Entering the Container",
+          "teaches": [
+            "c-logs-inspect"
+          ],
+          "body": "Use `docker logs` to read everything a container has written to **stdout** or **stderr**.\n\nFor example, if you started a container named `web`:\n\n`docker logs web`\n\nBy default, you see the entire history. If the output is long, add `--tail 50` to see only the last 50 lines, or `-f` to follow new lines as they appear, just like `tail -f`.\n\nWhat if you need more than the log stream? Use `docker inspect` to see metadata: the exact image SHA, start time, environment variables, port bindings, and mount points.\n\n`docker inspect web`\n\nThis returns a JSON array. You will often grep or format it, but for now remember: `docker logs` is for application output, and `docker inspect` is for container configuration and state."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-inspect-exec-p2",
+          "prompt": "Which command do you use to see the last 20 lines of output from a running container named `api`?",
+          "tests": [
+            "c-logs-inspect"
+          ],
+          "explanation": "`docker logs --tail 20 api` reads the container's stdout/stderr history. `docker inspect` shows JSON metadata, not application output, and `docker exec` runs a new command rather than reading existing logs.",
+          "xp": 10,
+          "context": "You are debugging a Node.js service. The container is still running, but the API is returning errors.",
+          "options": [
+            {
+              "id": "inspect",
+              "text": "`docker inspect --last 20 api`",
+              "misconception": "Confuses `docker inspect` (metadata JSON) with `docker logs` (stdout/stderr), and invents a nonexistent `--last` flag."
+            },
+            {
+              "id": "exec",
+              "text": "`docker exec api tail -20`",
+              "misconception": "Assumes you must enter the container to read logs, missing that Docker already captures stdout/stderr for you via `docker logs`."
+            },
+            {
+              "id": "logs",
+              "text": "`docker logs --tail 20 api`"
+            },
+            {
+              "id": "run",
+              "text": "`docker run --tail 20 api`",
+              "misconception": "Believes `docker run` can be used on an existing container to fetch logs; `docker run` creates a brand new container from an image."
+            }
+          ],
+          "correctOptionId": "logs"
+        },
+        {
+          "type": "text",
+          "id": "lesson-inspect-exec-p3",
+          "title": "Running Commands Inside a Live Container",
+          "teaches": [
+            "c-exec-shell"
+          ],
+          "body": "Sometimes a log message is not enough. You need to look around inside a running container: check a config file, run a database migration, or debug a network issue.\n\nThe `docker exec` command starts a new process inside an existing container.\n\n`docker exec api ls /app`\n\nThis runs `ls /app` in the container named `api` without disturbing the main application.\n\nTo open an interactive shell, add `-it`:\n\n`docker exec -it api bash`\n\nThe `-i` keeps **stdin** open, and `-t` allocates a pseudo-terminal so that prompts and colors work correctly.\n\nImportant: `docker exec` only works if the container is running. If the container is stopped, its filesystem is still on disk, but there is no live environment to execute a new process in."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-inspect-exec-p4",
+          "prompt": "Type the command to open an interactive `sh` shell inside the running container named `worker`.",
+          "tests": [
+            "c-exec-shell"
+          ],
+          "explanation": "`docker exec -it worker sh` starts a new interactive shell process inside the existing `worker` container. The `-i` and `-t` flags are needed for an interactive terminal experience.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "docker exec -it worker sh",
+            "docker exec -i -t worker sh",
+            "docker exec -it worker /bin/sh",
+            "docker exec -i -t worker /bin/sh"
+          ],
+          "hint": "You need three parts: the exec command, flags for interactivity, the container name, and the shell program."
+        },
+        {
+          "type": "text",
+          "id": "lesson-inspect-exec-p5",
+          "title": "A Quick Check Before You Proceed",
+          "teaches": [],
+          "body": "Before you practice, keep two boundaries in mind.\n\n`docker run` creates a **new** container from an image. `docker exec` adds a process to an **existing** running container.\n\n`docker logs` reads output the main process already produced. `docker exec` runs something new.\n\nMixing these up is a common source of confusion. When you want to debug a live service, reach for `exec` and `logs`; when you want to launch a fresh instance, reach for `run`."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-inspect-exec-p6",
+          "prompt": "Match each task to the command that best completes it.",
+          "tests": [
+            "c-logs-inspect",
+            "c-exec-shell",
+            "c-run-command",
+            "c-images-vs-containers"
+          ],
+          "explanation": "`docker run` creates a new container; `docker logs` reads captured output; `docker inspect` returns metadata; `docker exec` runs a new process inside an existing container.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "launch",
+              "left": "Launch a brand new container from an image",
+              "right": "`docker run`"
+            },
+            {
+              "id": "read-output",
+              "left": "Read stdout/stderr of the main process",
+              "right": "`docker logs`"
+            },
+            {
+              "id": "metadata",
+              "left": "View JSON metadata about a container",
+              "right": "`docker inspect`"
+            },
+            {
+              "id": "shell",
+              "left": "Start an interactive shell in a running container",
+              "right": "`docker exec`"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-inspect-exec-p7",
+          "prompt": "Explain the difference between `docker run` and `docker exec`. In your answer, describe when you would choose each one.",
+          "tests": [
+            "c-exec-shell",
+            "c-run-command",
+            "c-container-lifecycle",
+            "c-images-vs-containers"
+          ],
+          "explanation": "`docker run` creates a fresh container from an image, starting the defined command as the main process (PID 1). `docker exec` starts an additional process inside an already running container. You use `run` to launch services and `exec` to debug or administer them without disrupting the main process.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "`docker run` creates a new container from an image.",
+              "`docker exec` runs a command in an existing, running container.",
+              "`docker run` starts the container's main process; `docker exec` starts an auxiliary process.",
+              "Use `run` to launch a service; use `exec` for debugging or administrative tasks."
+            ],
+            "commonMisconceptions": [
+              "Claiming that `docker exec` can start a new container from an image.",
+              "Saying that `docker run` can enter an already running container.",
+              "Believing that `docker exec` replaces or restarts the container's main process."
+            ],
+            "sampleAnswer": "`docker run` creates a brand new container from an image and starts its main process. I use it when I want to launch a service. `docker exec` starts an extra process inside an already running container. I use it when I need to debug, inspect files, or run a one-off command without disturbing the main application."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-health-monitor",
+      "title": "Container Health & Monitoring",
+      "description": "Use built-in stats, health checks, and top to diagnose issues.",
+      "skillNodeId": "node-debug",
+      "estimatedMinutes": 20,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-health-monitor-p1",
+          "title": "Spotting Trouble with docker stats and docker top",
+          "teaches": [
+            "c-debug-commands"
+          ],
+          "body": "When a teammate says, \"The service feels slow,\" your first move is to see what the container is actually doing right now.\n\n`docker stats` shows a live stream of every running container’s CPU, memory, network, and disk usage. Imagine you have a container named `api`. Open a second terminal and run:\n\n`docker stats api`\n\nYou will see columns like `CPU %`, `MEM USAGE / LIMIT`, and `NET I/O` update every second. If `CPU %` stays near 100, the container is working hard—or stuck in a loop.\n\nTo see exactly which processes are running inside, use `docker top`. Run:\n\n`docker top api`\n\nThis prints the process IDs, users, and commands as seen from the host. If you see dozens of unexpected `python` processes, you have found a runaway script.\n\nThese commands give you real-time data without stopping or entering the container."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-health-monitor-p2",
+          "prompt": "You notice a container named `worker` is sluggish. Which command shows you the live memory and CPU usage for only that container?",
+          "tests": [
+            "c-debug-commands"
+          ],
+          "explanation": "`docker stats` streams live resource metrics. `docker top` lists processes, `docker inspect` shows metadata, and `docker logs` shows output.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "stats",
+              "text": "`docker stats worker`"
+            },
+            {
+              "id": "top",
+              "text": "`docker top worker`",
+              "misconception": "Confuses process listing with resource metrics; docker top shows running processes, not live CPU or memory consumption."
+            },
+            {
+              "id": "inspect",
+              "text": "`docker inspect worker`",
+              "misconception": "Inspect returns static configuration and state metadata, not a live resource stream."
+            },
+            {
+              "id": "logs",
+              "text": "`docker logs worker`",
+              "misconception": "Shows log output from the application; logs do not display CPU or memory statistics."
+            }
+          ],
+          "correctOptionId": "stats"
+        },
+        {
+          "type": "text",
+          "id": "lesson-health-monitor-p3",
+          "title": "Automated Safety Checks with HEALTHCHECK",
+          "teaches": [
+            "c-health-checks"
+          ],
+          "body": "Real-time commands are great, but you do not want to stare at terminals all day. Docker can run automatic health checks to report whether a container is truly ready.\n\nIn a Dockerfile, add a `HEALTHCHECK` instruction to define a test Docker runs periodically. Here is an example for a web service listening on port 8080:\n\n`HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD curl -f http://localhost:8080/health || exit 1`\n\nDocker runs this command inside the container every 30 seconds. If it fails 3 times in a row, the container is marked `unhealthy`. The `start-period` gives the application 5 seconds to warm up before failures count.\n\nYou can also add a health check when you run a container:\n\n`docker run --health-cmd=\"curl -f http://localhost:8080/health\" --health-interval=10s myapp`\n\nCheck the current health status with `docker ps`. The `STATUS` column shows `(health: starting)`, `(healthy)`, or `(unhealthy)`. Orchestrators use this signal to restart or reroute traffic automatically."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-health-monitor-p4",
+          "prompt": "Match each health-check element to its role.",
+          "tests": [
+            "c-health-checks"
+          ],
+          "explanation": "The interval controls probe frequency, retries set the failure threshold, start-period allows warm-up, CMD defines the test, and `docker ps` exposes the result.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "interval",
+              "left": "--interval=30s",
+              "right": "How often Docker runs the probe"
+            },
+            {
+              "id": "retries",
+              "left": "--retries=3",
+              "right": "Consecutive failures needed to mark unhealthy"
+            },
+            {
+              "id": "start-period",
+              "left": "--start-period=5s",
+              "right": "Grace time for the app to boot before failures count"
+            },
+            {
+              "id": "cmd",
+              "left": "CMD curl -f ... || exit 1",
+              "right": "The actual test command run inside the container"
+            },
+            {
+              "id": "status",
+              "left": "`docker ps` STATUS column",
+              "right": "Displays starting, healthy, or unhealthy"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "lesson-health-monitor-p5",
+          "title": "From Red Flags to Root Cause",
+          "teaches": [],
+          "body": "Picture this: your health check starts failing on a container named `billing-api`. `docker ps` shows `(unhealthy)`. What do you do next?\n\nFirst, run `docker stats billing-api`. If memory usage is climbing toward its limit, the process might be leaking memory. Then run `docker top billing-api` to see whether extra helper processes were spawned accidentally. Finally, use `docker logs billing-api` to read the exact error the health-check curl command received.\n\nMonitoring and health checks are not just dashboards—they are a debugging workflow. You move from the high-level status color to the specific process or resource causing the problem."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-health-monitor-p6",
+          "prompt": "In `docker ps`, a brand-new container with a health check shows `(health: starting)` before the first probe runs. What is the health status word inside those parentheses?",
+          "tests": [
+            "c-health-checks"
+          ],
+          "explanation": "Docker labels the container `(health: starting)` until the first health check completes. After that, it becomes `(healthy)` or `(unhealthy)`.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "starting"
+          ],
+          "hint": "It is the same state that means 'not yet checked'."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-health-monitor-p7",
+          "prompt": "Explain the difference between `docker stats`, `docker top`, and a Dockerfile `HEALTHCHECK`. When would you reach for each one during a typical day?",
+          "tests": [
+            "c-debug-commands",
+            "c-health-checks"
+          ],
+          "explanation": "Each tool has a distinct job: stats for resources, top for processes, and HEALTHCHECK for automated pass/fail status over time.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "`docker stats` provides live resource metrics like CPU, memory, and network for running containers.",
+              "`docker top` shows the processes running inside a container from the host perspective.",
+              "A Dockerfile `HEALTHCHECK` is an automated, periodic test that marks a container as healthy or unhealthy.",
+              "They serve different purposes: HEALTHCHECK for ongoing automated status; stats and top for real-time manual diagnosis when something is wrong."
+            ],
+            "commonMisconceptions": [
+              "`docker top` shows resource usage like `docker stats`.",
+              "HEALTHCHECK is only for orchestrators and invisible in `docker ps`.",
+              "`docker stats` requires entering the container with `docker exec`."
+            ],
+            "sampleAnswer": "`docker stats` streams live CPU, memory, and network numbers so I can spot resource pressure immediately. `docker top` lists the actual processes inside the container, which helps me identify runaway or zombie processes. A Dockerfile `HEALTHCHECK` is an automatic probe that runs repeatedly and labels the container healthy or unhealthy in `docker ps`, giving me a passive signal I can trust before routing traffic. I rely on HEALTHCHECK for day-to-day automation, and I reach for stats and top only when HEALTHCHECK turns red or a teammate reports slowness."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-networking",
+      "title": "Container Networking Basics",
+      "description": "Create bridge networks so containers communicate securely.",
+      "skillNodeId": "node-networks",
+      "estimatedMinutes": 20,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-networking-p1",
+          "title": "Why Containers Need a Custom Bridge Network",
+          "teaches": [
+            "c-bridge-networks"
+          ],
+          "body": "Imagine you are running two containers on the same machine: a `web` container and a `db` container. By default, Docker puts every container on a built-in network called the **default bridge**.\n\nIf `web` wants to talk to `db`, it could try using the database container's IP address. But there is a problem: the IP address changes every time the `db` container restarts. Hard-coding an IP address is fragile and breaks your service after a simple `docker restart`.\n\nA **custom bridge network** solves this. When you create your own bridge network and attach both containers to it, Docker gives each container a stable DNS name that matches its container name. On that network, `web` can reach `db` simply by using the hostname `db`. The containers can also communicate securely without exposing ports to the host machine, keeping internal traffic off your computer's network interfaces."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-networking-p2",
+          "prompt": "What is the main drawback of relying on the default bridge network for container-to-container communication?",
+          "tests": [
+            "c-bridge-networks"
+          ],
+          "explanation": "On the default bridge, containers receive dynamic IP addresses. When a container restarts, its IP usually changes, so any service hard-coding that IP will fail. Custom bridge networks provide DNS names that stay stable across restarts.",
+          "xp": 10,
+          "context": "You have started a `postgres` container and an `api` container on a fresh Docker installation. The `api` container needs to reach `postgres`.",
+          "options": [
+            {
+              "id": "ip-changes",
+              "text": "The target container's IP address changes when it restarts, breaking hard-coded connections."
+            },
+            {
+              "id": "no-communication",
+              "text": "Containers on the default bridge cannot communicate with each other at all.",
+              "misconception": "Containers on the default bridge can communicate using IP addresses; they are not completely isolated from each other."
+            },
+            {
+              "id": "must-map-ports",
+              "text": "You must publish the database port to the host with -p for the containers to communicate.",
+              "misconception": "Port mapping is only needed to expose a container to the host or external network, not for internal default-bridge traffic between containers."
+            },
+            {
+              "id": "needs-dockerfile",
+              "text": "You need a Dockerfile that declares the dependency before the containers can communicate.",
+              "misconception": "A Dockerfile defines how an image is built; it has no effect on runtime networking between containers."
+            }
+          ],
+          "correctOptionId": "ip-changes"
+        },
+        {
+          "type": "text",
+          "id": "lesson-networking-p3",
+          "title": "Creating and Attaching Containers to a Bridge Network",
+          "teaches": [],
+          "body": "Here is how you create a custom bridge network and put containers on it.\n\nFirst, create the network:\n\n`docker network create my-app-net`\n\nNow start your database container and attach it directly:\n\n`docker run -d --name db --network my-app-net -e POSTGRES_PASSWORD=secret postgres`\n\nThen start your application container on the same network:\n\n`docker run -d --name api --network my-app-net my-api-image`\n\nBecause both containers are on `my-app-net`, the `api` container can reach the database using the hostname `db` and the standard PostgreSQL port `5432`. You do **not** need to publish port `5432` to the host with `-p` for this internal communication to work. Docker's embedded DNS server resolves the name `db` to the correct container IP automatically.\n\nIf you inspect the network with `docker network inspect my-app-net`, you will see both containers listed as connected endpoints."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-networking-p4",
+          "prompt": "Match each Docker command to its effect when working with bridge networks.",
+          "tests": [
+            "c-bridge-networks",
+            "c-docker-cli"
+          ],
+          "explanation": "`docker network create` makes the custom bridge, `--network` attaches a container at runtime, `docker network ls` shows available networks, and `docker network inspect` reveals which containers are connected and their IP addresses.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "create",
+              "left": "docker network create my-net",
+              "right": "Creates a new custom bridge network named my-net"
+            },
+            {
+              "id": "attach",
+              "left": "docker run --network my-net ...",
+              "right": "Attaches a new container to the existing my-net bridge"
+            },
+            {
+              "id": "list",
+              "left": "docker network ls",
+              "right": "Lists all networks on the Docker host"
+            },
+            {
+              "id": "inspect",
+              "left": "docker network inspect my-net",
+              "right": "Shows detailed configuration and connected containers for my-net"
+            }
+          ]
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-networking-p5",
+          "title": "DNS Resolution on a Custom Bridge Network",
+          "teaches": [],
+          "intro": "Containers on a custom bridge can find each other by name instead of by IP address.",
+          "mermaid": "flowchart LR\n    A[\"Container: api\"] -->|\"Uses hostname db\"| B[\"Bridge: my-app-net\"]\n    B -->|\"DNS resolves to\"| C[\"Container: db\"]",
+          "caption": "Notice that the `api` container reaches the other container by its name, `db`. The custom bridge network acts as the DNS resolver and router, so the actual IP address behind `db` can change without breaking the connection."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-networking-p6",
+          "prompt": "You are starting a container named `web` and you want to attach it to an existing custom bridge network called `frontend`. What flag (and value) do you append to the `docker run` command?",
+          "tests": [
+            "c-bridge-networks",
+            "c-run-command"
+          ],
+          "explanation": "The `--network` flag (or its shorthand `--net`) tells Docker which bridge network the container should join. For example: `docker run -d --name web --network frontend my-image`.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "--network frontend",
+            "--net frontend",
+            "--network=frontend",
+            "--net=frontend"
+          ],
+          "hint": "The flag is `--network` followed by the network name."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-networking-p7",
+          "prompt": "Your teammate asks why you created a custom bridge network called `app-net` instead of just using Docker's default bridge network for a multi-container application. Explain the key advantages of using a custom bridge network in your own words.",
+          "tests": [
+            "c-bridge-networks"
+          ],
+          "explanation": "Custom bridge networks provide automatic DNS resolution by container name, isolate your application's traffic from unrelated containers, and remove the need to hard-code IP addresses that change across restarts.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Automatic DNS resolution allows containers to reach each other by stable container name instead of IP address.",
+              "Custom bridges isolate the application containers from other unrelated containers on the host.",
+              "Containers on a custom bridge can communicate internally without publishing ports to the host."
+            ],
+            "commonMisconceptions": [
+              "Claiming that custom bridges increase internet download speed or bandwidth.",
+              "Believing that port mapping (-p) is still required for container-to-container communication inside the same custom bridge.",
+              "Thinking that custom bridge networks are only for Docker Compose or Swarm and unavailable for plain docker run."
+            ],
+            "sampleAnswer": "A custom bridge network gives each container a stable DNS name based on its container name, so I can connect to the database using 'db' instead of a changing IP address. It also keeps my app's containers isolated from other projects on the same Docker host. Plus, internal traffic stays internal—I don't have to expose the database port to the host machine with -p just so two containers can talk."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-volumes",
+      "title": "Managing Data with Volumes",
+      "description": "Persist data with named volumes and bind mounts.",
+      "skillNodeId": "node-networks",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-volumes-p1",
+          "title": "Why Container Data Disappears",
+          "teaches": [
+            "c-named-volumes"
+          ],
+          "body": "By default, anything you write inside a container disappears when the container is removed. Imagine you start a Postgres container and add customer records. If you stop and remove that container, your database vanishes.\n\n**Named volumes** solve this. A named volume is a persistent storage bucket managed by Docker on your host. You create it by adding `-v volumeName:/container/path` to your `docker run` command.\n\nFor example:\n\n`docker run -d -v pgdata:/var/lib/postgresql/data postgres`\n\nDocker stores the volume data in its own managed area on the host, usually under `/var/lib/docker/volumes/`. The volume survives after the container stops or is deleted, and you can mount `pgdata` into a new container later. This keeps your data safe without you ever needing to know the exact host path."
+        },
+        {
+          "type": "text",
+          "id": "lesson-volumes-p2",
+          "title": "Sync Code Instantly with Bind Mounts",
+          "teaches": [
+            "c-bind-mounts"
+          ],
+          "body": "While named volumes are great for data you want Docker to manage, **bind mounts** are perfect when you need direct access from your host.\n\nA bind mount maps a specific host path to a path inside the container. If you are developing a Node.js app in `/home/dev/myapp` and want the container to see every edit instantly, you run:\n\n`docker run -v /home/dev/myapp:/app node:18`\n\nBecause the container reads directly from your host folder, any change you make in your editor is immediately visible inside the container. Unlike named volumes, you control the exact host location. Be careful: if the host directory is empty, the container will see an empty folder at that path, hiding any files that were built into the image."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-volumes-p3",
+          "title": "Named Volumes vs Bind Mounts",
+          "teaches": [],
+          "intro": "This diagram shows how data flows into a container for each storage strategy.",
+          "mermaid": "flowchart LR\n    HostFolder[Host Folder] --> BindMount[Bind Mount]\n    BindMount --> ContainerApp[Container /app]\n    DockerVol[Docker Volume] --> NamedVol[Named Volume]\n    NamedVol --> ContainerData[Container /data]\n    Ephemeral[Container Layer] --> Lost[Data Lost on Exit]",
+          "caption": "Notice how bind mounts create a direct bridge from your host filesystem, while named volumes route through Docker-managed storage."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-volumes-p4",
+          "prompt": "You run a Postgres container with `docker run -v pgdata:/var/lib/postgresql/data postgres`. You then remove the container with `docker rm`. What happens to the database files?",
+          "tests": [
+            "c-named-volumes"
+          ],
+          "explanation": "Named volumes are stored outside the container's lifecycle. Removing the container does not delete `pgdata`, so you can safely attach it to a new Postgres container later.",
+          "xp": 10,
+          "context": "You are managing a database inside a Docker container and want to ensure the data survives container removal.",
+          "options": [
+            {
+              "id": "persist",
+              "text": "They persist in the named volume `pgdata` and can be mounted into a new container."
+            },
+            {
+              "id": "deleted",
+              "text": "They are deleted along with the container because containers are ephemeral.",
+              "misconception": "This confuses the container's writable layer with a named volume. Named volumes exist outside the container lifecycle and are not deleted when the container is removed."
+            },
+            {
+              "id": "copied",
+              "text": "They are copied to your host machine's current directory in a folder named `pgdata`.",
+              "misconception": "This describes a bind mount behavior, not a named volume. Named volumes are managed by Docker in its internal storage area, not your current directory."
+            },
+            {
+              "id": "layer",
+              "text": "They remain in the container's writable layer but become inaccessible after removal.",
+              "misconception": "The writable layer is removed along with the container. Named volumes store data separately from the container's filesystem."
+            }
+          ],
+          "correctOptionId": "persist"
+        },
+        {
+          "type": "text",
+          "id": "lesson-volumes-p5",
+          "title": "Watch Out: Bind Mounts Can Hide Container Files",
+          "teaches": [],
+          "body": "Bind mounts are powerful, but they can behave unexpectedly when the host folder already has files—or does not.\n\nSuppose your image copies application code into `/app` during the build. If you then run:\n\n`docker run -v $(pwd):/app myimage`\n\nand your current directory on the host is empty, the container sees an empty `/app`. The bind mount overlays the host folder on top of the container path, hiding the original image contents.\n\nThis is useful when you want to replace built files with live source code, but confusing if you expect the image files to remain visible. Always check that the host path contains what the container needs before using a bind mount."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-volumes-p6",
+          "prompt": "Match each Docker storage concept to its correct description.",
+          "tests": [
+            "c-named-volumes",
+            "c-bind-mounts"
+          ],
+          "explanation": "`-v mydata:/data` uses a named volume because only the volume name and container path are provided. `-v /host/code:/app` uses a bind mount because a full host path is specified. Named volumes are Docker-managed, while bind mounts directly reference the host filesystem.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "named",
+              "left": "Named volume",
+              "right": "Docker-managed storage that persists after a container is removed"
+            },
+            {
+              "id": "bind",
+              "left": "Bind mount",
+              "right": "Directly links a host path to a container path"
+            },
+            {
+              "id": "cmd-named",
+              "left": "`-v mydata:/data`",
+              "right": "Uses a named volume"
+            },
+            {
+              "id": "cmd-bind",
+              "left": "`-v /host/code:/app`",
+              "right": "Uses a bind mount"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-volumes-p7",
+          "prompt": "To directly share a folder from your host machine into a container, you use a **______ mount**. Type the single missing word.",
+          "tests": [
+            "c-bind-mounts"
+          ],
+          "explanation": "A bind mount maps a specific host directory into a container. This is different from a named volume, which is managed by Docker and does not require you to specify a host path.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "bind"
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-volumes-p8",
+          "prompt": "Explain the difference between a named volume and a bind mount. In your answer, describe a specific scenario where you would choose each one for a web development project.",
+          "tests": [
+            "c-named-volumes",
+            "c-bind-mounts"
+          ],
+          "explanation": "Named volumes are managed by Docker and abstract away the host path, making them ideal for databases and persistent state. Bind mounts directly expose a host path to the container, making them ideal for live development workflows where you edit code on your machine and see changes instantly inside the container.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Named volumes are managed by Docker in an internal host directory and persist data independently of containers.",
+              "Bind mounts directly map a specific host path to a container path, giving the developer full control over the files.",
+              "Named volumes are ideal for production data like databases where the host path does not matter.",
+              "Bind mounts are ideal for development workflows where the developer needs direct access to source files from the host."
+            ],
+            "commonMisconceptions": [
+              "Believing that named volumes are stored inside the container image.",
+              "Thinking that bind mounts copy files rather than referencing the same host files.",
+              "Claiming that named volumes require the container to be running to exist."
+            ],
+            "sampleAnswer": "A named volume is a persistent storage bucket managed by Docker, typically used for data like databases that must survive container restarts. A bind mount is a direct bridge between a folder on my host and a path in the container, which I use during development to see code changes immediately. I would use a named volume for a Postgres database so Docker handles the storage location, and a bind mount for my React source code so I can edit files in VS Code and see updates instantly in the browser."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-compose-basics",
+      "title": "Docker Compose Fundamentals",
+      "description": "Define and run multi-container apps with Docker Compose.",
+      "skillNodeId": "node-compose",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-compose-basics-p1",
+          "title": "The Problem With Manual `docker run`",
+          "teaches": [
+            "c-compose-intro"
+          ],
+          "body": "Imagine you join a team whose local development stack has three parts: a Node.js API, a Postgres database, and a Redis cache.\n\nEvery morning you open the README and copy-paste three separate `docker run` commands. Each one is a dozen lines long with flags like `--network`, `-p`, `-e`, and `-v`. If you forget one flag or get an order wrong, the API cannot reach the database and you spend your morning debugging a typo.\n\nDocker Compose exists to remove exactly this friction.\n\n**Docker Compose** lets you define an entire multi-container application in a single YAML file—usually `compose.yaml`. Instead of memorizing multiple `docker run` commands, you declare the whole stack and start it with one command.\n\nThat file can live in version control, be reviewed in pull requests, and shared with every teammate. Everyone runs the exact same configuration, and no one has to hunt for the right flags."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-compose-basics-p2",
+          "prompt": "You just joined a team with a web API, a Postgres database, and a Redis cache. The README currently lists three long `docker run` commands with many flags. What is the main benefit of moving this setup into a `compose.yaml` file?",
+          "tests": [
+            "c-compose-intro"
+          ],
+          "explanation": "Docker Compose is designed to orchestrate multi-container applications declaratively. By defining the stack in `compose.yaml`, you replace multiple error-prone `docker run` commands with a single reproducible command: `docker compose up`.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "declarative",
+              "text": "You define the entire stack in one file and start everything with a single command like `docker compose up`, ensuring every teammate runs the exact same configuration."
+            },
+            {
+              "id": "dockerfiles",
+              "text": "Compose analyzes your source code and automatically generates optimized Dockerfiles so you no longer need to write them.",
+              "misconception": "Confuses Compose with a build generator; Compose orchestrates containers but does not replace or auto-generate Dockerfiles."
+            },
+            {
+              "id": "supercontainer",
+              "text": "It merges all containers into one lightweight super-container so they share a single process namespace.",
+              "misconception": "Mistakenly believes Compose collapses services into a single container; Compose keeps each service as a separate container."
+            },
+            {
+              "id": "daemon",
+              "text": "Compose replaces the Docker daemon with its own background service that uses fewer system resources.",
+              "misconception": "Confuses Compose with the Docker Engine; Compose is a client tool that still talks to the existing Docker daemon."
+            }
+          ],
+          "correctOptionId": "declarative"
+        },
+        {
+          "type": "text",
+          "id": "lesson-compose-basics-p3",
+          "title": "Defining Services in `compose.yaml`",
+          "teaches": [
+            "c-compose-services"
+          ],
+          "body": "The heart of a Compose file is the `services:` key. Everything you previously typed into a `docker run` command—image, ports, environment variables, and volumes—now lives inside a named service block.\n\nThink of a **service** as a recipe for one container. Under `services:`, each top-level name like `web` or `db` becomes a service. Compose turns that recipe into a running container.\n\nConsider a two-service stack:\n\n- `web` uses the image `my-api:1.2`, maps host port `8080` to container port `80`, and sets an environment variable `DB_HOST=db`.\n- `db` uses the image `postgres:15` and mounts a named volume called `pgdata` at `/var/lib/postgresql/data`.\n\nWhen you run `docker compose up`, Compose reads both service definitions and tells the Docker Engine to start two containers on a default bridge network. You do not need to create the network or remember long `docker run` commands."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-compose-basics-p4",
+          "prompt": "In a `compose.yaml` file, what is the exact top-level key that groups the definitions for your app's containers, such as `web` and `db`?",
+          "tests": [
+            "c-compose-services"
+          ],
+          "explanation": "The `services:` key is the root block in a Compose file. Each entry underneath it defines a service that Docker Compose turns into a container.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "services",
+            "services:"
+          ],
+          "hint": "The key is plural and appears at the root of the file, above the individual container names."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-compose-basics-p5",
+          "title": "From YAML to Running Containers",
+          "teaches": [],
+          "intro": "Docker Compose translates your declarative file into real Docker resources.",
+          "mermaid": "flowchart TD\n    A[compose.yaml] --> B[Docker Compose CLI]\n    B --> C[Docker Engine]\n    C --> D[web container]\n    C --> E[db container]\n    C --> F[shared network]\n    C --> G[named volume]",
+          "caption": "Notice that one Compose file drives multiple containers, a default bridge network, and any declared volumes. You do not have to create each resource with separate CLI commands."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-compose-basics-p6",
+          "prompt": "Match each Compose directive to what it configures in the resulting container or file.",
+          "tests": [
+            "c-compose-services",
+            "c-port-mapping",
+            "c-env-vars",
+            "c-named-volumes",
+            "c-images-vs-containers"
+          ],
+          "explanation": "The `services:` key groups container definitions. Inside each service, `image` picks the base image, `ports` handles port mapping, `environment` sets env vars, and `volumes` mounts storage.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "svc",
+              "left": "services:",
+              "right": "Top-level section that defines each container as a named service"
+            },
+            {
+              "id": "img",
+              "left": "image: redis:7",
+              "right": "Specifies the base image used to create the service container"
+            },
+            {
+              "id": "prt",
+              "left": "ports: - \"8080:80\"",
+              "right": "Publishes a container port to a port on the Docker host"
+            },
+            {
+              "id": "env",
+              "left": "environment: - LOG_LEVEL=debug",
+              "right": "Injects an environment variable into the container at runtime"
+            },
+            {
+              "id": "vol",
+              "left": "volumes: - db_data:/var/lib/postgresql/data",
+              "right": "Mounts a named volume into the container to persist data"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-compose-basics-p7",
+          "prompt": "A new teammate sees the team's `compose.yaml` and asks: 'Why don't we just use a shell script with three `docker run` commands? And what exactly is a service in this file?' Write a short explanation in your own words.",
+          "tests": [
+            "c-compose-intro",
+            "c-compose-services"
+          ],
+          "explanation": "Compose provides a declarative, version-controlled way to run multi-container stacks reliably. A service is a named container definition under the `services:` key.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Compose declares the whole multi-container stack in a single file.",
+              "A single command like `docker compose up` creates or updates everything consistently.",
+              "A service is a named definition under the `services:` key that describes one container's image, ports, env vars, etc.",
+              "Using a declarative file avoids error-prone manual `docker run` commands."
+            ],
+            "commonMisconceptions": [
+              "Confusing a service with a Docker image or Dockerfile.",
+              "Thinking Compose replaces the Docker Engine or daemon.",
+              "Believing a service is a physical or cloud server rather than a container definition."
+            ],
+            "sampleAnswer": "We use `compose.yaml` because it declares our entire stack—web, database, and cache—in one place. Instead of remembering three long `docker run` commands, we run `docker compose up` and everyone gets the same setup. Inside the file, a service is a named block like `web` or `db` under the `services:` key. It tells Docker which image to use, which ports to open, and what environment variables to set. Each service becomes one container when Compose talks to the Docker daemon."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-workflow",
+      "title": "End-to-End Team Service Workflow",
+      "description": "Apply a structured workflow to debug a team service.",
+      "skillNodeId": "node-compose",
+      "estimatedMinutes": 25,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-workflow-p1",
+          "title": "A Structured Way to Debug Team Services",
+          "teaches": [
+            "c-debug-workflow"
+          ],
+          "body": "Imagine you join your team's standup and hear: \"The payment service is acting weird.\" Before you start frantically typing commands, you need a structured debugging workflow. Jumping straight into a container without a plan usually wastes time.\n\nHere is the workflow you will use:\n\n- **Observe and define symptoms.** What exactly is failing? Is the container crashing? Is the API returning 500s? Is it a networking issue? Write down the specific symptom.\n\n- **Inspect configuration and logs.** Check how the container was started. Look at `docker logs` and `docker inspect` output. Verify environment variables, port mappings, and mounted volumes.\n\n- **Check networking and resources.** Confirm the container is on the right bridge network. Make sure ports are mapped correctly. Check disk and memory with `docker stats` and `docker system df`.\n\n- **Reproduce and isolate.** Can you trigger the bug again? Try running a minimal version of the service locally. Use `docker exec` to run tests inside the container.\n\n- **Fix, rebuild, and verify.** Update the code or configuration. Rebuild the image if needed. Start a fresh container and confirm the symptom is gone.\n\nThis workflow turns chaotic firefighting into repeatable detective work."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-workflow-p2",
+          "title": "The Debugging Workflow Visualized",
+          "teaches": [
+            "c-debug-workflow"
+          ],
+          "intro": "Follow the arrows from symptom to solution.",
+          "mermaid": "flowchart TD\n    A[Observe Symptoms] --> B[Inspect Logs & Config]\n    B --> C[Check Network & Resources]\n    C --> D[Reproduce & Isolate]\n    D --> E[Fix & Verify]",
+          "caption": "Notice that each step feeds into the next. You never jump straight to Fix without first isolating the real cause."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-workflow-p3",
+          "prompt": "Your teammate messages you: \"The user-service container keeps restarting.\" Which step of the structured debugging workflow should you perform first?",
+          "tests": [
+            "c-debug-workflow"
+          ],
+          "explanation": "The first step is always to observe and clearly define the symptom. Knowing that the container is restarting tells you what to look for in logs and configuration, but you must start by understanding the exact failure mode.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "inspect-logs",
+              "text": "Run `docker logs` on the container to find the crash reason.",
+              "misconception": "This skips the crucial observation phase. You will eventually inspect logs, but first you need to confirm the symptom and how it manifests."
+            },
+            {
+              "id": "restart-container",
+              "text": "Immediately restart the container with `docker restart`.",
+              "misconception": "Restarting can destroy evidence of the failure. The workflow requires understanding the problem before attempting a fix."
+            },
+            {
+              "id": "observe-symptoms",
+              "text": "Confirm exactly what 'restarting' means and when it happens."
+            },
+            {
+              "id": "exec-debug",
+              "text": "Use `docker exec` to open a shell inside the container.",
+              "misconception": "If the container is continuously restarting, you may not be able to exec into it. More importantly, this is not the first step of the workflow."
+            }
+          ],
+          "correctOptionId": "observe-symptoms"
+        },
+        {
+          "type": "text",
+          "id": "lesson-workflow-p4",
+          "title": "Workflow in Action: A Crashing Container",
+          "teaches": [],
+          "body": "Let's apply the workflow to a real scenario. Your team's `order-api` container exits immediately after start.\n\n- **Step 1: Observe.** The container status flaps from `Up` to `Exited (1)` every few seconds.\n\n- **Step 2: Inspect.** You run `docker logs order-api` and see: `ModuleNotFoundError: No module named 'flask'`. You then run `docker inspect order-api` and confirm the image tag is `order-api:latest` and the correct environment variables are set.\n\n- **Step 3: Check resources and networking.** The database container on the same bridge network is healthy. Port mapping `8000:8000` is present. Disk space is fine.\n\n- **Step 4: Reproduce.** You check the Dockerfile in the repo and realize a teammate accidentally removed `pip install -r requirements.txt` in the last commit. You build the image locally and the error persists—great, you've isolated it.\n\n- **Step 5: Fix and verify.** You restore the install instruction, rebuild the image, run a new container, and hit `localhost:8000/health`. It returns `200 OK`.\n\nThe workflow kept you from randomly rebuilding or blaming the network."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-workflow-p5",
+          "prompt": "Match each symptom to the debugging action that best fits the structured workflow.",
+          "tests": [
+            "c-debug-workflow",
+            "c-logs-inspect",
+            "c-port-mapping",
+            "c-bind-mounts",
+            "c-exec-shell"
+          ],
+          "explanation": "Each symptom points to a specific investigation step. Notice how the workflow guides you to the right tool: logs for crashes, inspect for configuration, port mapping for connectivity, bind mounts for missing files, and exec for runtime debugging.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "crash",
+              "left": "Container exits immediately on start",
+              "right": "Read `docker logs` to find the error"
+            },
+            {
+              "id": "connection",
+              "left": "Cannot reach service from browser on host",
+              "right": "Verify port mapping in `docker inspect`"
+            },
+            {
+              "id": "config",
+              "left": "Application says config file is missing",
+              "right": "Check the bind mount path for typos"
+            },
+            {
+              "id": "runtime",
+              "left": "Need to check which packages are installed",
+              "right": "Use `docker exec` to inspect the filesystem"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-workflow-p6",
+          "prompt": "According to the structured debugging workflow, what should you always do before inspecting logs or checking network settings?",
+          "tests": [
+            "c-debug-workflow"
+          ],
+          "explanation": "Before using any Docker commands, you must observe and clearly define the symptoms. This prevents you from chasing red herrings and ensures you know what 'fixed' looks like.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "Observe and define symptoms",
+            "Observe symptoms",
+            "Define symptoms",
+            "Gather symptoms",
+            "Observe and gather symptoms",
+            "Identify symptoms"
+          ],
+          "hint": "Think about the first step of the workflow. It requires no `docker` commands."
+        },
+        {
+          "type": "text",
+          "id": "lesson-workflow-p7",
+          "title": "When to Escalate and How to Prevent Repeat Issues",
+          "teaches": [],
+          "body": "Sometimes the workflow reveals a problem outside your container. If the symptom is slow responses and `docker stats` shows normal usage, the bottleneck might be the database or an upstream API. The workflow helps you prove the container is healthy so you can escalate with confidence.\n\nTo prevent repeating the same debug loop:\n\n- **Document the symptom and fix** in your team's runbook.\n\n- **Add health checks** to your Dockerfile so failures surface faster.\n\n- **Use Docker Compose** to standardize ports, networks, and volumes so local setups match production.\n\nThe goal is not just to fix one container, but to make your team's services easier to debug next time."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-workflow-p8",
+          "prompt": "Explain the structured debugging workflow for a team Docker service. Describe the steps in order and give an example of how you would apply at least two specific `docker` commands during the workflow.",
+          "tests": [
+            "c-debug-workflow",
+            "c-logs-inspect",
+            "c-exec-shell"
+          ],
+          "explanation": "A strong answer shows you move from observation to verification without skipping steps, and it names concrete commands that fit each phase.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "The workflow starts with observing and defining specific symptoms.",
+              "The learner mentions inspecting configuration and logs (e.g., `docker logs`, `docker inspect`).",
+              "The learner includes checking networking and resources (e.g., `docker stats`, verifying bridge networks or port mappings).",
+              "The learner describes reproducing or isolating the issue before attempting a fix.",
+              "The workflow ends with fixing, rebuilding if necessary, and verifying the service is healthy."
+            ],
+            "commonMisconceptions": [
+              "Claiming the first step is to restart or rebuild the container.",
+              "Suggesting `docker exec` is appropriate for a container that is not running.",
+              "Skipping the observation step and jumping straight to logs or commands.",
+              "Forgetting to verify the fix after making changes."
+            ],
+            "sampleAnswer": "First, I observe the symptom. For example, the web container is returning 502 errors. Next, I inspect logs with `docker logs web` and configuration with `docker inspect web` to check port mappings and env vars. Then I check resources with `docker stats` and network connectivity. After that, I try to reproduce the issue by running the container locally with a bind mount for the code. Once I find the bug, I fix it, rebuild the image, and verify by curling the health endpoint. If it returns 200, I know the workflow is complete."
+          }
+        }
+      ]
+    }
+  ]
+}

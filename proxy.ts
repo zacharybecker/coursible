@@ -12,6 +12,10 @@ export function proxy(request: NextRequest) {
   const onSignin = pathname === "/signin";
 
   if (!sessionCookie && !onSignin) {
+    // API callers get JSON, not a redirect they can't follow.
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
     return NextResponse.redirect(new URL("/signin", request.url));
   }
   if (sessionCookie && onSignin) {

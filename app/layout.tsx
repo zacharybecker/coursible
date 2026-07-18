@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ember — Learn anything, for real",
+  title: "Coursible — Learn anything, for real",
   description:
     "Structured, adaptive courses that get you to a real-world outcome — with streaks, mastery, and projects that stick.",
 };
