@@ -12,21 +12,21 @@ const PAD_X = 60;
 const PAD_Y = 56;
 const R = 30;
 
-/** A node is complete when every one of its activities is done. */
+/** A node is complete when every one of its pages is done. */
 export function getNodeState(
   node: SkillNode,
   course: Course,
   progress: CourseProgress | null,
 ): NodeState {
   const completedIds = new Set(
-    Object.values(progress?.lessonProgress ?? {}).flatMap((lp) => lp.completedActivityIds),
+    Object.values(progress?.lessonProgress ?? {}).flatMap((lp) => lp.completedPageIds),
   );
-  const activitiesOf = (n: SkillNode) =>
-    course.lessons.flatMap((l) => l.activities).filter((a) => a.skillNodeId === n.id);
+  const pagesOf = (n: SkillNode) =>
+    course.lessons.filter((l) => l.skillNodeId === n.id).flatMap((l) => l.pages);
 
   const isComplete = (n: SkillNode) => {
-    const acts = activitiesOf(n);
-    return acts.length > 0 && acts.every((a) => completedIds.has(a.id));
+    const pages = pagesOf(n);
+    return pages.length > 0 && pages.every((p) => completedIds.has(p.id));
   };
 
   if (isComplete(node)) return "complete";
@@ -37,7 +37,7 @@ export function getNodeState(
   });
   if (!prereqsMet) return "locked";
 
-  const started = activitiesOf(node).some((a) => completedIds.has(a.id));
+  const started = pagesOf(node).some((p) => completedIds.has(p.id));
   return started ? "in_progress" : "available";
 }
 

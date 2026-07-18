@@ -31,7 +31,7 @@ export function CoursePreview({
   // A transient Course wrapper so the SkillTree can render content pre-library.
   const previewCourse: Course = { ...content, id: "preview", source: "custom", status: "active" };
 
-  const activityCount = content.lessons.reduce((n, l) => n + l.activities.length, 0);
+  const pageCount = content.lessons.reduce((n, l) => n + l.pages.length, 0);
 
   async function add() {
     setAdding(true);
@@ -76,7 +76,7 @@ export function CoursePreview({
             </span>
             <span className="flex items-center gap-1.5">
               <BookOpen className="size-4 text-brand" aria-hidden />
-              {content.lessons.length} lessons · {activityCount} activities
+              {content.lessons.length} lessons · {pageCount} pages
             </span>
           </div>
 
@@ -109,10 +109,6 @@ export function CoursePreview({
           Start over
         </Button>
       </div>
-      <p className="text-center text-xs text-muted-foreground">
-        Prototype note: course generation is mocked — this preview is a canned example, not a real
-        response to your inputs.
-      </p>
     </motion.div>
   );
 }

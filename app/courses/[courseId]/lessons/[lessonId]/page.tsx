@@ -4,7 +4,7 @@ import { use, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import type { Course, CourseProgress } from "@/lib/types";
 import { getCourseById, getCourseProgress } from "@/lib/data/actions";
-import { ActivityPlayer } from "@/components/lesson/activity-player";
+import { PagePlayer } from "@/components/lesson/page-player";
 
 export default function LessonPage({
   params,
@@ -28,16 +28,16 @@ export default function LessonPage({
   const lesson = course?.lessons.find((l) => l.id === lessonId);
   if (!course || !lesson) notFound();
 
-  // Resume at the first incomplete activity (fresh redo if all are done).
+  // Resume at the first incomplete page (fresh redo if all are done).
   const completedIds = new Set(
-    progress?.lessonProgress[lessonId]?.completedActivityIds ?? [],
+    progress?.lessonProgress[lessonId]?.completedPageIds ?? [],
   );
-  let startIndex = lesson.activities.findIndex((a) => !completedIds.has(a.id));
+  let startIndex = lesson.pages.findIndex((p) => !completedIds.has(p.id));
   if (startIndex === -1) startIndex = 0;
 
   return (
     <div className="mx-auto max-w-2xl">
-      <ActivityPlayer course={course} lesson={lesson} startIndex={startIndex} />
+      <PagePlayer course={course} lesson={lesson} startIndex={startIndex} />
     </div>
   );
 }

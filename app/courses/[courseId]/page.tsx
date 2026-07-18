@@ -133,7 +133,7 @@ export default function CourseDetailPage({
               {nodeLessons.map((lesson) => {
                 const lp = progress?.lessonProgress[lesson.id];
                 const done = lp?.completed ?? false;
-                const started = (lp?.completedActivityIds.length ?? 0) > 0;
+                const started = (lp?.completedPageIds.length ?? 0) > 0;
                 const locked = nodeState === "locked";
                 return (
                   <li key={lesson.id}>
