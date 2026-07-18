@@ -8,6 +8,20 @@
       "when": 1784294206583,
       "tag": "0000_tranquil_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784378900737,
+      "tag": "0001_drop-activity-completions",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784378932409,
+      "tag": "0002_page-based-lessons",
+      "breakpoints": true
     }
   ]
 }

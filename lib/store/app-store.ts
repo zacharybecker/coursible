@@ -1,10 +1,10 @@
 import { create } from "zustand";
-import type { ActivityCompletionResult } from "@/lib/types";
+import type { PageCompletionResult } from "@/lib/types";
 
 interface AppState {
-  /** Pending celebration from the last completed activity (drives the toast). */
-  celebration: ActivityCompletionResult | null;
-  celebrate: (result: ActivityCompletionResult) => void;
+  /** Pending celebration from the last completed page (drives the toast). */
+  celebration: PageCompletionResult | null;
+  celebrate: (result: PageCompletionResult) => void;
   clearCelebration: () => void;
   /** Bumped after any repository write so header stats & lists re-fetch. */
   dataVersion: number;

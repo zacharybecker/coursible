@@ -1,8 +1,7 @@
 // @vitest-environment node
-// Core-loop tests against real Postgres semantics: PGlite (in-memory) with the
-// actual Drizzle schema and generated migrations. Ports the scenarios from the
-// prototype's repository.test.ts and adds multi-user isolation and DB-level
-// XP idempotency.
+// Core-loop tests against real Postgres semantics: PGlite (in-memory) with
+// the actual Drizzle schema and generated migrations. Ports the v1 scenarios
+// to the page model and adds the new mastery rule (correct answers only).
 
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
@@ -10,10 +9,10 @@ import { drizzle } from "drizzle-orm/pglite";
 import { migrate } from "drizzle-orm/pglite/migrator";
 import { eq } from "drizzle-orm";
 import * as schema from "@/lib/db/schema";
-import { dockerFundamentals } from "@/lib/mock/courses/docker-fundamentals";
+import { fixtureCourse } from "@/lib/test-fixtures/course";
 import {
   addCourseToLibrary,
-  completeActivity,
+  completePage,
   duplicateCourse,
   getAllProgress,
   getCourseById,
@@ -24,7 +23,7 @@ import {
   setCourseStatus,
   type Db,
 } from "./core";
-import { seedStarterCourses, STARTER_COURSES } from "./seed-content";
+import { loadStarterCourses, seedStarterCourses } from "./seed-content";
 import { computeAverageMastery, computeCourseCompletion } from "./derive";
 
 let db: Db;
@@ -47,7 +46,6 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // Fresh users each test; cascades wipe courses/progress/completions.
   await db.delete(schema.user).where(eq(schema.user.id, ALICE));
   await db.delete(schema.user).where(eq(schema.user.id, BOB));
   for (const id of [ALICE, BOB]) {
@@ -61,33 +59,36 @@ beforeEach(async () => {
 });
 
 describe("starter catalog", () => {
-  it("exposes all seeded starter courses", async () => {
+  it("exposes exactly the seeded starter courses", async () => {
     const catalog = await getStarterCatalog(db);
-    expect(catalog.length).toBe(STARTER_COURSES.length);
-    expect(catalog.map((c) => c.title)).toContain("Docker Fundamentals");
-    expect(catalog.map((c) => c.contentId)).toContain("content-git-essentials");
+    const starters = loadStarterCourses();
+    expect(catalog.map((c) => c.contentId).sort()).toEqual(
+      starters.map((c) => c.contentId).sort(),
+    );
   });
 
   it("is idempotent to re-seed", async () => {
     await seedStarterCourses(db);
-    expect((await getStarterCatalog(db)).length).toBe(STARTER_COURSES.length);
+    expect((await getStarterCatalog(db)).length).toBe(loadStarterCourses().length);
   });
 });
 
 describe("library management", () => {
-  it("adds a catalog course as a fresh copy with empty progress", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
-    expect(course.contentId).toBe("content-docker-fundamentals");
+  it("adds a course as a fresh copy with empty progress", async () => {
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    expect(course.contentId).toBe("content-fixture");
     expect(course.status).toBe("active");
-    expect(course.lessons.length).toBeGreaterThan(0);
+    expect(course.schemaVersion).toBe(2);
+    expect(course.concepts.length).toBe(3);
+    expect(course.lessons.length).toBe(2);
     const progress = await getCourseProgress(db, ALICE, course.id);
     expect(progress?.xpEarned).toBe(0);
-    expect(progress?.masteryByNode["containers"]).toBe(0);
+    expect(progress?.masteryByNode["n1"]).toBe(0);
   });
 
   it("duplicates an existing course with independent progress", async () => {
-    const original = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
-    await completeActivity(db, ALICE, original.id, "docker-l1", "docker-l1-a1", "correct");
+    const original = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    await completePage(db, ALICE, original.id, "l1", "l1-p3", "correct");
     const copy = await duplicateCourse(db, ALICE, original.id);
     expect(copy).not.toBeNull();
     expect(copy!.source).toBe("shared");
@@ -99,7 +100,7 @@ describe("library management", () => {
   });
 
   it("archives and restores a course", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
     await setCourseStatus(db, ALICE, course.id, "archived");
     expect((await getCourseById(db, ALICE, course.id))?.status).toBe("archived");
     await setCourseStatus(db, ALICE, course.id, "active");
@@ -107,33 +108,40 @@ describe("library management", () => {
   });
 });
 
-describe("completeActivity — the core loop", () => {
+describe("completePage — the core loop", () => {
   let courseId: string;
 
   beforeEach(async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
     courseId = course.id;
   });
 
-  it("awards full XP for a correct first completion", async () => {
-    const result = await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a2", "correct");
-    expect(result?.xpAwarded).toBe(20);
-    const progress = await getCourseProgress(db, ALICE, courseId);
-    expect(progress?.lessonProgress["docker-l3"].completedActivityIds).toContain("docker-l3-a2");
-    expect(progress?.xpEarned).toBe(20);
-  });
-
-  it("awards half XP for a needs_review completion", async () => {
-    const result = await completeActivity(
-      db, ALICE, courseId, "docker-l3", "docker-l3-a2", "needs_review",
-    );
+  it("awards full XP for a correct question-page completion", async () => {
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     expect(result?.xpAwarded).toBe(10);
+    const progress = await getCourseProgress(db, ALICE, courseId);
+    expect(progress?.lessonProgress["l1"].completedPageIds).toContain("l1-p3");
+    expect(progress?.xpEarned).toBe(10);
   });
 
-  it("never double-awards XP for the same activity", async () => {
-    await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a2", "correct");
+  it("awards half XP for an incorrect completion", async () => {
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p3", "incorrect");
+    expect(result?.xpAwarded).toBe(5);
+  });
+
+  it("awards no XP for content pages but still counts them and the streak", async () => {
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p1", "correct");
+    expect(result?.xpAwarded).toBe(0);
+    expect(result?.streakExtended).toBe(true);
+    const progress = await getCourseProgress(db, ALICE, courseId);
+    expect(progress?.lessonProgress["l1"].completedPageIds).toContain("l1-p1");
+    expect(progress?.xpEarned).toBe(0);
+  });
+
+  it("never double-awards XP for the same page", async () => {
+    await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     const statsAfterFirst = await getUserStats(db, ALICE);
-    const second = await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a2", "correct");
+    const second = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     expect(second?.xpAwarded).toBe(0);
     const statsAfterSecond = await getUserStats(db, ALICE);
     expect(statsAfterSecond.totalXp).toBe(statsAfterFirst.totalXp);
@@ -141,39 +149,45 @@ describe("completeActivity — the core loop", () => {
   });
 
   it("enforces completion uniqueness at the DB level", async () => {
-    await db.insert(schema.activityCompletions).values({
+    await db.insert(schema.pageCompletions).values({
       courseId,
-      activityId: "docker-l1-a1",
-      lessonId: "docker-l1",
+      pageId: "l1-p1",
+      lessonId: "l1",
       outcome: "correct",
-      xpAwarded: 10,
+      xpAwarded: 0,
     });
     await expect(
-      db.insert(schema.activityCompletions).values({
+      db.insert(schema.pageCompletions).values({
         courseId,
-        activityId: "docker-l1-a1",
-        lessonId: "docker-l1",
+        pageId: "l1-p1",
+        lessonId: "l1",
         outcome: "correct",
-        xpAwarded: 10,
+        xpAwarded: 0,
       }),
     ).rejects.toThrow();
   });
 
-  it("recomputes node mastery from completions over node activity count", async () => {
-    // The "images" node (lesson docker-l3) has 2 activities.
-    const first = await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a1", "correct");
+  it("drives mastery from correct question outcomes only", async () => {
+    // n1 has 2 question pages (l1-p3, l1-p4).
+    const first = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     expect(first?.nodeMastery).toBe(50);
-    const second = await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a2", "correct");
-    expect(second?.nodeMastery).toBe(100);
+    // Incorrect completion counts the page done but gives no mastery credit.
+    const second = await completePage(db, ALICE, courseId, "l1", "l1-p4", "incorrect");
+    expect(second?.nodeMastery).toBe(50);
     const progress = await getCourseProgress(db, ALICE, courseId);
-    expect(progress?.masteryByNode["images"]).toBe(100);
+    expect(progress?.masteryByNode["n1"]).toBe(50);
+  });
+
+  it("content pages do not change mastery", async () => {
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p1", "correct");
+    expect(result?.nodeMastery).toBe(0);
   });
 
   it("starts a streak of 1 on a fresh account and does not extend twice same day", async () => {
-    const first = await completeActivity(db, ALICE, courseId, "docker-l1", "docker-l1-a1", "correct");
+    const first = await completePage(db, ALICE, courseId, "l1", "l1-p1", "correct");
     expect(first?.streakExtended).toBe(true);
     expect(first?.currentStreak).toBe(1);
-    const second = await completeActivity(db, ALICE, courseId, "docker-l1", "docker-l1-a2", "correct");
+    const second = await completePage(db, ALICE, courseId, "l1", "l1-p2", "correct");
     expect(second?.streakExtended).toBe(false);
     expect(second?.currentStreak).toBe(1);
   });
@@ -183,7 +197,7 @@ describe("completeActivity — the core loop", () => {
       .update(schema.userStats)
       .set({ currentStreak: 12, longestStreak: 12, lastStudyDate: utcDate(-1), xpToday: 55 })
       .where(eq(schema.userStats.userId, ALICE));
-    const result = await completeActivity(db, ALICE, courseId, "docker-l1", "docker-l1-a1", "correct");
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     expect(result?.streakExtended).toBe(true);
     expect(result?.currentStreak).toBe(13);
     const stats = await getUserStats(db, ALICE);
@@ -198,23 +212,25 @@ describe("completeActivity — the core loop", () => {
       .update(schema.userStats)
       .set({ currentStreak: 7, longestStreak: 9, lastStudyDate: utcDate(-3) })
       .where(eq(schema.userStats.userId, ALICE));
-    const result = await completeActivity(db, ALICE, courseId, "docker-l1", "docker-l1-a1", "correct");
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
     expect(result?.currentStreak).toBe(1);
     expect((await getUserStats(db, ALICE)).longestStreak).toBe(9);
   });
 
-  it("marks the lesson complete when its last activity completes", async () => {
-    await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a1", "correct");
-    const result = await completeActivity(db, ALICE, courseId, "docker-l3", "docker-l3-a2", "correct");
+  it("marks the lesson complete when its last page completes", async () => {
+    await completePage(db, ALICE, courseId, "l1", "l1-p1", "correct");
+    await completePage(db, ALICE, courseId, "l1", "l1-p2", "correct");
+    await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p4", "correct");
     expect(result?.lessonCompleted).toBe(true);
   });
 
-  it("marks the course completed when every activity is done", async () => {
+  it("marks the course completed when every page is done", async () => {
     const course = (await getCourseById(db, ALICE, courseId))!;
-    let last: Awaited<ReturnType<typeof completeActivity>> = null;
+    let last: Awaited<ReturnType<typeof completePage>> = null;
     for (const lesson of course.lessons) {
-      for (const activity of lesson.activities) {
-        last = await completeActivity(db, ALICE, courseId, lesson.id, activity.id, "correct");
+      for (const page of lesson.pages) {
+        last = await completePage(db, ALICE, courseId, lesson.id, page.id, "correct");
       }
     }
     expect(last?.courseCompleted).toBe(true);
@@ -222,29 +238,29 @@ describe("completeActivity — the core loop", () => {
   });
 
   it("returns null for unknown ids", async () => {
-    expect(await completeActivity(db, ALICE, "nope", "docker-l3", "docker-l3-a2", "correct")).toBeNull();
-    expect(await completeActivity(db, ALICE, courseId, "nope", "x", "correct")).toBeNull();
-    expect(await completeActivity(db, ALICE, courseId, "docker-l3", "nope", "correct")).toBeNull();
+    expect(await completePage(db, ALICE, "nope", "l1", "l1-p1", "correct")).toBeNull();
+    expect(await completePage(db, ALICE, courseId, "nope", "x", "correct")).toBeNull();
+    expect(await completePage(db, ALICE, courseId, "l1", "nope", "correct")).toBeNull();
   });
 });
 
 describe("multi-user isolation", () => {
   it("keeps libraries separate", async () => {
-    await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
+    await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
     expect((await getCourses(db, ALICE)).length).toBe(1);
     expect((await getCourses(db, BOB)).length).toBe(0);
     expect((await getAllProgress(db, BOB)).length).toBe(0);
   });
 
   it("hides other users' courses from reads", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
     expect(await getCourseById(db, BOB, course.id)).toBeNull();
     expect(await getCourseProgress(db, BOB, course.id)).toBeNull();
   });
 
   it("rejects mutations against courses the user does not own", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
-    const result = await completeActivity(db, BOB, course.id, "docker-l1", "docker-l1-a1", "correct");
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    const result = await completePage(db, BOB, course.id, "l1", "l1-p3", "correct");
     expect(result).toBeNull();
     await setCourseStatus(db, BOB, course.id, "archived");
     expect((await getCourseById(db, ALICE, course.id))?.status).toBe("active");
@@ -255,22 +271,22 @@ describe("multi-user isolation", () => {
 });
 
 describe("derived metrics", () => {
-  it("computes completion percentage across all activities", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
-    await completeActivity(db, ALICE, course.id, "docker-l1", "docker-l1-a1", "correct");
-    await completeActivity(db, ALICE, course.id, "docker-l1", "docker-l1-a2", "correct");
+  it("computes completion percentage across all pages", async () => {
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    await completePage(db, ALICE, course.id, "l1", "l1-p1", "correct");
+    await completePage(db, ALICE, course.id, "l1", "l1-p2", "correct");
     const full = (await getCourseById(db, ALICE, course.id))!;
     const progress = await getCourseProgress(db, ALICE, course.id);
-    const totalActivities = full.lessons.reduce((n, l) => n + l.activities.length, 0);
-    expect(computeCourseCompletion(full, progress)).toBe(Math.round((100 * 2) / totalActivities));
+    // 2 of 8 pages complete.
+    expect(computeCourseCompletion(full, progress)).toBe(25);
   });
 
   it("computes average mastery across nodes", async () => {
-    const course = await addCourseToLibrary(db, ALICE, dockerFundamentals, "starter");
-    // Complete both "images" activities → that node is 100, others 0 (6 nodes).
-    await completeActivity(db, ALICE, course.id, "docker-l3", "docker-l3-a1", "correct");
-    await completeActivity(db, ALICE, course.id, "docker-l3", "docker-l3-a2", "correct");
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    // Both n1 questions correct → n1 = 100, n2 = 0 → average 50.
+    await completePage(db, ALICE, course.id, "l1", "l1-p3", "correct");
+    await completePage(db, ALICE, course.id, "l1", "l1-p4", "correct");
     const progress = await getCourseProgress(db, ALICE, course.id);
-    expect(computeAverageMastery(progress)).toBe(Math.round(100 / 6));
+    expect(computeAverageMastery(progress)).toBe(50);
   });
 });

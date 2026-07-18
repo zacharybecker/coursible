@@ -1,9 +1,8 @@
 "use server";
 
-// Server Actions: the app's entire data API. Same names and signatures as the
-// prototype's repository so components and hooks only change an import path.
-// Each action resolves the user from the session (never from the client),
-// validates inputs with Zod, and delegates to lib/data/core.
+// Server Actions: the app's entire data API. Each action resolves the user
+// from the session (never from the client), validates inputs with Zod, and
+// delegates to lib/data/core (and lib/generation for AI-backed actions).
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,17 +10,21 @@ import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type {
-  ActivityCompletionResult,
-  ActivityOutcome,
   Course,
   CourseContent,
   CourseProgress,
   CourseSource,
   CourseStatus,
+  GenerationJobView,
+  GradeResponse,
+  PageCompletionResult,
+  PageOutcome,
   UserStats,
 } from "@/lib/types";
 import { courseContentSchema } from "@/lib/validation/course-content";
-import { customCoursePreview } from "@/lib/mock/custom-preview";
+import { getModelClient } from "@/lib/generation/client";
+import { gradeWithFallback } from "@/lib/generation/grading";
+import { getGenerationJobView } from "@/lib/generation/jobs";
 import * as core from "./core";
 
 /** Authoritative auth check: session → user id. Redirects when signed out. */
@@ -34,7 +37,8 @@ async function requireUser(): Promise<string> {
 const idSchema = z.string().min(1).max(200);
 const sourceSchema = z.enum(["starter", "custom", "shared"]);
 const statusSchema = z.enum(["active", "completed", "archived"]);
-const outcomeSchema = z.enum(["correct", "incorrect", "needs_review"]);
+const outcomeSchema = z.enum(["correct", "incorrect"]);
+const answerSchema = z.string().min(1).max(5000);
 
 // ---------- reads ----------
 
@@ -68,10 +72,9 @@ export async function getStarterCatalog(): Promise<CourseContent[]> {
   return core.getStarterCatalog(db);
 }
 
-/** The wizard's preview stays canned this slice; generation lands in slice 2. */
-export async function getCustomCoursePreview(): Promise<CourseContent> {
-  await requireUser();
-  return customCoursePreview;
+export async function getGenerationJob(jobId: string): Promise<GenerationJobView | null> {
+  const userId = await requireUser();
+  return getGenerationJobView(db, userId, idSchema.parse(jobId));
 }
 
 // ---------- writes ----------
@@ -94,19 +97,40 @@ export async function setCourseStatus(courseId: string, status: CourseStatus): P
   await core.setCourseStatus(db, userId, idSchema.parse(courseId), statusSchema.parse(status));
 }
 
-export async function completeActivity(
+export async function completePage(
   courseId: string,
   lessonId: string,
-  activityId: string,
-  outcome: ActivityOutcome,
-): Promise<ActivityCompletionResult | null> {
+  pageId: string,
+  outcome: PageOutcome,
+): Promise<PageCompletionResult | null> {
   const userId = await requireUser();
-  return core.completeActivity(
+  return core.completePage(
     db,
     userId,
     idSchema.parse(courseId),
     idSchema.parse(lessonId),
-    idSchema.parse(activityId),
+    idSchema.parse(pageId),
     outcomeSchema.parse(outcome),
   );
+}
+
+/**
+ * Grade an open-ended answer with the small grading model. The rubric is
+ * loaded server-side from the owned course's content — never trusted from
+ * the client. Never throws to the client: API failures return a fallback
+ * marker and the UI degrades to self-assessment.
+ */
+export async function gradeOpenEnded(
+  courseId: string,
+  lessonId: string,
+  pageId: string,
+  answer: string,
+): Promise<GradeResponse> {
+  const userId = await requireUser();
+  const course = await core.getCourseById(db, userId, idSchema.parse(courseId));
+  const page = course?.lessons
+    .find((l) => l.id === idSchema.parse(lessonId))
+    ?.pages.find((p) => p.id === idSchema.parse(pageId));
+  if (!page || page.type !== "open_ended") return { ok: false, fallback: true };
+  return gradeWithFallback(getModelClient(), page, answerSchema.parse(answer.trim()));
 }

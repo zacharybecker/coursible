@@ -15,11 +15,14 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import type {
-  ActivityOutcome,
+  Concept,
   CourseSource,
   CourseStatus,
+  GenerationJobStatus,
   Lesson,
+  PageOutcome,
   SkillNode,
+  WizardAnswers,
 } from "@/lib/types";
 
 // ---------- Better Auth tables (managed via its Drizzle adapter) ----------
@@ -110,6 +113,8 @@ export const courseContent = pgTable("course_content", {
   estimatedHours: integer("estimated_hours").notNull(),
   skillNodes: jsonb("skill_nodes").$type<SkillNode[]>().notNull(),
   lessons: jsonb("lessons").$type<Lesson[]>().notNull(),
+  schemaVersion: integer("schema_version").default(2).notNull(),
+  concepts: jsonb("concepts").$type<Concept[]>().notNull(),
   isStarter: boolean("is_starter").default(false).notNull(),
   createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
   /** Pre-provisioned for slice-3 publish-updates. */
@@ -151,27 +156,45 @@ export const courses = pgTable(
 );
 
 /**
- * One row per completed activity. The composite primary key makes double
+ * One row per completed page. The composite primary key makes double
  * completion — and therefore double XP — impossible at the DB level: the
  * insert uses ON CONFLICT DO NOTHING and side effects only run when a row
  * was actually inserted.
  */
-export const activityCompletions = pgTable(
-  "activity_completions",
+export const pageCompletions = pgTable(
+  "page_completions",
   {
     courseId: text("course_id")
       .notNull()
       .references(() => courses.id, { onDelete: "cascade" }),
-    activityId: text("activity_id").notNull(),
+    pageId: text("page_id").notNull(),
     lessonId: text("lesson_id").notNull(),
-    outcome: text("outcome").$type<ActivityOutcome>().notNull(),
+    outcome: text("outcome").$type<PageOutcome>().notNull(),
     xpAwarded: integer("xp_awarded").notNull(),
     completedAt: timestamp("completed_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [primaryKey({ columns: [table.courseId, table.activityId] })],
+  (table) => [primaryKey({ columns: [table.courseId, table.pageId] })],
 );
 
-/** 1:1 with courses. Lesson completion is derived from activity_completions. */
+/** One row per wizard submission; the wizard polls status until done/failed. */
+export const generationJobs = pgTable(
+  "generation_jobs",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    answers: jsonb("answers").$type<WizardAnswers>().notNull(),
+    status: text("status").$type<GenerationJobStatus>().default("queued").notNull(),
+    error: text("error"),
+    contentId: text("content_id").references(() => courseContent.contentId),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("generation_jobs_user_id_idx").on(table.userId)],
+);
+
+/** 1:1 with courses. Lesson completion is derived from page_completions. */
 export const courseProgress = pgTable("course_progress", {
   courseId: text("course_id")
     .primaryKey()

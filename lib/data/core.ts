@@ -9,17 +9,18 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import * as schema from "@/lib/db/schema";
-import type {
-  ActivityCompletionResult,
-  ActivityOutcome,
-  Cohort,
-  Course,
-  CourseContent,
-  CourseProgress,
-  CourseSource,
-  CourseStatus,
-  LessonProgress,
-  UserStats,
+import {
+  isQuestionPage,
+  type Cohort,
+  type Course,
+  type CourseContent,
+  type CourseProgress,
+  type CourseSource,
+  type CourseStatus,
+  type LessonProgress,
+  type PageCompletionResult,
+  type PageOutcome,
+  type UserStats,
 } from "@/lib/types";
 import { validateCourseContent } from "@/lib/validation/course-content";
 
@@ -28,19 +29,21 @@ export type Db = PgDatabase<PgQueryResultHKT, typeof schema>;
 
 type ContentRow = typeof schema.courseContent.$inferSelect;
 type CourseRow = typeof schema.courses.$inferSelect;
-type CompletionRow = typeof schema.activityCompletions.$inferSelect;
+type CompletionRow = typeof schema.pageCompletions.$inferSelect;
 type ProgressRow = typeof schema.courseProgress.$inferSelect;
 
 // ---------- row → domain mapping ----------
 
-function toCourseContent(row: ContentRow): CourseContent {
+export function toCourseContent(row: ContentRow): CourseContent {
   return {
     contentId: row.contentId,
+    schemaVersion: 2,
     title: row.title,
     description: row.description,
     outcome: row.outcome,
     tags: row.tags,
     estimatedHours: row.estimatedHours,
+    concepts: row.concepts,
     skillNodes: row.skillNodes,
     lessons: row.lessons,
   };
@@ -64,17 +67,17 @@ function toProgress(
   const byLesson = new Map<string, string[]>();
   for (const c of completions) {
     const ids = byLesson.get(c.lessonId) ?? [];
-    ids.push(c.activityId);
+    ids.push(c.pageId);
     byLesson.set(c.lessonId, ids);
   }
   const lessonProgress: Record<string, LessonProgress> = {};
   for (const lesson of contentRow.lessons) {
-    const completedActivityIds = byLesson.get(lesson.id) ?? [];
+    const completedPageIds = byLesson.get(lesson.id) ?? [];
     lessonProgress[lesson.id] = {
       lessonId: lesson.id,
-      completedActivityIds,
+      completedPageIds,
       completed:
-        lesson.activities.length > 0 && completedActivityIds.length >= lesson.activities.length,
+        lesson.pages.length > 0 && completedPageIds.length >= lesson.pages.length,
     };
   }
   return {
@@ -172,8 +175,8 @@ export async function getCourseProgress(
   if (!progressRow) return null;
   const completions = await db
     .select()
-    .from(schema.activityCompletions)
-    .where(eq(schema.activityCompletions.courseId, courseId));
+    .from(schema.pageCompletions)
+    .where(eq(schema.pageCompletions.courseId, courseId));
   return toProgress(progressRow, found.contentRow, completions);
 }
 
@@ -191,8 +194,8 @@ export async function getAllProgress(db: Db, userId: string): Promise<CourseProg
   if (rows.length === 0) return [];
   const completions = await db
     .select()
-    .from(schema.activityCompletions)
-    .where(inArray(schema.activityCompletions.courseId, rows.map((r) => r.courseId)));
+    .from(schema.pageCompletions)
+    .where(inArray(schema.pageCompletions.courseId, rows.map((r) => r.courseId)));
   const byCourse = new Map<string, CompletionRow[]>();
   for (const c of completions) {
     const list = byCourse.get(c.courseId) ?? [];
@@ -246,6 +249,8 @@ export async function addCourseToLibrary(
         outcome: validated.outcome,
         tags: validated.tags,
         estimatedHours: validated.estimatedHours,
+        schemaVersion: 2,
+        concepts: validated.concepts,
         skillNodes: validated.skillNodes,
         lessons: validated.lessons,
         isStarter: false,
@@ -295,31 +300,36 @@ export async function setCourseStatus(
 }
 
 /**
- * Record an activity completion and run the core-loop bookkeeping in one
+ * Record a page completion and run the core-loop bookkeeping in one
  * transaction: completion insert (ON CONFLICT DO NOTHING) → XP → mastery →
- * streak → course auto-completion. A conflicting insert means the activity
- * was already completed: no XP, no stat changes, at the database level.
+ * streak → course auto-completion. A conflicting insert means the page was
+ * already completed: no XP, no stat changes, at the database level.
+ * Content pages award no XP but count toward lesson completion and streaks.
  */
-export async function completeActivity(
+export async function completePage(
   db: Db,
   userId: string,
   courseId: string,
   lessonId: string,
-  activityId: string,
-  outcome: ActivityOutcome,
-): Promise<ActivityCompletionResult | null> {
+  pageId: string,
+  outcome: PageOutcome,
+): Promise<PageCompletionResult | null> {
   return db.transaction(async (tx) => {
     const found = await loadOwnedCourse(tx, userId, courseId);
     if (!found) return null;
     const { courseRow, contentRow } = found;
     const lesson = contentRow.lessons.find((l) => l.id === lessonId);
-    const activity = lesson?.activities.find((a) => a.id === activityId);
-    if (!lesson || !activity) return null;
+    const page = lesson?.pages.find((p) => p.id === pageId);
+    if (!lesson || !page) return null;
 
-    const xp = outcome === "correct" ? activity.xp : Math.round(activity.xp / 2);
+    const xp = isQuestionPage(page)
+      ? outcome === "correct"
+        ? page.xp
+        : Math.round(page.xp / 2)
+      : 0;
     const inserted = await tx
-      .insert(schema.activityCompletions)
-      .values({ courseId, activityId, lessonId, outcome, xpAwarded: xp })
+      .insert(schema.pageCompletions)
+      .values({ courseId, pageId, lessonId, outcome, xpAwarded: xp })
       .onConflictDoNothing()
       .returning();
     const isNew = inserted.length > 0;
@@ -327,17 +337,26 @@ export async function completeActivity(
 
     const completions = await tx
       .select()
-      .from(schema.activityCompletions)
-      .where(eq(schema.activityCompletions.courseId, courseId));
-    const completedIds = new Set(completions.map((c) => c.activityId));
+      .from(schema.pageCompletions)
+      .where(eq(schema.pageCompletions.courseId, courseId));
+    const completedIds = new Set(completions.map((c) => c.pageId));
+    const correctIds = new Set(
+      completions.filter((c) => c.outcome === "correct").map((c) => c.pageId),
+    );
 
-    // Mastery: completed fraction of the activity's node, across the course.
-    const nodeActivities = contentRow.lessons
-      .flatMap((l) => l.activities)
-      .filter((a) => a.skillNodeId === activity.skillNodeId);
-    const nodeDone = nodeActivities.filter((a) => completedIds.has(a.id)).length;
+    // Mastery: fraction of the node's question pages answered correctly.
+    // (Open-ended "pass" arrives here as "correct"; "partial" as "incorrect".)
+    const nodeQuestionPages = contentRow.lessons
+      .filter((l) => l.skillNodeId === lesson.skillNodeId)
+      .flatMap((l) => l.pages)
+      .filter(isQuestionPage);
     const nodeMastery =
-      nodeActivities.length === 0 ? 0 : Math.round((100 * nodeDone) / nodeActivities.length);
+      nodeQuestionPages.length === 0
+        ? 0
+        : Math.round(
+            (100 * nodeQuestionPages.filter((p) => correctIds.has(p.id)).length) /
+              nodeQuestionPages.length,
+          );
 
     const [progressRow] = await tx
       .select()
@@ -350,7 +369,7 @@ export async function completeActivity(
 
     if (isNew) {
       const masteryByNode = { ...(progressRow?.masteryByNode ?? {}) };
-      masteryByNode[activity.skillNodeId] = nodeMastery;
+      masteryByNode[lesson.skillNodeId] = nodeMastery;
       await tx
         .update(schema.courseProgress)
         .set({
@@ -395,10 +414,9 @@ export async function completeActivity(
       currentStreak = stats?.currentStreak ?? 0;
     }
 
-    const lessonCompleted =
-      lesson.activities.every((a) => completedIds.has(a.id));
-    const allActivities = contentRow.lessons.flatMap((l) => l.activities);
-    const courseCompleted = allActivities.every((a) => completedIds.has(a.id));
+    const lessonCompleted = lesson.pages.every((p) => completedIds.has(p.id));
+    const allPages = contentRow.lessons.flatMap((l) => l.pages);
+    const courseCompleted = allPages.every((p) => completedIds.has(p.id));
     if (courseCompleted && courseRow.status === "active") {
       await tx
         .update(schema.courses)

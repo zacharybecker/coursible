@@ -3,12 +3,12 @@
 
 import type { Course, CourseProgress } from "@/lib/types";
 
-/** Overall course completion: fraction of all activities completed, 0-100. */
+/** Overall course completion: fraction of all pages completed, 0-100. */
 export function computeCourseCompletion(course: Course, progress: CourseProgress | null): number {
-  const total = course.lessons.reduce((n, l) => n + l.activities.length, 0);
+  const total = course.lessons.reduce((n, l) => n + l.pages.length, 0);
   if (total === 0 || !progress) return 0;
   const done = Object.values(progress.lessonProgress).reduce(
-    (n, lp) => n + lp.completedActivityIds.length,
+    (n, lp) => n + lp.completedPageIds.length,
     0,
   );
   return Math.round((100 * done) / total);
