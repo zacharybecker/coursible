@@ -1,18 +1,32 @@
-// Starter catalog seeding. Slice-2 interim state: the old hand-written mock
-// courses are gone; Task 9 replaces this with pipeline-generated JSON loaded
-// from lib/data/starter-courses/. Until then the catalog seeds empty.
+// Upserts the starter-course catalog into course_content. Starter content is
+// generated through the real pipeline by scripts/generate-starters.ts and
+// checked into lib/data/starter-courses/ as JSON — the pipeline's dogfood
+// test. Idempotent: re-running updates content in place and keeps
+// is_starter flags intact.
 
+import fs from "node:fs";
+import path from "node:path";
 import { sql } from "drizzle-orm";
 import * as schema from "@/lib/db/schema";
 import type { Db } from "./core";
 import type { CourseContent } from "@/lib/types";
+import { validateCourseContent } from "@/lib/validation/course-content";
 
+const STARTER_DIR = path.join(process.cwd(), "lib", "data", "starter-courses");
+
+/** Parsed starter JSON. Validated at seed time and by starter-content.test.ts. */
 export function loadStarterCourses(): CourseContent[] {
-  return [];
+  if (!fs.existsSync(STARTER_DIR)) return [];
+  return fs
+    .readdirSync(STARTER_DIR)
+    .filter((f) => f.endsWith(".json"))
+    .sort()
+    .map((f) => JSON.parse(fs.readFileSync(path.join(STARTER_DIR, f), "utf8")) as CourseContent);
 }
 
 export async function seedStarterCourses(db: Db): Promise<void> {
-  for (const content of loadStarterCourses()) {
+  for (const raw of loadStarterCourses()) {
+    const content = validateCourseContent(raw);
     await db
       .insert(schema.courseContent)
       .values({

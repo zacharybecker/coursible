@@ -97,7 +97,7 @@ export function makeStubModel(
     calls,
     async generate<T>(params: GenerateParams<T>): Promise<T> {
       calls.push(params as GenerateParams<unknown>);
-      if (params.schema === outlineSchema) return outline as T;
+      if ((params.schema as unknown) === outlineSchema) return outline as T;
       const lessonId = Object.keys(lessonResponses).find((id) =>
         params.user.includes(`Lesson id: ${id}`),
       );
