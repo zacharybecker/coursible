@@ -1,0 +1,2436 @@
+{
+  "contentId": "content-markdown-basics",
+  "schemaVersion": 2,
+  "title": "Markdown Mastery for Clean Docs, READMEs & PRs",
+  "description": "Go from Markdown beginner to writing polished documentation, professional READMEs, and clear pull request descriptions. Learn the syntax and the writing habits that make technical writing easy to read.",
+  "outcome": "You can confidently author well-structured Markdown documents, craft complete project READMEs, and write clear, reviewable PR descriptions.",
+  "tags": [
+    "markdown",
+    "documentation",
+    "technical-writing",
+    "git"
+  ],
+  "estimatedHours": 10,
+  "concepts": [
+    {
+      "id": "c-markdown-purpose",
+      "name": "What Markdown is and why it's used"
+    },
+    {
+      "id": "c-rendering",
+      "name": "How raw Markdown renders to formatted output"
+    },
+    {
+      "id": "c-headings",
+      "name": "Headings and heading levels"
+    },
+    {
+      "id": "c-paragraphs",
+      "name": "Paragraphs and line breaks"
+    },
+    {
+      "id": "c-emphasis",
+      "name": "Bold and italic emphasis"
+    },
+    {
+      "id": "c-unordered-lists",
+      "name": "Unordered (bulleted) lists"
+    },
+    {
+      "id": "c-ordered-lists",
+      "name": "Ordered (numbered) lists"
+    },
+    {
+      "id": "c-task-lists",
+      "name": "Task lists (checkboxes)"
+    },
+    {
+      "id": "c-links",
+      "name": "Hyperlinks"
+    },
+    {
+      "id": "c-images",
+      "name": "Embedding images"
+    },
+    {
+      "id": "c-inline-code",
+      "name": "Inline code spans"
+    },
+    {
+      "id": "c-fenced-code",
+      "name": "Fenced code blocks with syntax highlighting"
+    },
+    {
+      "id": "c-blockquotes",
+      "name": "Blockquotes"
+    },
+    {
+      "id": "c-tables",
+      "name": "Tables"
+    },
+    {
+      "id": "c-horizontal-rules",
+      "name": "Horizontal rules"
+    },
+    {
+      "id": "c-readme-purpose",
+      "name": "Purpose and audience of a README"
+    },
+    {
+      "id": "c-project-title",
+      "name": "Project title and description block"
+    },
+    {
+      "id": "c-badges",
+      "name": "Status badges"
+    },
+    {
+      "id": "c-installation-usage",
+      "name": "Installation and usage sections"
+    },
+    {
+      "id": "c-toc",
+      "name": "Table of contents"
+    },
+    {
+      "id": "c-contributing-section",
+      "name": "Contributing and license sections"
+    },
+    {
+      "id": "c-pr-purpose",
+      "name": "Purpose of a PR description"
+    },
+    {
+      "id": "c-pr-summary",
+      "name": "Writing a clear summary of changes"
+    },
+    {
+      "id": "c-pr-checklists",
+      "name": "Review checklists in PRs"
+    },
+    {
+      "id": "c-linking-issues",
+      "name": "Linking issues and referencing commits"
+    },
+    {
+      "id": "c-concise-writing",
+      "name": "Concise, plain-language writing"
+    },
+    {
+      "id": "c-scannable-structure",
+      "name": "Scannable structure and formatting"
+    },
+    {
+      "id": "c-style-consistency",
+      "name": "Consistent style and conventions"
+    },
+    {
+      "id": "c-admonitions",
+      "name": "Notes, warnings, and callouts"
+    }
+  ],
+  "skillNodes": [
+    {
+      "id": "node-basics",
+      "title": "Markdown Fundamentals",
+      "description": "Understand what Markdown is and master the essential text-formatting syntax.",
+      "prereqIds": [],
+      "lessonIds": [
+        "lesson-what-is-markdown",
+        "lesson-headings-text"
+      ],
+      "position": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-formatting",
+      "title": "Rich Formatting",
+      "description": "Add lists, links, images, code, and tables to structure real documents.",
+      "prereqIds": [
+        "node-basics"
+      ],
+      "lessonIds": [
+        "lesson-lists",
+        "lesson-links-images",
+        "lesson-code",
+        "lesson-tables"
+      ],
+      "position": {
+        "col": 1,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-readmes",
+      "title": "Writing READMEs",
+      "description": "Assemble the standard sections of a professional project README.",
+      "prereqIds": [
+        "node-formatting"
+      ],
+      "lessonIds": [
+        "lesson-readme-anatomy",
+        "lesson-readme-sections"
+      ],
+      "position": {
+        "col": 2,
+        "row": 0
+      }
+    },
+    {
+      "id": "node-pr",
+      "title": "Pull Request Descriptions",
+      "description": "Write clear, reviewable PR descriptions that speed up code review.",
+      "prereqIds": [
+        "node-formatting"
+      ],
+      "lessonIds": [
+        "lesson-pr-anatomy",
+        "lesson-pr-details"
+      ],
+      "position": {
+        "col": 2,
+        "row": 1
+      }
+    },
+    {
+      "id": "node-style",
+      "title": "Clean Documentation Style",
+      "description": "Apply writing and formatting habits that make any doc easy to read.",
+      "prereqIds": [
+        "node-readmes",
+        "node-pr"
+      ],
+      "lessonIds": [
+        "lesson-writing-clean",
+        "lesson-consistency"
+      ],
+      "position": {
+        "col": 3,
+        "row": 0
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "lesson-what-is-markdown",
+      "title": "What Is Markdown?",
+      "description": "Learn what Markdown is, where it's used, and how raw text becomes formatted output.",
+      "skillNodeId": "node-basics",
+      "estimatedMinutes": 45,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-what-is-markdown-p1",
+          "title": "What Is Markdown?",
+          "teaches": [
+            "c-markdown-purpose"
+          ],
+          "body": "**Markdown** is a lightweight way to write formatted text using plain characters you already know. Instead of clicking buttons in a word processor, you type small symbols that describe your formatting.\n\nFor example, to make a word **bold**, you wrap it in double asterisks: `**bold**`. To create a heading, you start a line with `#`. To make a bullet list, you begin lines with `- `.\n\nThe key idea: you write in plain text, but that text carries meaning about structure — headings, lists, emphasis, code — without any hidden formatting.\n\nBecause it is just text, Markdown files are small, easy to read even before formatting, work in any text editor, and play nicely with version control like Git."
+        },
+        {
+          "type": "text",
+          "id": "lesson-what-is-markdown-p2",
+          "title": "Where You'll Use It",
+          "teaches": [
+            "c-markdown-purpose"
+          ],
+          "body": "Markdown shows up almost everywhere developers and writers collaborate:\n\n- **README files** that explain what a project does and how to run it\n- **Pull request descriptions** where you summarize your changes for reviewers\n- **Issues and comments** on platforms like GitHub and GitLab\n- **Documentation sites**, notes apps, and chat tools like Slack or Discord\n\nThe reason it's so popular: it's fast to write, stays readable as raw text, and produces clean, consistent output. You focus on *what* you're saying, and Markdown handles *how* it looks.\n\nCompare it to writing raw HTML — `<strong>bold</strong>` versus `**bold**`. Markdown gives you most of the everyday formatting you need with far less typing and clutter."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-what-is-markdown-p3",
+          "prompt": "Why do people choose Markdown?",
+          "tests": [
+            "c-markdown-purpose"
+          ],
+          "explanation": "Markdown's whole point is lightweight, readable formatting in plain text. It doesn't replace programming languages or require special paid software — a plain text editor is enough.",
+          "xp": 10,
+          "context": "A teammate asks you why the project uses Markdown for its README instead of a Word document.",
+          "options": [
+            {
+              "id": "a",
+              "text": "It lets you format text with simple plain-text symbols that stay readable and work with version control"
+            },
+            {
+              "id": "b",
+              "text": "It compiles into a running program that executes your documentation",
+              "misconception": "Confusing a markup language with a programming language — Markdown describes formatting, it doesn't execute."
+            },
+            {
+              "id": "c",
+              "text": "It requires specialized paid editing software to open and view files",
+              "misconception": "Markdown is plain text and opens in any editor; needing special software is the opposite of its appeal."
+            },
+            {
+              "id": "d",
+              "text": "It hides all formatting in a binary file that only the author can read",
+              "misconception": "That describes proprietary word-processor formats; Markdown is transparent plain text anyone can read."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-what-is-markdown-p4",
+          "title": "From Raw Text to Rendered Output",
+          "teaches": [
+            "c-rendering"
+          ],
+          "body": "When you write Markdown, there are always **two versions** of your document:\n\n- The **raw source** — the plain text with symbols, like `# Hello` or `**important**`\n- The **rendered output** — the formatted result you see, like a large heading or bold text\n\nA piece of software called a **renderer** (or Markdown parser) reads your raw text, recognizes the symbols, and converts them into formatted output — usually HTML that a browser or app displays.\n\nFor example, when you type `## Setup` in a GitHub README and save it, GitHub's renderer turns that line into a styled second-level heading. You wrote the raw source; the renderer produced what everyone sees.\n\nThis is why the same `README.md` can look plain in your editor but polished on GitHub — the rendering step happens in between."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-what-is-markdown-p5",
+          "title": "The Rendering Pipeline",
+          "teaches": [
+            "c-rendering"
+          ],
+          "intro": "Here's how your keystrokes become formatted output.",
+          "mermaid": "flowchart LR\n  A[You type raw Markdown] --> B[Renderer parses the symbols]\n  B --> C[Symbols become formatting]\n  C --> D[Formatted output displayed]",
+          "caption": "Notice that the renderer sits between what you write and what the reader sees — the raw source never disappears, it's just transformed for display."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-what-is-markdown-p6",
+          "prompt": "What is the name for the software that reads raw Markdown and converts it into formatted output?",
+          "tests": [
+            "c-rendering"
+          ],
+          "explanation": "The renderer (also called a Markdown parser) is what transforms raw source symbols into the formatted output you see.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "renderer",
+            "a renderer",
+            "markdown renderer",
+            "parser",
+            "markdown parser",
+            "the renderer"
+          ],
+          "hint": "It starts with 'r' — or you could also call it a 'parser'."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-what-is-markdown-p7",
+          "prompt": "Match each raw Markdown source to what it becomes when rendered.",
+          "tests": [
+            "c-rendering",
+            "c-markdown-purpose"
+          ],
+          "explanation": "Each symbol signals a specific formatting intent: `#` for a heading, `**` for bold, and `- ` for a bullet list item. The renderer reads these and produces the matching output.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "# Setup",
+              "right": "A large heading"
+            },
+            {
+              "id": "p2",
+              "left": "**note**",
+              "right": "Bold text"
+            },
+            {
+              "id": "p3",
+              "left": "- item",
+              "right": "A bullet list item"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-what-is-markdown-p8",
+          "prompt": "In your own words, explain the difference between raw Markdown source and rendered output, and what happens in between.",
+          "tests": [
+            "c-rendering"
+          ],
+          "explanation": "A strong answer distinguishes the plain-text source you write from the formatted result readers see, and identifies the renderer as the step that transforms one into the other.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Raw source is the plain text with symbols that you type",
+              "Rendered output is the formatted result the reader sees",
+              "A renderer/parser converts the raw source into the rendered output"
+            ],
+            "commonMisconceptions": [
+              "Thinking the symbols themselves appear in the final output",
+              "Believing Markdown must be manually formatted rather than transformed by software"
+            ],
+            "sampleAnswer": "Raw Markdown is the plain text I write, like `**bold**` or `# Title`. The rendered output is what a reader actually sees — bold text or a big heading. In between, a renderer parses the symbols and converts them into formatting, usually HTML, so the same file can look plain in my editor but polished on GitHub."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-headings-text",
+      "title": "Headings and Text",
+      "description": "Format documents with headings, paragraphs, line breaks, and emphasis.",
+      "skillNodeId": "node-basics",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-headings-text-p1",
+          "title": "Headings Give Your Document Structure",
+          "teaches": [
+            "c-headings"
+          ],
+          "body": "Headings are how you carve a document into sections. In Markdown, you create a heading by starting a line with one or more `#` characters, followed by a space and your text.\n\nThe number of `#` symbols sets the **level**:\n\n- `# Title` is a level-1 heading (the biggest, usually the document title)\n- `## Section` is a level-2 heading\n- `### Subsection` is a level-3 heading\n\nMarkdown supports six levels, from `#` down to `######`. When rendered, each level shows at a progressively smaller size, letting readers scan the hierarchy at a glance.\n\nTwo things to watch for: always put a **space** after the `#` (`#Heading` will not render as a heading), and use levels in a sensible order — don't jump from `#` straight to `####`, because that breaks the logical outline of your document."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-headings-text-p2",
+          "title": "How Heading Levels Nest",
+          "teaches": [
+            "c-headings"
+          ],
+          "intro": "Think of heading levels like an outline that nests from broad to specific.",
+          "mermaid": "flowchart TD\n  A[\"# Project Title\"] --> B[\"## Installation\"]\n  A --> C[\"## Usage\"]\n  C --> D[\"### Basic Example\"]\n  C --> E[\"### Advanced Example\"]",
+          "caption": "Notice how a single `#` sits at the top, `##` marks major sections, and `###` refines a section further — the levels descend one step at a time."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-headings-text-p3",
+          "prompt": "Which line will correctly render as a level-2 heading?",
+          "tests": [
+            "c-headings"
+          ],
+          "explanation": "A heading needs the right number of `#` symbols followed by a space. Two `#` make a level-2 heading, and the space after them is required.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "`## Installation`"
+            },
+            {
+              "id": "b",
+              "text": "`**Installation**`",
+              "misconception": "This is bold emphasis, not a heading — it changes weight but creates no structural section."
+            },
+            {
+              "id": "c",
+              "text": "`#Installation`",
+              "misconception": "Missing the space after `#`, so most renderers show it as literal text rather than a heading."
+            },
+            {
+              "id": "d",
+              "text": "`#### Installation`",
+              "misconception": "Four `#` symbols make a level-4 heading, not level-2."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-headings-text-p4",
+          "title": "Paragraphs and Line Breaks",
+          "teaches": [
+            "c-paragraphs"
+          ],
+          "body": "In Markdown, a **paragraph** is simply one or more lines of text separated from the next block by a **blank line**. That blank line is what tells the renderer \"start a new paragraph here.\"\n\nHere is what surprises most beginners: if you press Enter just once and start typing on the next line, the renderer usually **joins the two lines into the same paragraph**. The single newline is collapsed into a space.\n\nFor example, this source:\n\n`Roses are red`\n`Violets are blue`\n\nrenders as one line: `Roses are red Violets are blue`.\n\nTo force a **line break** without starting a whole new paragraph, end a line with **two or more spaces** before pressing Enter (sometimes called a \"hard break\"). Many editors also accept a backslash `\\` at the end of the line. Use a blank line for a new paragraph, and a hard break when you want lines close together — like an address or a short poem."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-headings-text-p5",
+          "prompt": "You write two lines of text with just a single Enter between them and no trailing spaces. How does it render?",
+          "tests": [
+            "c-paragraphs"
+          ],
+          "explanation": "A single newline is collapsed into a space, so both lines flow together as one paragraph. You need a blank line for a new paragraph, or two trailing spaces for a hard line break.",
+          "xp": 10,
+          "context": "You're editing a README and typed:\n`Install the tool.`\n`Then run it.`",
+          "options": [
+            {
+              "id": "a",
+              "text": "As one continuous paragraph: `Install the tool. Then run it.`"
+            },
+            {
+              "id": "b",
+              "text": "As two separate paragraphs with a gap between them.",
+              "misconception": "Two separate paragraphs require a blank line between them, not just a single newline."
+            },
+            {
+              "id": "c",
+              "text": "As two lines stacked directly on top of each other.",
+              "misconception": "That stacked look needs a hard break (two trailing spaces or a backslash); a plain newline is collapsed instead."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "typing",
+          "id": "lesson-headings-text-p6",
+          "prompt": "What do you put at the end of a line to force a hard line break without starting a new paragraph? (Describe the whitespace answer.)",
+          "tests": [
+            "c-paragraphs"
+          ],
+          "explanation": "Ending a line with two (or more) trailing spaces creates a hard line break, keeping the next line directly beneath without a paragraph gap.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "two spaces",
+            "two trailing spaces",
+            "2 spaces",
+            "two or more spaces",
+            "two spaces at the end",
+            "trailing spaces"
+          ],
+          "hint": "It's an invisible amount of a common whitespace character."
+        },
+        {
+          "type": "text",
+          "id": "lesson-headings-text-p7",
+          "title": "Bold and Italic Emphasis",
+          "teaches": [
+            "c-emphasis"
+          ],
+          "body": "Emphasis lets you make words stand out inline, right inside a paragraph.\n\n- **Italic**: wrap text in a single asterisk or underscore — `*like this*` or `_like this_` renders as *like this*.\n- **Bold**: wrap text in double asterisks or double underscores — `**like this**` or `__like this__` renders as **like this**.\n- **Bold italic**: combine them with three markers — `***like this***`.\n\nA few practical tips:\n\n- The opening and closing markers must **match** and must **hug** the text with no stray space (`* wrong *` won't render as italic).\n- Asterisks are the safer, more portable choice, especially inside words — `un**believ**able` works, while underscores mid-word often don't.\n- Use emphasis sparingly. Bold is great for the one key term in a sentence; if everything is bold, nothing stands out."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-headings-text-p8",
+          "prompt": "Match each Markdown source to what it produces.",
+          "tests": [
+            "c-emphasis"
+          ],
+          "explanation": "One marker on each side gives italic, two gives bold, and three gives bold italic. The markers must hug the text.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "`*text*`",
+              "right": "Italic"
+            },
+            {
+              "id": "p2",
+              "left": "`**text**`",
+              "right": "Bold"
+            },
+            {
+              "id": "p3",
+              "left": "`***text***`",
+              "right": "Bold italic"
+            },
+            {
+              "id": "p4",
+              "left": "`* text *`",
+              "right": "Literal asterisks, no emphasis"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-headings-text-p9",
+          "prompt": "A teammate's README has one giant block of text with occasional single Enters between sentences, and every important word wrapped in `**bold**`. Explain what will go wrong when it renders and how you'd fix it using headings, paragraphs, and emphasis correctly.",
+          "tests": [
+            "c-headings",
+            "c-paragraphs",
+            "c-emphasis"
+          ],
+          "explanation": "A strong answer connects all three concepts: single newlines collapse into one paragraph, over-bolding kills emphasis, and headings restore scannable structure.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Single Enters collapse into one running paragraph; blank lines are needed to separate paragraphs",
+              "Overusing bold defeats its purpose — nothing stands out when everything is emphasized",
+              "Adding headings (# / ##) breaks the wall of text into scannable sections",
+              "Emphasis should be applied sparingly to key terms only"
+            ],
+            "commonMisconceptions": [
+              "Believing a single newline creates a visible line break or new paragraph",
+              "Thinking bolding more words makes a document clearer"
+            ],
+            "sampleAnswer": "Because the sentences are separated by single Enters, the renderer collapses them into one long paragraph instead of the intended separate lines. Blank lines between them (or hard breaks) would fix that. The heavy bolding means no single term actually stands out, so I'd strip most of it and bold only the few truly key terms. Finally, I'd add `#` and `##` headings to split the content into labeled sections like Installation and Usage so readers can scan it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-lists",
+      "title": "Lists and Checkboxes",
+      "description": "Create bulleted, numbered, and task lists to organize information.",
+      "skillNodeId": "node-formatting",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-lists-p1",
+          "title": "Bulleted Lists",
+          "teaches": [
+            "c-unordered-lists"
+          ],
+          "body": "When you have a set of items where **order doesn't matter** — a shopping list, a list of features, a set of dependencies — you reach for an **unordered list** (also called a bulleted list).\n\nTo create one, start each line with a `-`, a `*`, or a `+` followed by a space:\n\n- First item\n- Second item\n- Third item\n\nThe raw Markdown for that looks like:\n\n`- First item`\n\n`- Second item`\n\n`- Third item`\n\nPick one marker and stay consistent — most people use `-` because it's easy to type and reads cleanly in raw form.\n\nYou can **nest** items by indenting a child line by two spaces:\n\n- Fruits\n  - Apples\n  - Oranges\n- Vegetables\n\nThe indentation tells the renderer that `Apples` and `Oranges` belong under `Fruits`."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-lists-p2",
+          "prompt": "Which raw Markdown produces a bulleted (unordered) list?",
+          "tests": [
+            "c-unordered-lists"
+          ],
+          "explanation": "Unordered lists start each line with a bullet marker (`-`, `*`, or `+`) followed by a space. A number followed by a period creates an ordered list instead, and plain lines with no marker render as a single paragraph.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "- Milk\n- Eggs\n- Bread"
+            },
+            {
+              "id": "b",
+              "text": "1. Milk\n2. Eggs\n3. Bread",
+              "misconception": "Numbers with periods create an ordered (numbered) list, not a bulleted one."
+            },
+            {
+              "id": "c",
+              "text": "Milk\nEggs\nBread",
+              "misconception": "Lines with no marker and single line breaks collapse into one paragraph, not a list."
+            },
+            {
+              "id": "d",
+              "text": "#Milk #Eggs #Bread",
+              "misconception": "A `#` creates a heading (and needs a space), not a list item."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-lists-p3",
+          "title": "Numbered Lists",
+          "teaches": [
+            "c-ordered-lists"
+          ],
+          "body": "When **sequence matters** — steps in an installation, ranked priorities, an ordered procedure — use an **ordered list**. Start each line with a number, a period, and a space:\n\n1. Clone the repository\n2. Install dependencies\n3. Run the tests\n\nA handy trick: the renderer **renumbers automatically** based on order, so the actual numbers you type don't have to be correct. This raw Markdown:\n\n`1. Clone the repository`\n\n`1. Install dependencies`\n\n`1. Run the tests`\n\n...still renders as 1, 2, 3. This means you can reorder steps without renumbering every line by hand. Many people write every line as `1.` for exactly this reason.\n\nThe number the list *starts* at is respected, though — begin with `3.` and the list renders 3, 4, 5."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-lists-p4",
+          "prompt": "You write three list items but type `1.` as the marker on all three lines. What number will the SECOND item show when rendered?",
+          "tests": [
+            "c-ordered-lists"
+          ],
+          "explanation": "Ordered lists renumber automatically based on position. Even though you typed `1.` three times, the renderer outputs 1, 2, 3 — so the second item shows 2.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "2",
+            "two"
+          ],
+          "hint": "The renderer counts positions, not the literal numbers you typed."
+        },
+        {
+          "type": "text",
+          "id": "lesson-lists-p5",
+          "title": "Task Lists (Checkboxes)",
+          "teaches": [
+            "c-task-lists"
+          ],
+          "body": "A **task list** is a special unordered list where each item is a checkbox — perfect for to-do lists, PR checklists, and tracking progress in issues.\n\nBuild one by starting with a normal bullet (`-`), then adding `[ ]` for an unchecked box or `[x]` for a checked one:\n\n- [x] Write the code\n- [x] Add tests\n- [ ] Update the docs\n\nThe raw Markdown is:\n\n`- [x] Write the code`\n\n`- [x] Add tests`\n\n`- [ ] Update the docs`\n\nNote the exact spacing: a dash, a space, then brackets containing either a single space or an `x`. On platforms like GitHub, these render as clickable checkboxes and even show a progress count.\n\nTask lists shine in **PR descriptions** — reviewers can see at a glance what's done and what's still outstanding."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-lists-p6",
+          "prompt": "Match each raw Markdown snippet to what it produces.",
+          "tests": [
+            "c-unordered-lists",
+            "c-ordered-lists",
+            "c-task-lists"
+          ],
+          "explanation": "A bare `-` makes a bullet, `1.` makes a numbered item, `- [ ]` makes an unchecked checkbox, and `- [x]` makes a checked checkbox.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "- Buy milk",
+              "right": "A bullet point"
+            },
+            {
+              "id": "p2",
+              "left": "1. Buy milk",
+              "right": "A numbered item"
+            },
+            {
+              "id": "p3",
+              "left": "- [ ] Buy milk",
+              "right": "An unchecked checkbox"
+            },
+            {
+              "id": "p4",
+              "left": "- [x] Buy milk",
+              "right": "A checked checkbox"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-lists-p7",
+          "prompt": "Which snippet renders as a CHECKED task list item?",
+          "tests": [
+            "c-task-lists"
+          ],
+          "explanation": "A checked task item needs a bullet, a space, and brackets containing a lowercase `x`: `- [x] Deploy`. An empty pair of brackets is an unchecked box, and omitting the leading `-` breaks the task-list syntax.",
+          "xp": 10,
+          "context": "You're building a checklist for a PR description and want one item to appear already completed.",
+          "options": [
+            {
+              "id": "a",
+              "text": "- [x] Deploy to staging"
+            },
+            {
+              "id": "b",
+              "text": "- [ ] Deploy to staging",
+              "misconception": "Brackets with a space inside render as an UNCHECKED box, not a checked one."
+            },
+            {
+              "id": "c",
+              "text": "[x] Deploy to staging",
+              "misconception": "Without the leading `- ` bullet, this isn't recognized as a task-list item at all."
+            },
+            {
+              "id": "d",
+              "text": "- (x) Deploy to staging",
+              "misconception": "Task lists require square brackets `[x]`, not parentheses."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-lists-p8",
+          "prompt": "You're documenting a project. Explain how you'd decide between an unordered list, an ordered list, and a task list, giving one example use for each.",
+          "tests": [
+            "c-unordered-lists",
+            "c-ordered-lists",
+            "c-task-lists"
+          ],
+          "explanation": "The key is matching list type to intent: bullets for unordered collections, numbers for sequences, checkboxes for trackable to-dos.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Unordered (bulleted) lists are for items where order doesn't matter, e.g. a list of features or dependencies",
+              "Ordered (numbered) lists are for sequences or steps where order matters, e.g. installation instructions",
+              "Task lists (checkboxes) are for trackable to-dos or checklists, e.g. a PR or release checklist"
+            ],
+            "commonMisconceptions": [
+              "Thinking you must number ordered-list lines correctly by hand — the renderer renumbers automatically",
+              "Believing task lists are unrelated to bullets, when they're actually bullets with `[ ]`/`[x]` added"
+            ],
+            "sampleAnswer": "I use an unordered list when the items are just a collection with no inherent sequence, like listing a project's key features. I use an ordered list when steps must happen in a specific order, like setup instructions: clone, install, run. I use a task list when items represent work to track, such as a PR checklist where reviewers can see which items are done via checked boxes and which remain."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-links-images",
+      "title": "Links and Images",
+      "description": "Add hyperlinks and embed images into your documents.",
+      "skillNodeId": "node-formatting",
+      "estimatedMinutes": 45,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-links-images-p1",
+          "title": "Why Links and Images Matter",
+          "teaches": [],
+          "body": "So far you've learned to structure text with headings, emphasis, and lists. But documentation rarely lives alone — it points to other pages, references sources, and shows screenshots.\n\nIn this lesson you'll master the two Markdown features that connect your document to the wider world:\n\n- **Links** — clickable text that jumps somewhere else\n- **Images** — pictures embedded right into your rendered document\n\nBoth use a similar bracket-and-parenthesis syntax, so once you learn one, the other is nearly free."
+        },
+        {
+          "type": "text",
+          "id": "lesson-links-images-p2",
+          "title": "Writing Hyperlinks",
+          "teaches": [
+            "c-links"
+          ],
+          "body": "A Markdown link has two parts: the **link text** in square brackets, and the **URL** in parentheses immediately after.\n\n### Basic syntax\n\n`[Visit the docs](https://example.com/docs)`\n\nWhen rendered, this shows the words **Visit the docs** as clickable text that points to `https://example.com/docs`. The reader never sees the raw URL — they see your chosen text.\n\n### Titles on hover\n\nYou can add an optional title that appears when a reader hovers over the link. Put it in quotes after the URL:\n\n`[Visit the docs](https://example.com \"Our documentation\")`\n\n### Relative links\n\nURLs don't have to be full web addresses. In a project, you often link to other files:\n\n`[See the contributing guide](CONTRIBUTING.md)`\n\nThis is how README files link to other docs in the same repository."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-links-images-p3",
+          "prompt": "Which snippet renders the words \"Read more\" as a clickable link to https://blog.io?",
+          "tests": [
+            "c-links"
+          ],
+          "explanation": "Link text goes in square brackets, and the URL goes in parentheses immediately after — with no space between the closing bracket and the opening parenthesis.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "`[Read more](https://blog.io)`"
+            },
+            {
+              "id": "b",
+              "text": "`(Read more)[https://blog.io]`",
+              "misconception": "Reverses the syntax — puts text in parentheses and URL in brackets. Markdown uses brackets for text, parentheses for the URL."
+            },
+            {
+              "id": "c",
+              "text": "`[Read more] (https://blog.io)`",
+              "misconception": "Adds a space between the bracket and parenthesis, which breaks the link — most renderers show it as plain text."
+            },
+            {
+              "id": "d",
+              "text": "`{Read more}(https://blog.io)`",
+              "misconception": "Uses curly braces instead of square brackets; Markdown links require square brackets for the text."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "typing",
+          "id": "lesson-links-images-p4",
+          "prompt": "Write the Markdown for a link whose visible text is Home and points to the URL /index.html",
+          "tests": [
+            "c-links"
+          ],
+          "explanation": "The pattern is [text](url). Relative URLs like /index.html work just like full web addresses.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "[Home](/index.html)"
+          ],
+          "hint": "Use square brackets then parentheses, with no space between them."
+        },
+        {
+          "type": "text",
+          "id": "lesson-links-images-p5",
+          "title": "Embedding Images",
+          "teaches": [
+            "c-images"
+          ],
+          "body": "Image syntax is almost identical to link syntax — with one crucial difference: it starts with an exclamation mark `!`.\n\n### Basic syntax\n\n`![A golden retriever puppy](puppy.jpg)`\n\nBreaking it down:\n\n- The `!` tells Markdown to embed rather than link.\n- The text in square brackets is the **alt text** — a description shown if the image fails to load and read aloud by screen readers.\n- The parentheses hold the **image path or URL**.\n\n### Alt text matters\n\nAlways write meaningful alt text. `![](logo.png)` technically works but leaves visually impaired readers and broken-image viewers with nothing.\n\n### Links vs. images\n\nThe only visible difference in syntax is the leading `!`. A link makes text clickable; an image displays the picture inline."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-links-images-p6",
+          "title": "Link vs. Image Syntax Side by Side",
+          "teaches": [
+            "c-links",
+            "c-images"
+          ],
+          "intro": "The two syntaxes differ by a single leading character.",
+          "mermaid": "flowchart TD\n    A[Bracket-paren syntax] --> B[No leading mark]\n    A --> C[Leading exclamation mark]\n    B --> D[Link: clickable text]\n    C --> E[Image: displays picture]",
+          "caption": "Notice both share [text](target); the exclamation mark is what turns a link into an embedded image."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-links-images-p7",
+          "prompt": "What does the leading `!` in `![Chart](chart.png)` do?",
+          "tests": [
+            "c-images"
+          ],
+          "explanation": "The exclamation mark is the only syntactic difference between a link and an image. It tells the renderer to embed and display the image inline rather than create clickable text.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "It tells Markdown to embed and display the image inline."
+            },
+            {
+              "id": "b",
+              "text": "It makes the image a clickable link to chart.png.",
+              "misconception": "Confuses images with links. The ! embeds the image; it doesn't add click behavior on its own."
+            },
+            {
+              "id": "c",
+              "text": "It marks the alt text as important or bold.",
+              "misconception": "The ! is not emphasis — it's the image marker, and it affects the whole element, not the alt text styling."
+            },
+            {
+              "id": "d",
+              "text": "It hides the image until the reader hovers over it.",
+              "misconception": "There's no hover-to-reveal behavior; the ! simply signals an image embed."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "matching",
+          "id": "lesson-links-images-p8",
+          "prompt": "Match each Markdown snippet to what it produces when rendered.",
+          "tests": [
+            "c-links",
+            "c-images"
+          ],
+          "explanation": "Links use plain [text](url) and produce clickable text. Images add a leading ! and display the picture, using the bracket text as alt text.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "[Docs](docs.md)",
+              "right": "Clickable text linking to a file"
+            },
+            {
+              "id": "p2",
+              "left": "![Docs](docs.png)",
+              "right": "An embedded image displayed inline"
+            },
+            {
+              "id": "p3",
+              "left": "![](logo.png)",
+              "right": "An image with empty alt text"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "lesson-links-images-p9",
+          "title": "Combining Links and Images",
+          "teaches": [
+            "c-links",
+            "c-images"
+          ],
+          "body": "A common pattern is a **clickable image** — an image wrapped in a link so readers can click the picture to navigate somewhere.\n\nYou nest the image syntax inside the link's square brackets:\n\n`[![Build status](badge.svg)](https://ci.example.com)`\n\nRead it from the inside out:\n\n- `![Build status](badge.svg)` is the image.\n- Wrapping it in `[ ... ](https://ci.example.com)` makes that image a clickable link.\n\nThis is exactly how the status badges at the top of many README files work: they show an image and link to the build or coverage report when clicked."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-links-images-p10",
+          "prompt": "In your own words, explain how image syntax differs from link syntax in Markdown, and why alt text is worth writing.",
+          "tests": [
+            "c-links",
+            "c-images"
+          ],
+          "explanation": "Image and link syntax are nearly identical; the leading exclamation mark distinguishes them. Alt text serves accessibility and fallback purposes.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Image syntax starts with a leading `!` while link syntax does not",
+              "Both use [text](target): brackets for text/alt, parentheses for the URL or path",
+              "Alt text describes the image for screen readers and shows when the image fails to load"
+            ],
+            "commonMisconceptions": [
+              "Thinking links and images use completely different syntax",
+              "Believing alt text is optional or purely decorative with no functional purpose"
+            ],
+            "sampleAnswer": "Both use the [text](target) pattern, but an image begins with an exclamation mark, like ![alt](image.png), while a link omits it, like [text](url). The bracket text is clickable link text for a link, but for an image it becomes alt text — a description that screen readers announce and that displays when the image can't load, making the document accessible and resilient."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-code",
+      "title": "Code and Quotes",
+      "description": "Show code with inline spans and fenced blocks, and highlight callouts with blockquotes.",
+      "skillNodeId": "node-formatting",
+      "estimatedMinutes": 55,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-code-p1",
+          "title": "Why Code Needs Special Treatment",
+          "teaches": [
+            "c-inline-code"
+          ],
+          "body": "When you write about code in Markdown, you can't just type it as plain text. Plain text gets mangled: characters like `*`, `_`, and `#` trigger formatting, and your carefully typed code loses its meaning.\n\nMarkdown gives you a way to mark text as code so it renders verbatim, in a monospace font, with no formatting applied.\n\n## Inline code spans\n\nWrap a short snippet in single backticks to make an **inline code span**. Use it for things you'd mention mid-sentence: a function name, a filename, a flag, or a value.\n\nFor example, writing:\n\n- Run `npm install` before you start.\n- The `--force` flag skips the prompt.\n- Edit the `config.json` file.\n\nEach backtick-wrapped piece renders in monospace and ignores any special characters inside it. So `*args` stays literally `*args` — the asterisk does not turn on italics."
+        },
+        {
+          "type": "text",
+          "id": "lesson-code-p2",
+          "title": "Backticks Inside Backticks",
+          "teaches": [
+            "c-inline-code"
+          ],
+          "body": "What if the code you want to show *contains* a backtick? Single backticks won't work — Markdown would end your span early.\n\nThe trick: wrap with **more** backticks than appear inside. To show a literal single backtick, wrap the whole thing in double backticks:\n\n- Typing ``use `backticks` here`` renders as: use `backticks` here.\n\nThe rule is simple: use a run of backticks longer than the longest run inside your code. If your snippet has two backticks in a row, wrap it in three. Markdown matches the opening and closing runs, and any shorter runs inside are treated as literal text.\n\nYou can also add a space just inside the delimiters if your code starts or ends with a backtick, and the renderer trims that padding space."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-code-p3",
+          "prompt": "Which Markdown correctly shows the filename config.yml as inline code in a sentence?",
+          "tests": [
+            "c-inline-code"
+          ],
+          "explanation": "Single backticks around a short snippet create an inline code span. Asterisks make text bold or italic, not code, and quotes do nothing special.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "Edit the `config.yml` file."
+            },
+            {
+              "id": "b",
+              "text": "Edit the **config.yml** file.",
+              "misconception": "Confuses emphasis (bold) with code formatting; asterisks bold text, they don't render it as monospace code."
+            },
+            {
+              "id": "c",
+              "text": "Edit the \"config.yml\" file.",
+              "misconception": "Plain quotation marks are literal characters in Markdown and produce no code styling."
+            },
+            {
+              "id": "d",
+              "text": "Edit the _config.yml_ file.",
+              "misconception": "Underscores create italic emphasis, not an inline code span."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-code-p4",
+          "title": "Fenced Code Blocks",
+          "teaches": [
+            "c-fenced-code"
+          ],
+          "body": "Inline spans are for tiny fragments. For multi-line code — a whole function, a config file, a terminal session — use a **fenced code block**.\n\nStart a line with three backticks, put your code on the lines below, and close with three backticks on their own line:\n\n```\nfunction greet(name) {\n  return \"Hi \" + name;\n}\n```\n\nEverything between the fences is shown verbatim, preserving indentation and line breaks, with no Markdown formatting applied inside.\n\n## Syntax highlighting\n\nAdd a **language identifier** right after the opening fence to enable syntax highlighting:\n\n```js\nconst x = 42;\n```\n\nHere `js` tells the renderer to color the code as JavaScript. Common identifiers include `js`, `python`, `bash`, `json`, `html`, and `sql`. The label affects only coloring — it never changes the code itself.\n\nTip: if your code itself contains three backticks, open and close the fence with four backticks instead."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-code-p5",
+          "title": "Inline vs. Fenced at a Glance",
+          "teaches": [
+            "c-inline-code",
+            "c-fenced-code"
+          ],
+          "intro": "Choose based on how much code you're showing.",
+          "mermaid": "flowchart TD\n    A[Showing code?] --> B{One short fragment mid-sentence?}\n    B -->|Yes| C[Inline code: single backticks]\n    B -->|No, multiple lines| D[Fenced block: triple backticks]\n    D --> E[Add language for highlighting]",
+          "caption": "Notice: inline spans fit inside a sentence, while fenced blocks stand alone and can carry a language label for coloring."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-code-p6",
+          "prompt": "What do you add immediately after the opening triple backticks of a fenced block to turn on syntax highlighting?",
+          "tests": [
+            "c-fenced-code"
+          ],
+          "explanation": "A language identifier (like `js` or `python`) placed right after the opening fence tells the renderer how to color the code.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "a language identifier",
+            "language identifier",
+            "the language",
+            "language name",
+            "a language name",
+            "language"
+          ],
+          "hint": "It names the programming language, e.g. js or python."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-code-p7",
+          "prompt": "Your code snippet itself contains a line with three backticks. How do you fence it correctly?",
+          "tests": [
+            "c-fenced-code"
+          ],
+          "explanation": "When your content contains a run of backticks, use a longer run to fence it. Four backticks safely wrap code that contains three.",
+          "xp": 10,
+          "context": "You want to show a Markdown tutorial that includes ``` inside the example.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Open and close the block with four backticks instead of three."
+            },
+            {
+              "id": "b",
+              "text": "Use single backticks around the whole multi-line block.",
+              "misconception": "Single backticks make an inline span and can't reliably wrap multi-line content containing backticks."
+            },
+            {
+              "id": "c",
+              "text": "Escape every backtick inside with an asterisk.",
+              "misconception": "Asterisks are emphasis markers, not escape characters, and don't neutralize backticks in a fence."
+            },
+            {
+              "id": "d",
+              "text": "Remove the language identifier so the fence closes correctly.",
+              "misconception": "The language label has nothing to do with how the fence delimiters match; removing it doesn't help."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-code-p8",
+          "title": "Blockquotes for Callouts",
+          "teaches": [
+            "c-blockquotes"
+          ],
+          "body": "A **blockquote** sets text apart as quoted or highlighted material. Start a line with a greater-than sign and a space:\n\n> This is a blockquote.\n\nRenderers typically show it indented with a vertical bar on the left, drawing the reader's eye.\n\n## Uses\n\nBlockquotes are great for:\n\n- Quoting someone (a spec, a reviewer, a doc).\n- Callouts like notes and warnings in a README.\n\nYou can put multiple lines in one quote by starting each with `>`, and you can nest quotes by adding more signs, like `>>`. You can also use other Markdown inside a blockquote — for example **bold** text or a list:\n\n> **Note:** Always run tests before pushing.\n\nThat combination — a bold label inside a blockquote — is a common pattern for callouts in project docs."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-code-p9",
+          "prompt": "Match each Markdown syntax to what it produces.",
+          "tests": [
+            "c-inline-code",
+            "c-fenced-code",
+            "c-blockquotes"
+          ],
+          "explanation": "Single backticks = inline code; triple backticks = fenced block (with optional language); a leading > = blockquote.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "`text`",
+              "right": "Inline code span"
+            },
+            {
+              "id": "p2",
+              "left": "``` on its own line",
+              "right": "Fenced code block"
+            },
+            {
+              "id": "p3",
+              "left": "> text",
+              "right": "Blockquote"
+            },
+            {
+              "id": "p4",
+              "left": "```python",
+              "right": "Fenced block with syntax highlighting"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-code-p10",
+          "prompt": "You're writing a README section that (1) names a command a user must type, (2) shows a full three-line setup script, and (3) warns readers not to commit their secrets. Explain which Markdown feature you'd use for each and why.",
+          "tests": [
+            "c-inline-code",
+            "c-fenced-code",
+            "c-blockquotes"
+          ],
+          "explanation": "Matching the feature to the content is the core skill: inline for fragments, fenced for multi-line code, blockquotes for callouts.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Use an inline code span (single backticks) for the single command name mentioned in prose",
+              "Use a fenced code block (triple backticks, ideally with a language label) for the three-line setup script",
+              "Use a blockquote (leading >) for the warning/callout about secrets"
+            ],
+            "commonMisconceptions": [
+              "Using a fenced block for a single mid-sentence command instead of an inline span",
+              "Thinking the language identifier changes the code rather than just its coloring",
+              "Using bold or italics instead of a blockquote to create a callout"
+            ],
+            "sampleAnswer": "I'd wrap the command in single backticks as an inline code span since it's a short fragment inside a sentence. For the three-line setup script I'd use a fenced code block with a language label like `bash` so it stays on its own lines with highlighting. For the warning I'd use a blockquote starting with `>`, likely with a bold **Warning:** label, so it stands out as a callout."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-tables",
+      "title": "Tables and Dividers",
+      "description": "Present structured data with tables and separate sections with horizontal rules.",
+      "skillNodeId": "node-formatting",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-tables-p1",
+          "title": "Building Tables in Markdown",
+          "teaches": [
+            "c-tables"
+          ],
+          "body": "When you need to present structured data — a list of options with descriptions, a comparison, or config values — a **table** beats a long bulleted list.\n\nA Markdown table is built from three parts, one per line:\n\n- A **header row** with your column labels, separated by pipes `|`.\n- A **separator row** made of dashes `---` that tells the renderer \"this is a table.\"\n- One or more **data rows**, each cell separated by pipes.\n\nHere is a minimal example:\n\n```\n| Command | Description |\n| --- | --- |\n| git add | Stage changes |\n| git commit | Save a snapshot |\n```\n\nThat renders as a clean two-column grid. The pipes mark where each cell starts and ends, and the dashed line under the header is what actually triggers table rendering. Notice you don't need to line the pipes up perfectly — the renderer ignores extra spaces — but aligning them in your raw source keeps the text readable."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-tables-p2",
+          "title": "Anatomy of a Table",
+          "teaches": [
+            "c-tables"
+          ],
+          "intro": "Each line of raw text maps to one visual row.",
+          "mermaid": "flowchart TD\n  A[Header row: | Name | Role |] --> B[Separator row: | --- | --- |]\n  B --> C[Data row: | Ada | Engineer |]\n  B --> D[Data row: | Grace | Admiral |]\n  C --> E[Rendered grid]\n  D --> E",
+          "caption": "Notice the separator row of dashes sits between the header and the data rows. Without it, the renderer treats everything as plain paragraph text."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-tables-p3",
+          "prompt": "Which line is required for text to render as a table rather than plain paragraphs?",
+          "tests": [
+            "c-tables"
+          ],
+          "explanation": "The separator row of dashes (like `| --- | --- |`) directly under the header is what signals a table. Without it, the pipes are just literal characters in a paragraph.",
+          "xp": 10,
+          "context": "You wrote a header row and two data rows with pipes, but it renders as one messy line of text.",
+          "options": [
+            {
+              "id": "a",
+              "text": "The dashed separator row beneath the header"
+            },
+            {
+              "id": "b",
+              "text": "A blank line above the header row",
+              "misconception": "Blank lines separate block elements but don't create table structure; the dashes are what matter."
+            },
+            {
+              "id": "c",
+              "text": "A heading (`##`) directly above the table",
+              "misconception": "A heading is optional context, not a structural requirement for tables."
+            },
+            {
+              "id": "d",
+              "text": "Bold text in the header cells",
+              "misconception": "Many renderers bold headers automatically, but emphasis is styling, not the trigger for table rendering."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-tables-p4",
+          "title": "Aligning Table Columns",
+          "teaches": [
+            "c-tables"
+          ],
+          "body": "You can control how each column aligns by adding a colon `:` to the dashes in the **separator row**:\n\n- `:---` — left-aligned (the default)\n- `:---:` — centered\n- `---:` — right-aligned\n\nRight alignment is especially handy for numbers, so digits line up by place value.\n\n```\n| Item | Qty | Price |\n| :--- | :---: | ---: |\n| Pen | 3 | 1.50 |\n| Notebook | 12 | 24.00 |\n```\n\nHere `Item` stays left, `Qty` centers, and `Price` hugs the right edge. The colons only ever go in the separator row — never in the header or data rows. Each cell can still contain other inline Markdown, like `**bold**`, `inline code`, or a link, so tables mix well with everything you've already learned."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-tables-p5",
+          "prompt": "Write the separator-row cell syntax that makes a column right-aligned.",
+          "tests": [
+            "c-tables"
+          ],
+          "explanation": "Placing a colon on the right side of the dashes (`---:`) right-aligns that column — ideal for numeric data.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "---:",
+            "--:",
+            "----:",
+            "| ---: |",
+            "---: "
+          ],
+          "hint": "Put a colon on the side you want the text pushed toward, using dashes."
+        },
+        {
+          "type": "text",
+          "id": "lesson-tables-p6",
+          "title": "Horizontal Rules for Dividing Sections",
+          "teaches": [
+            "c-horizontal-rules"
+          ],
+          "body": "A **horizontal rule** draws a full-width divider line across the page. Use it to visually separate major sections — for example, between a README's intro and its installation steps, or between distinct topics in a long PR description.\n\nCreate one by putting **three or more** of the same marker on their own line, with a blank line above and below:\n\n- `---` (three hyphens)\n- `***` (three asterisks)\n- `___` (three underscores)\n\nAll three render identically, so pick one and stay consistent. Example:\n\n```\nIntro paragraph here.\n\n---\n\nNext section starts here.\n```\n\nOne caution: `---` directly **underneath a line of text with no blank line** can be interpreted as a heading underline instead of a rule. Always leave a blank line above your horizontal rule to be safe."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-tables-p7",
+          "prompt": "Why should you leave a blank line above a `---` horizontal rule?",
+          "tests": [
+            "c-horizontal-rules",
+            "c-headings"
+          ],
+          "explanation": "When `---` sits directly under a line of text with no blank line, many renderers read it as a Setext-style heading underline, turning that text into a big heading instead of drawing a divider.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "Otherwise the `---` may be read as a heading underline for the text above it"
+            },
+            {
+              "id": "b",
+              "text": "Otherwise the rule renders in a different color",
+              "misconception": "Horizontal rule color is a styling concern, not affected by spacing in the source."
+            },
+            {
+              "id": "c",
+              "text": "Otherwise you need at least five dashes instead of three",
+              "misconception": "Three markers is always enough; the blank line is about disambiguation, not the dash count."
+            },
+            {
+              "id": "d",
+              "text": "Otherwise the rule becomes centered instead of full width",
+              "misconception": "Horizontal rules always span full width; spacing doesn't change their alignment."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "matching",
+          "id": "lesson-tables-p8",
+          "prompt": "Match each raw Markdown snippet to what it produces.",
+          "tests": [
+            "c-tables",
+            "c-horizontal-rules"
+          ],
+          "explanation": "Colons in the separator row set alignment, three dashes on their own line make a rule, and the dashed separator row is what makes a table render.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "`| ---: |`",
+              "right": "Right-aligned column"
+            },
+            {
+              "id": "p2",
+              "left": "`| :---: |`",
+              "right": "Centered column"
+            },
+            {
+              "id": "p3",
+              "left": "`***` on its own line",
+              "right": "Horizontal rule"
+            },
+            {
+              "id": "p4",
+              "left": "`| Name | Role |` then `| --- | --- |`",
+              "right": "Table header with two columns"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-tables-p9",
+          "prompt": "You're writing a README section that lists three CLI flags with a short description of each, followed by a divider before the next section. Explain how you'd structure this in Markdown and why a table plus a horizontal rule fits here.",
+          "tests": [
+            "c-tables",
+            "c-horizontal-rules"
+          ],
+          "explanation": "A two-column table cleanly pairs each flag with its description, and a horizontal rule signals the end of the section.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Use a table with a header row, a dashed separator row, and one data row per flag",
+              "Each row pairs a flag (e.g. in inline code) with its description across two columns",
+              "Add a horizontal rule (`---`, `***`, or `___`) on its own line after the table to divide sections",
+              "Leave a blank line above the horizontal rule so it isn't misread as a heading underline"
+            ],
+            "commonMisconceptions": [
+              "Thinking the separator dashes are optional decoration rather than the required table trigger",
+              "Believing colons for alignment go in the header or data rows instead of the separator row",
+              "Placing `---` immediately under text, causing it to render as a heading"
+            ],
+            "sampleAnswer": "I'd make a two-column table: a header row like `| Flag | Description |`, then the separator `| :--- | :--- |`, then one data row per flag with the flag in inline code (e.g. `| \\`--verbose\\` | Show detailed output |`). The table keeps each flag aligned with its description so it's scannable. After the table I'd add a blank line, then `---` on its own line, then another blank line to draw a clean divider before the next section — the blank line above prevents it from being read as a heading underline."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-readme-anatomy",
+      "title": "Anatomy of a README",
+      "description": "Understand a README's purpose and craft a strong title, description, and badges.",
+      "skillNodeId": "node-readmes",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-readme-anatomy-p1",
+          "title": "Why a README Exists",
+          "teaches": [
+            "c-readme-purpose"
+          ],
+          "body": "A **README** is the front door to your project. It's the first file people open — on GitHub it renders automatically on the repository home page — so it has to answer a stranger's questions fast: *What is this? Why should I care? How do I use it?*\n\nThe key insight is that a README serves **multiple audiences at once**:\n\n- A **new user** who wants to know what the project does and how to install it.\n- A **potential contributor** who needs to build and test the code.\n- Your **future self**, returning in six months having forgotten everything.\n- A **decision-maker** skimming to judge whether the project is active and trustworthy.\n\nBecause of this, good READMEs are ordered from most-general to most-specific: a clear title and one-line pitch up top, then description, then the practical details. Someone should grasp the point in the first ten seconds without scrolling.\n\nFor example, a README that opens with *\"`quickcache` is a 2KB in-memory cache for Node.js with TTL support\"* immediately tells a visitor what it is, how big it is, and who it's for — before they read anything else."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-readme-anatomy-p2",
+          "prompt": "Which statement best captures the purpose of a README?",
+          "tests": [
+            "c-readme-purpose"
+          ],
+          "explanation": "A README must quickly orient several kinds of readers — users, contributors, and your future self — about what the project is and how to use it. It's not just for developers, and it's not a place to dump every detail.",
+          "xp": 10,
+          "context": "A teammate says READMEs are 'just install instructions for developers.'",
+          "options": [
+            {
+              "id": "a",
+              "text": "It orients multiple audiences — users, contributors, and your future self — about what the project is and how to use it."
+            },
+            {
+              "id": "b",
+              "text": "It is only for developers who will contribute code, so it should contain build steps and nothing else.",
+              "misconception": "Treats the README as contributor-only documentation, ignoring users, decision-makers, and future readers."
+            },
+            {
+              "id": "c",
+              "text": "It is an exhaustive reference that documents every function and configuration option in the project.",
+              "misconception": "Confuses a README's role as an orienting overview with full API reference documentation."
+            },
+            {
+              "id": "d",
+              "text": "It exists mainly so the repository looks complete and professional to search engines.",
+              "misconception": "Focuses on appearance rather than the README's real job of informing human readers."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-readme-anatomy-p3",
+          "title": "The Title and Description Block",
+          "teaches": [
+            "c-project-title"
+          ],
+          "body": "The top of every README is the **title and description block**. It has two parts working together.\n\n### The title\n\nUse a single level-1 heading — one `#` — for the project name, and only one per document. This is the biggest text on the page and usually matches the project or package name:\n\n# quickcache\n\nIn raw Markdown that's simply:\n\n`# quickcache`\n\n### The description\n\nDirectly under the title comes a **one- or two-sentence description** — often called the *tagline* or *elevator pitch*. It should state what the project does and for whom, in plain language, without marketing fluff:\n\n> A 2KB in-memory cache for Node.js with TTL support and zero dependencies.\n\nA strong description answers three implicit questions: *what is it, what problem does it solve, and who is it for.* Keep it scannable — a reader deciding whether to keep reading should not have to parse a paragraph.\n\nAvoid two common weak openers: a title with no description at all (leaving readers guessing), and a description that restates the title (*\"quickcache is a caching library for caching\"*) without adding information."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-readme-anatomy-p4",
+          "title": "Top-of-README Layout",
+          "teaches": [
+            "c-project-title"
+          ],
+          "intro": "Here's how the opening of a README stacks, from top to bottom.",
+          "mermaid": "flowchart TD\n    A[# Project Title] --> B[Badges row]\n    B --> C[One-line description / tagline]\n    C --> D[Longer description paragraph]\n    D --> E[Installation, usage, etc.]",
+          "caption": "Notice the ordering: the single H1 title comes first, a badge row sits just beneath it, then the concise tagline, then more detail. Readers get the most general information first."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-readme-anatomy-p5",
+          "prompt": "What Markdown syntax do you use for a project title at the very top of a README (using 'quickcache' as the name)?",
+          "tests": [
+            "c-project-title",
+            "c-headings"
+          ],
+          "explanation": "A project title is a single level-1 heading, written with one '#' followed by a space and the name. There should be exactly one H1 in the document.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "# quickcache",
+            "#quickcache"
+          ],
+          "hint": "It's a level-1 heading — one hash symbol."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-readme-anatomy-p6",
+          "prompt": "Which is the strongest description line to place under the title?",
+          "tests": [
+            "c-project-title"
+          ],
+          "explanation": "A good description states what the project does and for whom, adding information beyond the name. Option b just restates the title; c is vague marketing; d is an unrelated detail that belongs lower down.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "A 2KB in-memory cache for Node.js with TTL support and zero dependencies."
+            },
+            {
+              "id": "b",
+              "text": "quickcache is a cache library that provides caching capabilities.",
+              "misconception": "Restates the title without adding any new information about what it does or who it's for."
+            },
+            {
+              "id": "c",
+              "text": "The best, blazing-fast, revolutionary caching solution you'll ever need!",
+              "misconception": "Relies on marketing hype instead of concretely stating what the project does."
+            },
+            {
+              "id": "d",
+              "text": "Licensed under MIT and maintained by the core team since 2021.",
+              "misconception": "Includes real but secondary metadata that belongs lower in the README, not in the opening pitch."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-readme-anatomy-p7",
+          "title": "Status Badges",
+          "teaches": [
+            "c-badges"
+          ],
+          "body": "**Badges** are the small colored labels you often see in a row just under the title — things like `build: passing`, `coverage: 92%`, `npm v1.4.0`, or `license: MIT`. They give readers an at-a-glance health check of the project before they read a single sentence.\n\n### What they're made of\n\nA badge is just an **image**, and clickable badges are an image wrapped in a link. Since you already know image and link syntax, a badge follows the same pattern:\n\n`![build status](https://img.shields.io/badge/build-passing-green)`\n\nWrapped in a link so clicking it jumps to the CI page:\n\n`[![build status](https://img.shields.io/badge/build-passing-green)](https://ci.example.com/quickcache)`\n\nServices like **Shields.io** generate the badge image from a URL; many CI, coverage, and package tools give you a ready-to-paste badge snippet.\n\n### Using them well\n\n- Place badges in a **single row directly under the title**, before the description.\n- Show information that helps a reader **trust or evaluate** the project: build status, test coverage, latest version, license.\n- Don't overdo it — a wall of ten badges is noise. Pick the few that matter.\n\nBecause each badge reflects live status, a green `build: passing` badge signals an actively maintained, working project, while a red one is an honest warning."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-readme-anatomy-p8",
+          "prompt": "Match each badge to the kind of information it communicates.",
+          "tests": [
+            "c-badges"
+          ],
+          "explanation": "Each badge type surfaces a different signal: CI result, test coverage percentage, the current release, and the legal terms of use.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "build: passing",
+              "right": "Whether the latest CI run succeeded"
+            },
+            {
+              "id": "p2",
+              "left": "coverage: 92%",
+              "right": "How much of the code is exercised by tests"
+            },
+            {
+              "id": "p3",
+              "left": "npm v1.4.0",
+              "right": "The current published release version"
+            },
+            {
+              "id": "p4",
+              "left": "license: MIT",
+              "right": "The legal terms for using the project"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-readme-anatomy-p9",
+          "prompt": "Given that a badge is fundamentally just an image, which snippet creates a clickable badge that links to a CI page?",
+          "tests": [
+            "c-badges",
+            "c-images",
+            "c-links"
+          ],
+          "explanation": "A clickable badge is an image nested inside a link: the image syntax `![alt](img)` goes where the link text normally sits, giving `[![alt](img)](url)`.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "[![build](https://img.shields.io/badge/build-passing-green)](https://ci.example.com)"
+            },
+            {
+              "id": "b",
+              "text": "![build](https://img.shields.io/badge/build-passing-green)(https://ci.example.com)",
+              "misconception": "Appends the link URL in parentheses but never wraps the image in link syntax, so it won't be clickable."
+            },
+            {
+              "id": "c",
+              "text": "[build](https://img.shields.io/badge/build-passing-green)",
+              "misconception": "Uses plain link syntax, which renders the alt text as a text link rather than showing the badge image."
+            },
+            {
+              "id": "d",
+              "text": "![[build](https://ci.example.com)](https://img.shields.io/badge/build-passing-green)",
+              "misconception": "Nests a link inside the image alt text, reversing the correct order of image-inside-link."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-readme-anatomy-p10",
+          "prompt": "Imagine a coworker pastes a README that has a title but jumps straight into installation commands. In your own words, explain what's missing from the top of the document and why it matters for readers.",
+          "tests": [
+            "c-readme-purpose",
+            "c-project-title",
+            "c-badges"
+          ],
+          "explanation": "A strong top-of-README opening orients any reader instantly. This README skips the description (and optionally badges), so a newcomer can't tell what the project is or whether it's healthy before diving into commands.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "A concise description/tagline is missing, so readers don't learn what the project does or who it's for",
+              "The README should serve multiple audiences (new users, contributors, future self) quickly, and jumping to install fails the newcomer",
+              "Status badges could add an at-a-glance trust signal such as build status, version, or license"
+            ],
+            "commonMisconceptions": [
+              "Thinking a title alone is enough to orient a reader",
+              "Believing installation steps are the most important thing to lead with",
+              "Assuming badges are decorative rather than informative"
+            ],
+            "sampleAnswer": "The README has a title but no description, so a reader can't tell what the project actually does or who it's for before hitting commands. Since a README needs to orient users, contributors, and even your future self within seconds, it should open with a one-line tagline stating the purpose. A row of badges (build passing, version, license) under the title would also help readers quickly judge whether the project is active and trustworthy before investing time in the install steps."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-readme-sections",
+      "title": "Essential README Sections",
+      "description": "Write installation, usage, table of contents, contributing, and license sections.",
+      "skillNodeId": "node-readmes",
+      "estimatedMinutes": 55,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-readme-sections-p1",
+          "title": "The Anatomy of a Complete README",
+          "teaches": [],
+          "body": "You already know a README opens with a **project title**, a short description, and maybe some **status badges**. But a title alone doesn't help someone actually *use* your project.\n\nThe body of a great README answers four questions in order:\n\n- How do I install it? (**Installation**)\n- How do I use it? (**Usage**)\n- How do I navigate this long document? (**Table of contents**)\n- How do I help, and what am I allowed to do with this? (**Contributing** and **License**)\n\nIn this lesson you'll write each of these sections using Markdown tools you already know — headings, fenced code blocks, lists, and links."
+        },
+        {
+          "type": "text",
+          "id": "lesson-readme-sections-p2",
+          "title": "Installation and Usage Sections",
+          "teaches": [
+            "c-installation-usage"
+          ],
+          "body": "## Installation\n\nAn **Installation** section gives the reader the exact commands to get your project running. Because these are commands, put them in a **fenced code block** so they render as copy-pasteable text with no auto-formatting surprises.\n\n### Installation\n\n```bash\nnpm install my-cool-lib\n```\n\nIf setup has ordered steps (clone, then install, then configure), use an **ordered list** with a fenced code block under each step.\n\n## Usage\n\nA **Usage** section shows the reader what to do *after* installing. Lead with the simplest possible working example, then build up.\n\n### Usage\n\n```js\nimport { greet } from 'my-cool-lib';\n\ngreet('world'); // => \"Hello, world\"\n```\n\nUse a fenced code block with a language tag (like ` ```js `) so the example gets syntax highlighting. Mention config options or flags with `inline code` when you refer to them in a sentence.\n\nThe key rule: **installation tells them how to get it; usage shows them what to do with it.** Keep them as separate headings so readers can jump straight to what they need."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-readme-sections-p3",
+          "prompt": "Which snippet best belongs under a Usage section rather than an Installation section?",
+          "tests": [
+            "c-installation-usage"
+          ],
+          "explanation": "Installation covers getting the project onto the reader's machine (package managers, cloning). Usage shows what to do once it's installed — calling the library, running the tool, seeing output.",
+          "xp": 10,
+          "context": "You're reviewing a teammate's README and deciding where each code block belongs.",
+          "options": [
+            {
+              "id": "a",
+              "text": "A code block calling `greet('world')` and showing its returned output"
+            },
+            {
+              "id": "b",
+              "text": "A code block running `npm install my-cool-lib`",
+              "misconception": "This is an install command — it gets the package onto the machine, so it belongs under Installation, not Usage."
+            },
+            {
+              "id": "c",
+              "text": "A code block running `git clone` followed by `cd project`",
+              "misconception": "Cloning and entering the directory are setup steps that belong in Installation, before the project can be used."
+            },
+            {
+              "id": "d",
+              "text": "A code block running `apt-get install nodejs` to get the runtime",
+              "misconception": "Installing a prerequisite runtime is part of getting set up, so it belongs under Installation/prerequisites."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-readme-sections-p4",
+          "title": "Table of Contents",
+          "teaches": [
+            "c-toc"
+          ],
+          "body": "Once a README grows past a screen or two, add a **table of contents (TOC)** near the top so readers can jump to any section.\n\nA TOC is just an **unordered list of links**, where each link points to a heading in the same document. GitHub and most renderers automatically create an **anchor** for every heading. The anchor is the heading text, lowercased, with spaces turned into hyphens and punctuation removed.\n\nSo a heading like:\n\n```md\n## Getting Started\n```\n\ngets the anchor `#getting-started`. You link to it like any other link, but the destination starts with `#`:\n\n```md\n## Table of Contents\n\n- [Installation](#installation)\n- [Usage](#usage)\n- [Contributing](#contributing)\n- [License](#license)\n```\n\nRules to remember:\n\n- Lowercase everything and replace each space with a hyphen.\n- Drop punctuation like `.` or `?`.\n- Nest sub-sections by indenting the list items.\n\nBecause a TOC is built from in-page links, it only works if your section headings actually exist and match the anchors."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-readme-sections-p5",
+          "title": "How a TOC Link Finds Its Heading",
+          "teaches": [
+            "c-toc"
+          ],
+          "intro": "A TOC entry is a link whose target is the auto-generated anchor of a heading.",
+          "mermaid": "flowchart LR\n  A[\"- [Usage](#usage)\"] --> B[\"Renderer looks up anchor #usage\"]\n  B --> C[\"## Usage heading\"]\n  C --> D[\"Page scrolls to that section\"]",
+          "caption": "Notice the link target `#usage` matches the heading `## Usage` lowercased with spaces hyphenated. If the heading text or anchor doesn't match, the link goes nowhere."
+        },
+        {
+          "type": "typing",
+          "id": "lesson-readme-sections-p6",
+          "prompt": "A README has a heading `## Getting Started`. Write the exact TOC link (Markdown) whose visible text is \"Getting Started\" and that jumps to that heading.",
+          "tests": [
+            "c-toc",
+            "c-links"
+          ],
+          "explanation": "The visible text goes in square brackets and the anchor goes in parentheses. The anchor is the heading lowercased with the space replaced by a hyphen: `#getting-started`.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "[Getting Started](#getting-started)"
+          ],
+          "hint": "Format is [text](#anchor). Lowercase the anchor and replace the space with a hyphen."
+        },
+        {
+          "type": "text",
+          "id": "lesson-readme-sections-p7",
+          "title": "Contributing and License Sections",
+          "teaches": [
+            "c-contributing-section"
+          ],
+          "body": "## Contributing\n\nThe **Contributing** section tells other people how to help. Keep it welcoming and concrete. A good pattern:\n\n- A short sentence inviting contributions.\n- An **ordered list** of the workflow: fork, branch, commit, open a pull request.\n- A **link** to a longer `CONTRIBUTING.md` file if you have one.\n\n### Contributing\n\n```md\nContributions are welcome! To propose a change:\n\n1. Fork the repo and create a branch.\n2. Make your change and add tests.\n3. Open a pull request describing what you changed.\n\nSee [CONTRIBUTING.md](CONTRIBUTING.md) for details.\n```\n\nYou can also link to an issues page or add a **task list** of good first issues.\n\n## License\n\nThe **License** section tells readers what they're legally allowed to do with your code. Keep it short — usually one line naming the license, often linking to the full text.\n\n### License\n\n```md\nThis project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.\n```\n\nName the specific license (MIT, Apache-2.0, GPL-3.0) rather than just writing \"open source.\" Without a license section, readers must assume they have **no** rights to reuse your code, so this small section matters a lot."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-readme-sections-p8",
+          "prompt": "Why is it a problem to publish a project README with no License section at all?",
+          "tests": [
+            "c-contributing-section"
+          ],
+          "explanation": "With no license stated, default copyright applies and others legally have no permission to use, copy, or modify your code — even if the repo is public. Naming a license grants those rights.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "Without a stated license, others have no legal permission to reuse the code by default"
+            },
+            {
+              "id": "b",
+              "text": "The README won't render correctly in GitHub without a License heading",
+              "misconception": "A missing section doesn't break rendering; Markdown renders fine regardless of which sections you include."
+            },
+            {
+              "id": "c",
+              "text": "The table of contents anchors will stop working without it",
+              "misconception": "TOC anchors depend only on the headings that exist; omitting a License section doesn't break links to other sections."
+            },
+            {
+              "id": "d",
+              "text": "Contributors can't fork the repository until a license is added",
+              "misconception": "Forking is a platform feature available on public repos regardless of license; the license governs reuse rights, not forking."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "matching",
+          "id": "lesson-readme-sections-p9",
+          "prompt": "Match each README section to the content that belongs in it.",
+          "tests": [
+            "c-installation-usage",
+            "c-toc",
+            "c-contributing-section"
+          ],
+          "explanation": "Installation = how to get it; Usage = a working example of using it; Table of contents = in-page links to sections; Contributing = the workflow for helping; License = the reuse terms.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "Installation",
+              "right": "`npm install my-cool-lib` in a fenced code block"
+            },
+            {
+              "id": "p2",
+              "left": "Usage",
+              "right": "A short code example calling the library and showing output"
+            },
+            {
+              "id": "p3",
+              "left": "Table of contents",
+              "right": "A bulleted list of links like `[Usage](#usage)`"
+            },
+            {
+              "id": "p4",
+              "left": "Contributing",
+              "right": "A numbered fork → branch → pull request workflow"
+            },
+            {
+              "id": "p5",
+              "left": "License",
+              "right": "One line naming MIT and linking to the LICENSE file"
+            }
+          ]
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-readme-sections-p10",
+          "prompt": "You've just written a small CLI tool and are drafting its README. In your own words, describe what you'd put in the Installation, Usage, Table of Contents, and License sections, and which Markdown features you'd use for each.",
+          "tests": [
+            "c-installation-usage",
+            "c-toc",
+            "c-contributing-section"
+          ],
+          "explanation": "A strong answer connects each section to its purpose and the right Markdown tool: fenced code blocks for install/usage commands, a bulleted list of in-page links for the TOC, and a concise named license.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Installation gives the setup/install commands, shown in a fenced code block",
+              "Usage shows a concrete working example (also a fenced code block, ideally language-tagged)",
+              "The table of contents is an unordered list of links pointing to heading anchors like #usage",
+              "The License section names a specific license (e.g., MIT) rather than just saying 'open source'"
+            ],
+            "commonMisconceptions": [
+              "Mixing install commands and usage examples into one undifferentiated section",
+              "Thinking a TOC needs a special syntax rather than being ordinary in-page links",
+              "Believing a public repo without a license is automatically free to reuse"
+            ],
+            "sampleAnswer": "Installation would have a fenced bash code block with the install command (e.g., `npm install my-tool`). Usage would show a fenced code block running the command with sample output so readers see it work. The table of contents near the top would be a bulleted list of links like [Installation](#installation) and [Usage](#usage) that jump to each heading. The License section would be one line naming the MIT License and linking to the LICENSE file so people know their reuse rights. I might also add a Contributing section with a numbered fork/branch/PR workflow."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-pr-anatomy",
+      "title": "Anatomy of a PR Description",
+      "description": "Learn why PR descriptions matter and how to summarize your changes clearly.",
+      "skillNodeId": "node-pr",
+      "estimatedMinutes": 45,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-pr-anatomy-p1",
+          "title": "Why a PR Description Exists",
+          "teaches": [
+            "c-pr-purpose"
+          ],
+          "body": "When you open a pull request, the code diff shows *what* lines changed. The **PR description** exists to explain everything the diff cannot: *why* the change was made, *what problem* it solves, and *how* a reviewer should approach it.\n\nThink of the reviewer's situation. They open your PR cold, often with no context. A good description saves them from reverse-engineering your intent line by line. It answers questions before they're asked:\n\n- What problem or ticket does this address?\n- What approach did you take, and why this one?\n- Is there anything risky the reviewer should look at closely?\n\nA PR description is also **permanent documentation**. Six months from now, someone running `git blame` on a confusing line will land on your PR. A clear description turns that moment from frustration into understanding.\n\nIn short: the diff is the *what*, and the description is the *why* and the *how*. Without it, reviewers guess — and guessing leads to slower reviews and missed bugs."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-pr-anatomy-p2",
+          "prompt": "What does a PR description provide that the code diff alone cannot?",
+          "tests": [
+            "c-pr-purpose"
+          ],
+          "explanation": "The diff already shows the exact lines that changed. The description's unique job is to supply the reasoning, context, and reviewing guidance the raw diff can't express.",
+          "xp": 10,
+          "context": "A teammate says, \"The diff already shows what changed, so why bother writing a description?\"",
+          "options": [
+            {
+              "id": "a",
+              "text": "The reasoning behind the change and context to help a reviewer"
+            },
+            {
+              "id": "b",
+              "text": "The exact lines of code that were added and removed",
+              "misconception": "This is precisely what the diff itself already displays; the description's value is elsewhere."
+            },
+            {
+              "id": "c",
+              "text": "An automatically generated list of every file touched",
+              "misconception": "File lists are also derivable from the diff, and this isn't the description's main purpose."
+            },
+            {
+              "id": "d",
+              "text": "The final merged commit hash for the branch",
+              "misconception": "A commit hash is metadata produced by the tooling, not the purpose of a written description."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-pr-anatomy-p3",
+          "prompt": "In your own words, explain why a PR description is valuable not just to the current reviewer but to future readers of the codebase.",
+          "tests": [
+            "c-pr-purpose"
+          ],
+          "explanation": "A strong answer connects the description to both the immediate review and its long-term life as searchable documentation.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "The description explains the why/context that the diff cannot show",
+              "It speeds up and improves the current review by giving reviewers intent",
+              "It serves as lasting documentation reachable via git blame/history later"
+            ],
+            "commonMisconceptions": [
+              "Thinking the description just repeats what the diff shows",
+              "Assuming it only matters until the PR is merged"
+            ],
+            "sampleAnswer": "A PR description records the intent and context behind a change, which the diff alone never captures. For the current reviewer it makes the review faster and more accurate because they understand the goal. For future readers, it becomes permanent documentation — when someone traces a line back through history, the description explains why the code exists at all."
+          }
+        },
+        {
+          "type": "text",
+          "id": "lesson-pr-anatomy-p4",
+          "title": "Writing a Clear Summary of Changes",
+          "teaches": [
+            "c-pr-summary"
+          ],
+          "body": "The heart of any PR description is the **summary of changes**: a short, scannable account of what you did and why.\n\nA good summary is written for a busy reader. Lead with a one- or two-sentence overview of the change, then break the specifics into a bulleted list so reviewers can scan them quickly.\n\n### A reusable pattern\n\nStart with a plain-language statement of the goal, then list concrete changes:\n\n```markdown\n## Summary\n\nFixes the login timeout that logged users out after 30 seconds.\n\n- Increased the session TTL from `30s` to `30m`\n- Added a `refreshToken` call on the settings page\n- Updated tests in `auth.test.ts`\n```\n\nNotice the habits of a strong summary:\n\n- **Lead with the outcome**, not the mechanics (\"Fixes the login timeout\" beats \"Changed a constant\").\n- **Use bullets** for individual changes so each is independently scannable.\n- **Use `inline code`** for file names, functions, and values so they stand out.\n- **Be specific but brief** — enough that a reviewer knows where to look, not a line-by-line retelling.\n\nAvoid the two common failure modes: a summary so vague it says nothing (\"fixed some bugs\") or so bloated it re-describes the entire diff. Aim for the middle: clear intent plus the handful of changes that matter."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-pr-anatomy-p5",
+          "title": "The Shape of a PR Description",
+          "teaches": [
+            "c-pr-summary"
+          ],
+          "intro": "Here's how the pieces fit together, from intent down to details.",
+          "mermaid": "flowchart TD\n  A[Title: concise change name] --> B[Summary: one-line outcome]\n  B --> C[Bulleted list of key changes]\n  C --> D[Context / why this approach]\n  D --> E[Notes for reviewers]",
+          "caption": "Notice the flow: the summary opens with the outcome, then narrows into a scannable bulleted list of specific changes before adding context."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-pr-anatomy-p6",
+          "prompt": "Match each summary-writing habit to the reason it helps the reviewer.",
+          "tests": [
+            "c-pr-summary"
+          ],
+          "explanation": "Each habit targets a specific reviewer need: fast orientation, scannability, visual clarity, and knowing where to focus.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "Lead with the outcome",
+              "right": "Reviewer instantly grasps the goal"
+            },
+            {
+              "id": "p2",
+              "left": "Break changes into bullets",
+              "right": "Each change is independently scannable"
+            },
+            {
+              "id": "p3",
+              "left": "Wrap file names in inline code",
+              "right": "Technical terms stand out visually"
+            },
+            {
+              "id": "p4",
+              "left": "Keep it specific but brief",
+              "right": "Reviewer knows where to look without re-reading the diff"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-pr-anatomy-p7",
+          "prompt": "Which summary opening is strongest for a PR that raised a session timeout limit?",
+          "tests": [
+            "c-pr-summary"
+          ],
+          "explanation": "Leading with the user-facing outcome orients the reviewer immediately, while still being specific. The others are either too vague or bury the intent under mechanics.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "Fixes the login timeout that logged users out after 30 seconds"
+            },
+            {
+              "id": "b",
+              "text": "Fixed some bugs and cleaned things up",
+              "misconception": "This is the vague failure mode — it tells the reviewer nothing actionable."
+            },
+            {
+              "id": "c",
+              "text": "Changed a constant from 30 to 1800 in the config file",
+              "misconception": "This leads with a mechanical detail and hides the actual outcome and intent."
+            },
+            {
+              "id": "d",
+              "text": "See the diff for the full list of every modified line",
+              "misconception": "This offloads the summary's job back onto the diff, defeating the purpose of writing one."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "typing",
+          "id": "lesson-pr-anatomy-p8",
+          "prompt": "In a PR summary, what Markdown formatting should you use to make individual changes independently scannable?",
+          "tests": [
+            "c-pr-summary",
+            "c-unordered-lists"
+          ],
+          "explanation": "A bulleted (unordered) list lets a reviewer scan each change on its own line rather than parsing a dense paragraph.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "a bulleted list",
+            "bulleted list",
+            "bullet list",
+            "unordered list",
+            "bullets",
+            "a bullet list"
+          ],
+          "hint": "It's the list type that uses '-' at the start of each line."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-pr-anatomy-p9",
+          "prompt": "Write a short PR summary (2-4 lines) for a change where you added dark mode to a settings page. Explain what makes your summary clear.",
+          "tests": [
+            "c-pr-summary"
+          ],
+          "explanation": "A good response opens with the outcome and uses scannable bullets with specific details, then reflects on why those choices help the reviewer.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Opens with the outcome/goal (adding dark mode)",
+              "Lists specific changes in a scannable form such as bullets",
+              "Is specific but concise rather than vague or a full diff retelling"
+            ],
+            "commonMisconceptions": [
+              "Writing something vague like 'added a feature'",
+              "Re-describing every changed line instead of summarizing key changes"
+            ],
+            "sampleAnswer": "## Summary\n\nAdds a dark mode toggle to the settings page.\n\n- New `ThemeToggle` component wired into `Settings.tsx`\n- Persists the choice to `localStorage`\n- Added dark-variant styles in `theme.css`\n\nIt's clear because it leads with the outcome, breaks the work into scannable bullets, and uses inline code so the reviewer knows exactly which files to check."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-pr-details",
+      "title": "Reviewable PR Details",
+      "description": "Add review checklists and link related issues and commits.",
+      "skillNodeId": "node-pr",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-pr-details-p1",
+          "title": "Why PR Details Matter",
+          "teaches": [],
+          "body": "A good pull request doesn't stop at a summary. The reviewer still has questions: *Did you test this? What issue does it close? Which commit introduced that fix?*\n\nYou already know how to write a clear PR summary. In this lesson you'll add two things that make a PR genuinely **reviewable**: a review checklist so reviewers know what's been verified, and links that tie the PR to the issues and commits it relates to.\n\nBoth are built from Markdown you've already met — task lists, links, and inline code — used with a few platform conventions."
+        },
+        {
+          "type": "text",
+          "id": "lesson-pr-details-p2",
+          "title": "Review Checklists in PRs",
+          "teaches": [
+            "c-pr-checklists"
+          ],
+          "body": "A **review checklist** is a task list near the top or bottom of a PR description that states what you (or the reviewer) should confirm before merging.\n\nIt uses the task list syntax: `- [ ]` for an unchecked item and `- [x]` for a checked one. On GitHub and similar platforms these render as clickable checkboxes.\n\n## Example\n\n```\n## Checklist\n- [x] Added unit tests for the new parser\n- [x] Updated the README\n- [ ] Verified on staging\n- [ ] Requires a database migration\n```\n\nEach item is a **concrete, verifiable claim** — not a vague hope. \"Added unit tests\" can be checked against the diff; \"made it better\" cannot.\n\nA good checklist:\n\n- keeps items short and specific\n- covers testing, docs, and any risky side effects\n- leaves boxes unchecked honestly when something isn't done yet\n\nThe unchecked boxes are a signal, not a failure — they tell the reviewer exactly what still needs attention."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-pr-details-p3",
+          "prompt": "Which checklist item is the most useful in a PR review checklist?",
+          "tests": [
+            "c-pr-checklists"
+          ],
+          "explanation": "A checklist item should be a concrete, verifiable claim. \"Added tests for the login flow\" can be confirmed against the diff; the others are vague or unverifiable.",
+          "xp": 10,
+          "context": "You're writing the checklist for a PR that changes the login flow.",
+          "options": [
+            {
+              "id": "a",
+              "text": "- [x] Added tests for the login flow"
+            },
+            {
+              "id": "b",
+              "text": "- [x] Made the code much better overall",
+              "misconception": "Thinks a checklist item can be a subjective judgment; reviewers can't verify vague quality claims."
+            },
+            {
+              "id": "c",
+              "text": "- [x] Did stuff",
+              "misconception": "Thinks any checked box counts; an item with no specific claim gives the reviewer nothing to confirm."
+            },
+            {
+              "id": "d",
+              "text": "- [x] Hopefully everything works now",
+              "misconception": "Confuses a hope with a verified fact; a checklist records what was actually confirmed."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "typing",
+          "id": "lesson-pr-details-p4",
+          "prompt": "Write the raw Markdown for a single UNCHECKED task list item that says: Verified on staging",
+          "tests": [
+            "c-pr-checklists",
+            "c-task-lists"
+          ],
+          "explanation": "An unchecked task list item is a hyphen, a space, open bracket, a space inside the brackets, close bracket, a space, then the text: `- [ ] Verified on staging`.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "- [ ] Verified on staging"
+          ],
+          "hint": "Start with a hyphen and use empty brackets with a space inside."
+        },
+        {
+          "type": "text",
+          "id": "lesson-pr-details-p5",
+          "title": "Linking Issues and Referencing Commits",
+          "teaches": [
+            "c-linking-issues"
+          ],
+          "body": "Tying a PR to its context lets reviewers jump straight to the relevant history. There are two main tools.\n\n## Referencing an issue\n\nWrite `#` followed by the issue number and the platform turns it into a link:\n\n```\nThis fixes the crash reported in #482.\n```\n\n## Closing an issue automatically\n\nSpecial **closing keywords** before the reference will auto-close the issue when the PR merges:\n\n```\nCloses #482\nFixes #17\nResolves #90\n```\n\nThe keywords `close`, `closes`, `fixes`, `fixed`, `resolve`, and `resolves` all work. Without a keyword, `#482` just links — it does not close anything.\n\n## Referencing a commit\n\nYou can paste a commit's **SHA hash** (the short 7-character form is enough) and it becomes a link to that commit:\n\n```\nRegression introduced in a1b2c3d, reverted here.\n```\n\nYou can also reference across repositories with `owner/repo#123`, useful when an issue lives in a different project."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-pr-details-p6",
+          "title": "How a PR Ties Things Together",
+          "teaches": [
+            "c-linking-issues"
+          ],
+          "intro": "A reviewable PR points outward to the work that explains it.",
+          "mermaid": "flowchart LR\n  PR[PR description] -->|Closes #482| ISS[Issue #482]\n  PR -->|links a1b2c3d| CMT[Commit a1b2c3d]\n  PR -->|owner/repo#12| EXT[Issue in another repo]\n  ISS -->|auto-closed on merge| DONE[Issue closed]",
+          "caption": "Notice that only the closing keyword path (Closes #482) leads to the issue being auto-closed; a plain SHA or cross-repo reference just links."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-pr-details-p7",
+          "prompt": "Match each reference to what it does in a PR description.",
+          "tests": [
+            "c-linking-issues"
+          ],
+          "explanation": "Closing keywords like `Closes` auto-close on merge; a bare `#number` only links; a SHA links to a commit; `owner/repo#n` links to an issue in another repository.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "Closes #482",
+              "right": "Auto-closes issue 482 when merged"
+            },
+            {
+              "id": "p2",
+              "left": "#482",
+              "right": "Links to issue 482 without closing it"
+            },
+            {
+              "id": "p3",
+              "left": "a1b2c3d",
+              "right": "Links to a specific commit"
+            },
+            {
+              "id": "p4",
+              "left": "owner/repo#12",
+              "right": "Links to an issue in another repository"
+            }
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-pr-details-p8",
+          "prompt": "You want issue 17 to be automatically closed when your PR merges. Which line do you write?",
+          "tests": [
+            "c-linking-issues"
+          ],
+          "explanation": "A closing keyword (`Fixes`, `Closes`, `Resolves`, etc.) followed by `#17` triggers auto-close on merge. A bare `#17` only creates a link.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "Fixes #17"
+            },
+            {
+              "id": "b",
+              "text": "See #17",
+              "misconception": "Assumes any mention of the issue closes it, but 'See' is not a closing keyword — this only links."
+            },
+            {
+              "id": "c",
+              "text": "#17",
+              "misconception": "Thinks a bare reference auto-closes; without a keyword it just links to the issue."
+            },
+            {
+              "id": "d",
+              "text": "Issue 17",
+              "misconception": "Omits the # sign, so the platform won't even create a link, let alone close the issue."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-pr-details-p9",
+          "prompt": "A teammate opens a PR with a good summary but no checklist and no issue references. Explain what you'd suggest they add and why it makes the PR more reviewable.",
+          "tests": [
+            "c-pr-checklists",
+            "c-linking-issues"
+          ],
+          "explanation": "A strong answer connects both concepts to the reviewer's needs: a checklist communicates what's verified, and issue/commit links give context and can auto-close work.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "A review checklist (task list) of concrete, verifiable items like tests added and docs updated",
+              "Linking the related issue with #number, and using a closing keyword like Closes/Fixes to auto-close on merge",
+              "Optionally referencing relevant commits by SHA for history/context",
+              "Explains these help the reviewer verify work and understand context faster"
+            ],
+            "commonMisconceptions": [
+              "Believing a bare #number auto-closes an issue without a keyword",
+              "Thinking vague checklist items ('made it better') are useful",
+              "Assuming the summary alone makes a PR fully reviewable"
+            ],
+            "sampleAnswer": "I'd suggest adding a checklist of specific items — like `- [x] Added tests` and `- [ ] Verified on staging` — so I can see at a glance what's been confirmed and what still needs attention. I'd also link the issue it addresses with a closing keyword, e.g. `Fixes #204`, so the issue auto-closes on merge and I have the full context. If a particular commit is worth highlighting, referencing its SHA lets me jump straight to that change. Together these make the PR much faster to review."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-writing-clean",
+      "title": "Writing Clearly",
+      "description": "Use concise language and scannable structure so readers find what they need.",
+      "skillNodeId": "node-style",
+      "estimatedMinutes": 55,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-writing-clean-p1",
+          "title": "Why Clear Writing Matters",
+          "teaches": [],
+          "body": "You have learned the mechanics of Markdown — headings, lists, code blocks, tables. But a document full of correct syntax can still be a chore to read.\n\nMost people don't read documentation top to bottom. They **scan**. They arrive with a question, hunt for the answer, grab it, and leave. Your job as an author is to make that hunt fast.\n\nThis lesson covers two skills that work together:\n\n- **Concise, plain-language writing** — say more with fewer words\n- **Scannable structure** — arrange those words so readers can skim to what they need\n\nBoth apply everywhere: READMEs, PR descriptions, wikis, and comments."
+        },
+        {
+          "type": "text",
+          "id": "lesson-writing-clean-p2",
+          "title": "Writing Concisely",
+          "teaches": [
+            "c-concise-writing"
+          ],
+          "body": "Concise writing removes words that don't earn their place. It favors **plain language** over jargon and filler.\n\nWatch how a bloated sentence shrinks without losing meaning:\n\n- Before: *\"In order to be able to run the tests, you will first need to make sure that you have installed all of the dependencies.\"*\n- After: *\"To run the tests, install the dependencies first.\"*\n\nThe second version cuts the word count roughly in half and reads faster. The techniques:\n\n- Cut hedges and filler: *in order to*, *basically*, *just*, *actually*, *really*\n- Prefer the **active voice**: *\"The script deletes old logs\"* beats *\"Old logs are deleted by the script.\"*\n- Choose short, common words: *use* over *utilize*, *help* over *facilitate*\n- Put the point first, the caveats after\n\nConcise does **not** mean cryptic. Keep the words a reader actually needs to understand you — just drop the ones they don't."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-writing-clean-p3",
+          "prompt": "Which rewrite is the most concise while keeping the meaning?",
+          "tests": [
+            "c-concise-writing"
+          ],
+          "explanation": "The best rewrite drops filler like 'At this point in time' and 'due to the fact that' and uses plain, active language. Conciseness means removing words that don't add meaning — not removing needed information.",
+          "xp": 10,
+          "context": "Original: \"At this point in time, the application is not able to start up due to the fact that the configuration file is missing.\"",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"The app won't start because the config file is missing.\""
+            },
+            {
+              "id": "b",
+              "text": "\"Currently, at this time, the application cannot start up as a result of the configuration file being absent.\"",
+              "misconception": "You swapped some phrases but kept redundant time markers ('Currently, at this time') and passive, wordy constructions."
+            },
+            {
+              "id": "c",
+              "text": "\"App broken.\"",
+              "misconception": "This is short but cryptic — it drops the reason the reader needs. Concise still keeps essential information."
+            },
+            {
+              "id": "d",
+              "text": "\"It should be noted that the application, due to a missing config file, is unable to start.\"",
+              "misconception": "placeholder"
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-writing-clean-p4",
+          "title": "Structure Readers Can Scan",
+          "teaches": [
+            "c-scannable-structure"
+          ],
+          "body": "Even concise prose becomes a wall if it arrives as one giant paragraph. **Scannable structure** breaks content into visual chunks a reader's eye can jump between.\n\nThe main tools — all Markdown you already know:\n\n- **Headings** label sections so readers can jump to the one they want\n- **Short paragraphs** (2–4 sentences) create breathing room\n- **Bulleted and numbered lists** turn a run-on sentence of items into a scannable column\n- **Bold** highlights key terms and the first words of list items\n- **Code spans and blocks** visually separate commands and code from prose\n\nCompare these two ways of giving steps:\n\n- Wall: *\"First clone the repo, then install dependencies with npm install, and after that copy .env.example to .env before finally running npm start.\"*\n- Scannable: a numbered list with one action per line.\n\nA good rule: **front-load** each section and each bullet with the most important word, so someone scanning the left edge of the page still gets the gist."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-writing-clean-p5",
+          "title": "How a Scanner's Eye Moves",
+          "teaches": [
+            "c-scannable-structure"
+          ],
+          "intro": "A reader skimming a well-structured page jumps between anchors rather than reading every word.",
+          "mermaid": "flowchart TD\n    A[Heading: Installation] --> B[Bold intro line]\n    B --> C[Numbered step 1]\n    C --> D[Numbered step 2]\n    D --> E[Code block: command]\n    E --> F[Next Heading: Usage]",
+          "caption": "Notice how headings, bold lead-ins, list items, and code blocks act as landing points. Structure gives the eye somewhere to jump, so the reader finds the target section fast."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-writing-clean-p6",
+          "prompt": "Match each writing problem to the tool that fixes it.",
+          "tests": [
+            "c-scannable-structure",
+            "c-concise-writing"
+          ],
+          "explanation": "Each formatting tool solves a specific scannability or clarity problem. Headings label sections, lists break up sequences, bold highlights key terms, and cutting filler tightens prose.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "A long run-on sentence listing five setup items",
+              "right": "Convert it to a bulleted list"
+            },
+            {
+              "id": "p2",
+              "left": "Readers can't jump to the part they need",
+              "right": "Add descriptive headings"
+            },
+            {
+              "id": "p3",
+              "left": "Sentence padded with 'in order to' and 'basically'",
+              "right": "Cut the filler words"
+            },
+            {
+              "id": "p4",
+              "left": "Key term is buried mid-paragraph",
+              "right": "Make it bold"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-writing-clean-p7",
+          "prompt": "What is the term for writing that removes filler and uses short, common words to say more with less?",
+          "tests": [
+            "c-concise-writing"
+          ],
+          "explanation": "Concise (or concise/plain-language) writing trims words that don't add meaning while keeping the information the reader needs.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "concise writing",
+            "concise",
+            "conciseness",
+            "plain language",
+            "plain-language writing"
+          ],
+          "hint": "It starts with 'c' and is the opposite of wordy."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-writing-clean-p8",
+          "prompt": "You're writing a README section with six install steps that must happen in order. What's the most scannable choice?",
+          "tests": [
+            "c-scannable-structure",
+            "c-ordered-lists"
+          ],
+          "explanation": "Order matters for install steps, so a numbered (ordered) list is ideal — each step gets its own line and the sequence is explicit and easy to scan.",
+          "xp": 10,
+          "options": [
+            {
+              "id": "a",
+              "text": "An ordered (numbered) list, one step per line"
+            },
+            {
+              "id": "b",
+              "text": "One paragraph joining the steps with 'then' and 'after that'",
+              "misconception": "Cramming sequential steps into prose creates a wall of text that's hard to scan and easy to lose your place in."
+            },
+            {
+              "id": "c",
+              "text": "A single bold sentence listing all six steps",
+              "misconception": "Bold doesn't add structure here; six steps in one line is still a wall, and order isn't visually clear."
+            },
+            {
+              "id": "d",
+              "text": "A blockquote containing all the steps",
+              "misconception": "Blockquotes signal quoted or set-aside content, not an ordered sequence of actions the reader must follow."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-writing-clean-p9",
+          "prompt": "A teammate wrote this PR description as a single dense paragraph: \"In order to fix the bug that was causing the login page to crash, I basically went ahead and refactored the auth module, and I also updated the tests, and additionally I updated the docs, and it should be noted that this closes issue 42.\" Rewrite it to be concise and scannable, and explain the changes you made.",
+          "tests": [
+            "c-concise-writing",
+            "c-scannable-structure"
+          ],
+          "explanation": "A strong answer both tightens the language and adds structure. It cuts filler ('in order to', 'basically', 'went ahead and', 'it should be noted that'), and it breaks the changes into a scannable list, likely with a short summary line and an issue reference.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Removes filler phrases like 'in order to', 'basically', 'went ahead and', 'it should be noted that'",
+              "Breaks the list of changes into a bulleted or numbered list instead of one paragraph",
+              "Keeps a short, clear summary of the purpose (fixing the login crash)",
+              "Preserves essential information including the issue reference (closes #42)"
+            ],
+            "commonMisconceptions": [
+              "Thinking concise means dropping needed details like the issue link",
+              "Believing formatting alone fixes it without also tightening the wording",
+              "Assuming a wall of text is fine as long as the words are correct"
+            ],
+            "sampleAnswer": "**Summary:** Fix login page crash by refactoring the auth module.\n\n**Changes:**\n- Refactored the auth module\n- Updated tests\n- Updated docs\n\nCloses #42.\n\nI cut filler words ('in order to', 'basically', 'it should be noted that'), split the run-on sentence into a scannable bulleted list, and kept the summary and issue reference so reviewers still have the context they need."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson-consistency",
+      "title": "Consistency and Callouts",
+      "description": "Apply consistent conventions and use notes, warnings, and callouts effectively.",
+      "skillNodeId": "node-style",
+      "estimatedMinutes": 50,
+      "pages": [
+        {
+          "type": "text",
+          "id": "lesson-consistency-p1",
+          "title": "Why Consistency Matters",
+          "teaches": [
+            "c-style-consistency"
+          ],
+          "body": "You've learned dozens of Markdown features. Now the challenge shifts from *knowing* syntax to *applying it the same way every time*. **Consistent style** is what makes a document feel professional rather than patched together.\n\nConsistency means picking one convention and sticking to it throughout a document (and ideally across a whole project). A reader shouldn't be distracted by the *how* — they should only notice the content.\n\nConsider a README where headings jump around: one section uses `## Setup`, another uses `## installation`, another writes `## USAGE`. Nothing is broken, but it reads like three people wrote it in a hurry. Compare that to `## Setup`, `## Installation`, `## Usage` — parallel, title-cased, predictable.\n\nInconsistency creates tiny friction on every line. Multiply that across a long document and readers lose trust in the details."
+        },
+        {
+          "type": "text",
+          "id": "lesson-consistency-p2",
+          "title": "Conventions to Lock Down",
+          "teaches": [
+            "c-style-consistency"
+          ],
+          "body": "Here are the choices worth making once and applying everywhere:\n\n### Emphasis markers\nPick one style for bold and italic. If you write `**bold**` and `_italic_`, don't switch to `__bold__` and `*italic*` halfway through.\n\n### List markers\nChoose a single bullet character. Use `-` throughout, or `*` throughout — not a mix:\n\n- Consistent uses `-` every time\n- Which keeps the raw source clean\n\n### Heading case\nDecide on Title Case (`## Getting Started`) or sentence case (`## Getting started`) and hold the line for every heading.\n\n### Code references\nAlways wrap file names, commands, and identifiers in `inline code`. If `config.json` is code in one paragraph, it should be code everywhere.\n\n### Spacing\nOne blank line between blocks, a newline at the end of the file. These invisible habits keep diffs small and clean.\n\nThe specific choice matters less than making a choice and honoring it."
+        },
+        {
+          "type": "multiple_choice",
+          "id": "lesson-consistency-p3",
+          "prompt": "Which snippet shows the best internal consistency?",
+          "tests": [
+            "c-style-consistency"
+          ],
+          "explanation": "",
+          "xp": 10,
+          "context": "A contributor is drafting a section of a README.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Uses `-` for every bullet, Title Case for every heading, and `**bold**` throughout."
+            },
+            {
+              "id": "b",
+              "text": "Mixes `-` and `*` bullets, alternates `**bold**` and `__bold__`, and varies heading case.",
+              "misconception": "You may think variety looks richer, but mixing markers signals carelessness and adds noise to the source."
+            },
+            {
+              "id": "c",
+              "text": "Uses Title Case headings but switches bullet characters between every list.",
+              "misconception": "Getting headings right is good, but switching bullet characters still breaks consistency in the raw source."
+            },
+            {
+              "id": "d",
+              "text": "Wraps file names in code in one section but leaves them as plain text elsewhere.",
+              "misconception": "Applying a convention only sometimes is exactly the inconsistency to avoid — code formatting must be uniform."
+            }
+          ],
+          "correctOptionId": "a"
+        },
+        {
+          "type": "text",
+          "id": "lesson-consistency-p4",
+          "title": "Notes, Warnings, and Callouts",
+          "teaches": [
+            "c-admonitions"
+          ],
+          "body": "Sometimes a line of text needs to *stand out* — a caveat, a heads-up, a critical warning. These are **admonitions** (also called callouts): visually distinct blocks that pull the reader's eye.\n\n### The portable way: blockquotes\nPlain Markdown has no built-in callout, so a common convention is a blockquote with a bold label:\n\n> **Note:** This feature requires Node 18 or newer.\n\n> **Warning:** Deleting this file cannot be undone.\n\nThis renders anywhere Markdown is supported.\n\n### GitHub-flavored alerts\nGitHub, and several other platforms, support a special syntax built on blockquotes:\n\n```\n> [!NOTE]\n> Useful information the reader should know.\n\n> [!WARNING]\n> Critical content demanding immediate attention.\n```\n\nThe keyword in brackets triggers a colored, icon-labeled box when rendered. Supported types include `NOTE`, `TIP`, `IMPORTANT`, `WARNING`, and `CAUTION`."
+        },
+        {
+          "type": "diagram",
+          "id": "lesson-consistency-p5",
+          "title": "Choosing a Callout Type",
+          "teaches": [
+            "c-admonitions"
+          ],
+          "intro": "Match the severity of your message to the right callout keyword.",
+          "mermaid": "flowchart TD\n  A[What kind of message?] --> B[Helpful extra info]\n  A --> C[A better way to do it]\n  A --> D[Must not be missed]\n  A --> E[Risk of a bad outcome]\n  B --> F[NOTE]\n  C --> G[TIP]\n  D --> H[IMPORTANT]\n  E --> I[WARNING / CAUTION]",
+          "caption": "Notice that callout choice is about the reader's needed reaction — informative vs. cautionary — not just decoration."
+        },
+        {
+          "type": "matching",
+          "id": "lesson-consistency-p6",
+          "prompt": "Match each callout type to the situation where it fits best.",
+          "tests": [
+            "c-admonitions"
+          ],
+          "explanation": "NOTE adds context, TIP offers a shortcut, IMPORTANT flags essential info, and WARNING signals possible harm. Matching severity to keyword keeps callouts meaningful.",
+          "xp": 15,
+          "pairs": [
+            {
+              "id": "p1",
+              "left": "NOTE",
+              "right": "Extra background the reader might find useful"
+            },
+            {
+              "id": "p2",
+              "left": "TIP",
+              "right": "An optional shortcut that makes a task easier"
+            },
+            {
+              "id": "p3",
+              "left": "IMPORTANT",
+              "right": "Essential info the reader must not skip"
+            },
+            {
+              "id": "p4",
+              "left": "WARNING",
+              "right": "An action that could cause data loss or breakage"
+            }
+          ]
+        },
+        {
+          "type": "typing",
+          "id": "lesson-consistency-p7",
+          "prompt": "Write the GitHub-flavored alert opening line (the blockquote line with the bracketed keyword) that would introduce a critical, attention-demanding callout.",
+          "tests": [
+            "c-admonitions"
+          ],
+          "explanation": "GitHub alerts start with a blockquote marker, then the keyword in brackets: `> [!WARNING]`. The alert body goes on the following blockquoted lines.",
+          "xp": 10,
+          "acceptableAnswers": [
+            "> [!WARNING]",
+            "[!WARNING]",
+            "> [!CAUTION]",
+            "[!CAUTION]"
+          ],
+          "hint": "Start with the blockquote character, then the keyword in square brackets prefixed with an exclamation point."
+        },
+        {
+          "type": "open_ended",
+          "id": "lesson-consistency-p8",
+          "prompt": "You're reviewing a teammate's README that uses three different bullet characters, mixes `**bold**` and `__bold__`, and buries a data-loss warning inside a normal paragraph. Explain what you'd advise them to change and why.",
+          "tests": [
+            "c-style-consistency",
+            "c-admonitions"
+          ],
+          "explanation": "A strong answer connects consistency to reader trust and low-friction reading, and connects callouts to surfacing critical information.",
+          "xp": 20,
+          "rubric": {
+            "keyPoints": [
+              "Pick one bullet character and one bold style and apply them uniformly throughout",
+              "Consistency reduces reader friction and makes the document look professional/trustworthy",
+              "The data-loss warning should be pulled out into a callout/admonition (blockquote with a bold label or a GitHub `> [!WARNING]` alert)",
+              "A warning must stand out visually because critical info buried in a paragraph is easily missed"
+            ],
+            "commonMisconceptions": [
+              "Believing the specific marker choice matters more than making a single consistent choice",
+              "Thinking callouts are purely decorative rather than tools to match reader reaction to message severity"
+            ],
+            "sampleAnswer": "I'd tell them to standardize on one bullet character (say `-`) and one bold style (`**bold**`) across the whole file, because the current mix adds noise and makes the doc look careless — consistency keeps readers focused on content. Then I'd move the data-loss warning out of the paragraph into its own callout, like `> [!WARNING]` on GitHub or a `> **Warning:**` blockquote, so a reader can't miss something that could destroy their data."
+          }
+        }
+      ]
+    }
+  ]
+}
