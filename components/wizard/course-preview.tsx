@@ -4,14 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { BookOpen, Clock, Plus, Sparkles, Target } from "lucide-react";
-import type { Course, CourseContent } from "@/lib/types";
+import type { Course, CourseContent, WizardAnswers } from "@/lib/types";
 import { addCourseToLibrary } from "@/lib/data/actions";
 import { useAppStore } from "@/lib/store/app-store";
 import { SkillTree } from "@/components/skill-map/skill-tree";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { WizardAnswers } from "./course-wizard";
 
 /** The mocked "AI" course preview + skill map, with Add to My Learning. */
 export function CoursePreview({

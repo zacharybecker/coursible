@@ -2,22 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, FileText, Sparkles, Upload, X } from "lucide-react";
-import type { CourseContent } from "@/lib/types";
-import { getCustomCoursePreview } from "@/lib/data/actions";
+import { ArrowLeft, ArrowRight, FileText, Sparkles, TriangleAlert, Upload, X } from "lucide-react";
+import type { CourseContent, GenerationJobStatus, WizardAnswers } from "@/lib/types";
+import { getGenerationJob } from "@/lib/data/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { CoursePreview } from "./course-preview";
-
-export interface WizardAnswers {
-  outcome: string;
-  knowledge: string;
-  time: string;
-  style: string;
-  sources: string[];
-}
 
 const KNOWLEDGE_OPTIONS = [
   { value: "beginner", label: "Complete beginner", hint: "Starting from zero" },
@@ -42,12 +34,16 @@ const STYLE_OPTIONS = [
 const MAX_FILE_MB = 10;
 const ACCEPTED_TYPES = ".pdf,.md,.txt,.docx";
 
-const GENERATION_STAGES = [
-  "Analyzing your goal…",
-  "Mapping the skills you'll need…",
-  "Structuring lessons and projects…",
-  "Calibrating to your schedule…",
-];
+const STATUS_MESSAGES: Record<GenerationJobStatus, string> = {
+  queued: "Queued…",
+  outlining: "Mapping the skills you'll need…",
+  generating: "Writing lessons, questions, and diagrams…",
+  validating: "Checking every question against what's been taught…",
+  failed: "Something went wrong.",
+  done: "Done!",
+};
+
+const POLL_INTERVAL_MS = 2000;
 
 type Step = "outcome" | "knowledge" | "time" | "style" | "sources" | "generating" | "preview";
 const FORM_STEPS: Step[] = ["outcome", "knowledge", "time", "style", "sources"];
@@ -63,25 +59,53 @@ export function CourseWizard() {
   });
   const [fileError, setFileError] = useState<string | null>(null);
   const [preview, setPreview] = useState<CourseContent | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [jobStatus, setJobStatus] = useState<GenerationJobStatus>("queued");
+  const [jobError, setJobError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const stepIndex = FORM_STEPS.indexOf(step);
 
-  // Mocked "AI generation": staged messages, then the canned preview.
-  // (Stage is reset in next() when entering the generating step.)
-  const [stage, setStage] = useState(0);
+  async function startGeneration() {
+    setJobError(null);
+    setJobId(null);
+    setJobStatus("queued");
+    setStep("generating");
+    try {
+      const res = await fetch("/api/generation", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(answers),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const data = (await res.json()) as { jobId: string };
+      setJobId(data.jobId);
+    } catch {
+      setJobError("Could not start generation. Check your connection and try again.");
+    }
+  }
+
+  // Poll the job row for real stage progress until done or failed.
   useEffect(() => {
-    if (step !== "generating") return;
-    const interval = setInterval(() => setStage((s) => Math.min(s + 1, GENERATION_STAGES.length - 1)), 700);
-    const done = setTimeout(async () => {
-      setPreview(await getCustomCoursePreview());
-      setStep("preview");
-    }, 2900);
+    if (step !== "generating" || !jobId || jobError) return;
+    let cancelled = false;
+    const interval = setInterval(async () => {
+      const job = await getGenerationJob(jobId).catch(() => null);
+      if (cancelled || !job) return;
+      if (job.status === "failed") {
+        setJobError(job.error ?? "Something went wrong during generation.");
+      } else if (job.status === "done" && job.content) {
+        setPreview(job.content);
+        setStep("preview");
+      } else {
+        setJobStatus(job.status);
+      }
+    }, POLL_INTERVAL_MS);
     return () => {
+      cancelled = true;
       clearInterval(interval);
-      clearTimeout(done);
     };
-  }, [step]);
+  }, [step, jobId, jobError]);
 
   function canAdvance(): boolean {
     switch (step) {
@@ -102,8 +126,7 @@ export function CourseWizard() {
 
   function next() {
     if (step === "sources") {
-      setStage(0);
-      setStep("generating");
+      void startGeneration();
     } else {
       setStep(FORM_STEPS[stepIndex + 1]);
     }
@@ -134,6 +157,8 @@ export function CourseWizard() {
         answers={answers}
         onRestart={() => {
           setPreview(null);
+          setJobId(null);
+          setJobError(null);
           setAnswers({ outcome: "", knowledge: "", time: "", style: "", sources: [] });
           setStep("outcome");
         }}
@@ -145,34 +170,64 @@ export function CourseWizard() {
     return (
       <Card className="mx-auto max-w-lg">
         <CardContent className="flex flex-col items-center gap-5 p-10 text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-          >
-            <Sparkles className="size-10 text-brand" aria-hidden />
-          </motion.div>
-          <div>
-            <h2 className="font-bold">Designing your course</h2>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={stage}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                className="mt-1 text-sm text-muted-foreground"
+          {jobError ? (
+            <>
+              <TriangleAlert className="size-10 text-destructive" aria-hidden />
+              <div>
+                <h2 className="font-bold">Generation failed</h2>
+                <p className="mt-1 break-words text-sm text-muted-foreground">{jobError}</p>
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={() => void startGeneration()}>
+                  <Sparkles className="size-4" aria-hidden />
+                  Try again
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setJobError(null);
+                    setJobId(null);
+                    setStep("sources");
+                  }}
+                >
+                  Back
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
               >
-                {GENERATION_STAGES[stage]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-            <motion.div
-              className="h-full bg-brand"
-              initial={{ width: "5%" }}
-              animate={{ width: "95%" }}
-              transition={{ duration: 2.8, ease: "easeInOut" }}
-            />
-          </div>
+                <Sparkles className="size-10 text-brand" aria-hidden />
+              </motion.div>
+              <div>
+                <h2 className="font-bold">Designing your course</h2>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={jobStatus}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="mt-1 text-sm text-muted-foreground"
+                  >
+                    {STATUS_MESSAGES[jobStatus]}
+                  </motion.p>
+                </AnimatePresence>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  This takes a few minutes — a real AI is writing every lesson.
+                </p>
+              </div>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                <motion.div
+                  className="h-full w-1/3 rounded-full bg-brand"
+                  animate={{ x: ["-100%", "300%"] }}
+                  transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
+                />
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     );
@@ -228,7 +283,7 @@ export function CourseWizard() {
                 <>
                   <StepHeading
                     title="Where are you starting from?"
-                    hint="This sets the difficulty of your diagnostic and first lessons."
+                    hint="This sets the difficulty of your first lessons."
                   />
                   <OptionList
                     options={KNOWLEDGE_OPTIONS}
@@ -256,7 +311,7 @@ export function CourseWizard() {
                 <>
                   <StepHeading
                     title="How do you like to learn?"
-                    hint="This shapes the mix of activities in your course."
+                    hint="This shapes the mix of pages in your course."
                   />
                   <OptionList
                     options={STYLE_OPTIONS}
@@ -270,7 +325,7 @@ export function CourseWizard() {
                 <>
                   <StepHeading
                     title="Any materials to build from?"
-                    hint="Optional — notes, syllabi, or docs you trust. The course will draw from them."
+                    hint="Optional — notes, syllabi, or docs you trust. (File contents aren't used yet.)"
                   />
                   <input
                     ref={fileInputRef}
