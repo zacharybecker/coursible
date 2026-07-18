@@ -1,132 +1,103 @@
-// Zod schema for the controlled-JSON course content. Applied to every
-// course_content write (seed script, addCourseToLibrary) and reused by the
-// slice-2 generation pipeline. Beyond shape, it enforces referential
-// integrity: prereq ids resolve and form a DAG, lessons and activities point
-// at real skill nodes, and every question's correctOptionId is a real option.
+// Zod schema for the controlled-JSON course content, schema v2. Applied to
+// every course_content write (seed script, addCourseToLibrary, generation
+// pipeline). Beyond shape it enforces referential integrity (prereq ids
+// resolve and form a DAG, lessons point at real skill nodes, concept refs
+// resolve) and the pedagogy rules (teach-before-test, coverage, teaching
+// minimums, distractor shape) via lib/validation/pedagogy.ts.
 
 import { z } from "zod";
 import type { CourseContent } from "@/lib/types";
+import { coursePedagogyIssues } from "./pedagogy";
 
-const knowledgeCheckOption = z.object({
+const conceptSchema = z.object({
   id: z.string().min(1),
-  text: z.string().min(1),
+  name: z.string().min(1),
 });
 
-const knowledgeCheckQuestion = z
-  .object({
-    id: z.string().min(1),
-    prompt: z.string().min(1),
-    options: z.array(knowledgeCheckOption).min(2),
-    correctOptionId: z.string().min(1),
-    explanation: z.string(),
-  })
-  .superRefine((q, ctx) => {
-    if (!q.options.some((o) => o.id === q.correctOptionId)) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["correctOptionId"],
-        message: `correctOptionId "${q.correctOptionId}" matches no option`,
-      });
-    }
-  });
-
-const activityBase = {
+const contentPageBase = {
   id: z.string().min(1),
   title: z.string().min(1),
-  skillNodeId: z.string().min(1),
+  teaches: z.array(z.string().min(1)),
+};
+
+const textPage = z.object({
+  type: z.literal("text"),
+  ...contentPageBase,
+  body: z.string().min(1),
+});
+
+const diagramPage = z.object({
+  type: z.literal("diagram"),
+  ...contentPageBase,
+  intro: z.string().optional(),
+  mermaid: z.string().min(1),
+  caption: z.string().min(1),
+});
+
+const videoPage = z.object({
+  type: z.literal("video"),
+  ...contentPageBase,
+  searchQuery: z.string().min(1),
+  shouldCover: z.string().min(1),
+  videoId: z.string().nullable(),
+});
+
+const questionPageBase = {
+  id: z.string().min(1),
+  prompt: z.string().min(1),
+  tests: z.array(z.string().min(1)).min(1),
+  explanation: z.string(),
   xp: z.number().int().positive(),
 };
 
-const explanationCheck = z.object({
-  type: z.literal("explanation_check"),
-  ...activityBase,
-  content: z.string().min(1),
-  questions: z.array(knowledgeCheckQuestion).min(1),
-});
-
-const scenarioChoice = z.object({
+const multipleChoiceOption = z.object({
   id: z.string().min(1),
   text: z.string().min(1),
-  outcome: z.string(),
-  rationale: z.string(),
-  correct: z.boolean(),
+  misconception: z.string().min(1).optional(),
 });
 
-const scenarioDecision = z
-  .object({
-    type: z.literal("scenario_decision"),
-    ...activityBase,
-    scenario: z.string().min(1),
-    choices: z.array(scenarioChoice).min(2),
-  })
-  .superRefine((a, ctx) => {
-    if (!a.choices.some((c) => c.correct)) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["choices"],
-        message: "scenario has no correct choice",
-      });
-    }
-  });
-
-const checklistItem = z.object({
-  id: z.string().min(1),
-  text: z.string().min(1),
+const multipleChoicePage = z.object({
+  type: z.literal("multiple_choice"),
+  ...questionPageBase,
+  context: z.string().optional(),
+  options: z.array(multipleChoiceOption).min(2).max(5),
+  correctOptionId: z.string().min(1),
 });
 
-const appliedTask = z
-  .object({
-    type: z.literal("applied_task"),
-    ...activityBase,
-    prompt: z.string().min(1),
-    submissionType: z.enum(["command", "checklist"]),
-    expectedPatterns: z.array(z.string().min(1)).optional(),
-    checklist: z.array(checklistItem).min(1).optional(),
-    successFeedback: z.string(),
-    reviewFeedback: z.string(),
-  })
-  .superRefine((a, ctx) => {
-    if (a.submissionType === "command" && !a.expectedPatterns?.length) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["expectedPatterns"],
-        message: "command submission requires expectedPatterns",
-      });
-    }
-    if (a.submissionType === "checklist" && !a.checklist?.length) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["checklist"],
-        message: "checklist submission requires checklist items",
-      });
-    }
-  });
-
-const tutorSampleMessage = z.object({
-  role: z.enum(["tutor", "learner"]),
-  text: z.string().min(1),
+const matchingPage = z.object({
+  type: z.literal("matching"),
+  ...questionPageBase,
+  pairs: z
+    .array(z.object({ id: z.string().min(1), left: z.string().min(1), right: z.string().min(1) }))
+    .min(3)
+    .max(6),
 });
 
-const aiTutorConversation = z.object({
-  type: z.literal("ai_tutor_conversation"),
-  ...activityBase,
-  description: z.string().min(1),
-  sampleMessages: z.array(tutorSampleMessage),
+const typingPage = z.object({
+  type: z.literal("typing"),
+  ...questionPageBase,
+  acceptableAnswers: z.array(z.string().min(1)).min(1),
+  hint: z.string().optional(),
 });
 
-const spacedReview = z.object({
-  type: z.literal("spaced_review"),
-  ...activityBase,
-  description: z.string().min(1),
-  reviewItems: z.array(z.string().min(1)),
+const openEndedPage = z.object({
+  type: z.literal("open_ended"),
+  ...questionPageBase,
+  rubric: z.object({
+    keyPoints: z.array(z.string().min(1)).min(1),
+    commonMisconceptions: z.array(z.string().min(1)),
+    sampleAnswer: z.string().min(1),
+  }),
 });
 
-const activity = z.discriminatedUnion("type", [
-  explanationCheck,
-  scenarioDecision,
-  appliedTask,
-  aiTutorConversation,
-  spacedReview,
+const page = z.discriminatedUnion("type", [
+  textPage,
+  diagramPage,
+  videoPage,
+  multipleChoicePage,
+  matchingPage,
+  typingPage,
+  openEndedPage,
 ]);
 
 const lesson = z.object({
@@ -135,7 +106,7 @@ const lesson = z.object({
   description: z.string(),
   skillNodeId: z.string().min(1),
   estimatedMinutes: z.number().int().positive(),
-  activities: z.array(activity).min(1),
+  pages: z.array(page).min(1),
 });
 
 const skillNode = z.object({
@@ -168,11 +139,13 @@ function hasCycle(nodes: { id: string; prereqIds: string[] }[]): boolean {
 export const courseContentSchema: z.ZodType<CourseContent> = z
   .object({
     contentId: z.string().min(1),
+    schemaVersion: z.literal(2),
     title: z.string().min(1),
     description: z.string(),
     outcome: z.string(),
     tags: z.array(z.string().min(1)),
     estimatedHours: z.number().int().positive(),
+    concepts: z.array(conceptSchema).min(1),
     skillNodes: z.array(skillNode).min(1),
     lessons: z.array(lesson).min(1),
   })
@@ -197,26 +170,25 @@ export const courseContentSchema: z.ZodType<CourseContent> = z
         path: ["skillNodes"],
         message: "prereq graph contains a cycle",
       });
+      return; // pedagogy checks assume a DAG
     }
 
+    let badNodeRef = false;
     content.lessons.forEach((l, i) => {
       if (!nodeIds.has(l.skillNodeId)) {
+        badNodeRef = true;
         ctx.addIssue({
           code: "custom",
           path: ["lessons", i, "skillNodeId"],
           message: `lesson "${l.id}" points at unknown skill node "${l.skillNodeId}"`,
         });
       }
-      l.activities.forEach((a, j) => {
-        if (!nodeIds.has(a.skillNodeId)) {
-          ctx.addIssue({
-            code: "custom",
-            path: ["lessons", i, "activities", j, "skillNodeId"],
-            message: `activity "${a.id}" points at unknown skill node "${a.skillNodeId}"`,
-          });
-        }
-      });
     });
+    if (badNodeRef) return;
+
+    for (const issue of coursePedagogyIssues(content)) {
+      ctx.addIssue({ code: "custom", path: issue.path, message: issue.message });
+    }
   });
 
 /** Parse unknown input into CourseContent; throws ZodError on failure. */
