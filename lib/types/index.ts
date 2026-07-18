@@ -1,114 +1,124 @@
-// Shared domain types for the learning app.
-// These mirror the "controlled JSON" course schema from the MVP spec so the
-// same shapes can later be produced by the real generation pipeline.
+// Shared domain types for the learning app — schema v2.
+// A lesson is an ordered sequence of pages: content pages (teach) and
+// question pages (test). Concepts are the spine that makes the
+// teach-before-test pedagogy rules mechanically enforceable.
 
-// ---------- Activities ----------
+// ---------- Concepts ----------
 
-export interface KnowledgeCheckOption {
+export interface Concept {
   id: string;
-  text: string;
+  name: string;
 }
 
-export interface KnowledgeCheckQuestion {
+// ---------- Content pages (teach) ----------
+
+interface ContentPageBase {
+  id: string;
+  title: string;
+  /** Concept ids this page substantively teaches (may be empty for narrative pages). */
+  teaches: string[];
+}
+
+export interface TextPage extends ContentPageBase {
+  type: "text";
+  /** Markdown subset: paragraphs, **bold**, `code`, #/##/### headings, "- " lists. */
+  body: string;
+}
+
+export interface DiagramPage extends ContentPageBase {
+  type: "diagram";
+  intro?: string;
+  /** Mermaid source, rendered client-side. */
+  mermaid: string;
+  caption: string;
+}
+
+/** In the schema for forward-compatibility; neither generated nor rendered this slice. */
+export interface VideoPage extends ContentPageBase {
+  type: "video";
+  searchQuery: string;
+  /** What the video must explain. */
+  shouldCover: string;
+  /** Always null this slice. */
+  videoId: string | null;
+}
+
+// ---------- Question pages (test) ----------
+
+interface QuestionPageBase {
   id: string;
   prompt: string;
-  options: KnowledgeCheckOption[];
-  correctOptionId: string;
+  /** Concept ids this question tests (min 1, enforced by the validator). */
+  tests: string[];
   /** Shown after answering, right or wrong. */
   explanation: string;
-}
-
-export interface ExplanationCheckActivity {
-  type: "explanation_check";
-  id: string;
-  title: string;
-  skillNodeId: string;
   xp: number;
-  /** Explanation content. Paragraphs separated by blank lines; supports **bold** and `code`. */
-  content: string;
-  questions: KnowledgeCheckQuestion[];
 }
 
-export interface ScenarioChoice {
+export interface MultipleChoiceOption {
   id: string;
   text: string;
-  /** What happens if the learner picks this. */
-  outcome: string;
-  /** Why this was right or wrong. */
-  rationale: string;
-  correct: boolean;
-}
-
-export interface ScenarioDecisionActivity {
-  type: "scenario_decision";
-  id: string;
-  title: string;
-  skillNodeId: string;
-  xp: number;
-  scenario: string;
-  choices: ScenarioChoice[];
-}
-
-export interface ChecklistItem {
-  id: string;
-  text: string;
-}
-
-export interface AppliedTaskActivity {
-  type: "applied_task";
-  id: string;
-  title: string;
-  skillNodeId: string;
-  xp: number;
-  prompt: string;
-  submissionType: "command" | "checklist";
   /**
-   * For "command" submissions: case-insensitive regex sources; the submission
-   * must match every pattern to pass. Mock rule-matching, not real evaluation.
+   * For incorrect options only: the plausible confusion that would lead a
+   * learner to pick it. Required on every distractor; forbidden on the
+   * correct option (validator-enforced).
    */
-  expectedPatterns?: string[];
-  /** For "checklist" submissions: all items must be checked to pass. */
-  checklist?: ChecklistItem[];
-  successFeedback: string;
-  /** Shown when a command submission doesn't match ("needs review", not failure). */
-  reviewFeedback: string;
+  misconception?: string;
 }
 
-export interface TutorSampleMessage {
-  role: "tutor" | "learner";
-  text: string;
+export interface MultipleChoicePage extends QuestionPageBase {
+  type: "multiple_choice";
+  /** Optional scenario framing (absorbs the old scenario_decision activity). */
+  context?: string;
+  options: MultipleChoiceOption[];
+  correctOptionId: string;
 }
 
-export interface AiTutorConversationActivity {
-  type: "ai_tutor_conversation";
+export interface MatchingPair {
   id: string;
-  title: string;
-  skillNodeId: string;
-  xp: number;
-  description: string;
-  /** Static preview transcript — not functional in the prototype. */
-  sampleMessages: TutorSampleMessage[];
+  left: string;
+  right: string;
 }
 
-export interface SpacedReviewActivity {
-  type: "spaced_review";
-  id: string;
-  title: string;
-  skillNodeId: string;
-  xp: number;
-  description: string;
-  /** Concepts this review session would cover — preview only. */
-  reviewItems: string[];
+export interface MatchingPage extends QuestionPageBase {
+  type: "matching";
+  /** 3-6 pairs; the UI shuffles the right column. */
+  pairs: MatchingPair[];
 }
 
-export type Activity =
-  | ExplanationCheckActivity
-  | ScenarioDecisionActivity
-  | AppliedTaskActivity
-  | AiTutorConversationActivity
-  | SpacedReviewActivity;
+export interface TypingPage extends QuestionPageBase {
+  type: "typing";
+  /** Matched case- and whitespace-insensitively. */
+  acceptableAnswers: string[];
+  hint?: string;
+}
 
-export type ActivityType = Activity["type"];
+export interface OpenEndedRubric {
+  keyPoints: string[];
+  commonMisconceptions: string[];
+  sampleAnswer: string;
+}
+
+export interface OpenEndedPage extends QuestionPageBase {
+  type: "open_ended";
+  /** Fixed at generation time; applied by the grading model at answer time. */
+  rubric: OpenEndedRubric;
+}
+
+export type ContentPage = TextPage | DiagramPage | VideoPage;
+export type QuestionPage = MultipleChoicePage | MatchingPage | TypingPage | OpenEndedPage;
+export type Page = ContentPage | QuestionPage;
+export type PageType = Page["type"];
+
+const CONTENT_PAGE_TYPES: ReadonlySet<string> = new Set(["text", "diagram", "video"]);
+
+export function isContentPage(page: Page): page is ContentPage {
+  return CONTENT_PAGE_TYPES.has(page.type);
+}
+
+export function isQuestionPage(page: Page): page is QuestionPage {
+  return !CONTENT_PAGE_TYPES.has(page.type);
+}
 
 // ---------- Course structure ----------
 
@@ -118,7 +128,7 @@ export interface Lesson {
   description: string;
   skillNodeId: string;
   estimatedMinutes: number;
-  activities: Activity[];
+  pages: Page[];
 }
 
 export interface SkillNode {
@@ -141,16 +151,19 @@ export interface Cohort {
   memberCount: number;
 }
 
-/** Immutable course content — what the generation pipeline would produce. */
+/** Immutable course content — what the generation pipeline produces. */
 export interface CourseContent {
   /** Stable content identity; shared across copies and cohort members. */
   contentId: string;
+  schemaVersion: 2;
   title: string;
   description: string;
   /** The real-world outcome this course targets. */
   outcome: string;
   tags: string[];
   estimatedHours: number;
+  /** Flat list of concepts the course teaches — referenced by teaches/tests. */
+  concepts: Concept[];
   skillNodes: SkillNode[];
   lessons: Lesson[];
 }
@@ -167,17 +180,17 @@ export interface Course extends CourseContent {
 
 // ---------- Progress & gamification ----------
 
-export type ActivityOutcome = "correct" | "incorrect" | "needs_review";
+export type PageOutcome = "correct" | "incorrect";
 
 export interface LessonProgress {
   lessonId: string;
-  completedActivityIds: string[];
+  completedPageIds: string[];
   completed: boolean;
 }
 
 export interface CourseProgress {
   courseId: string;
-  /** 0-100 mastery per skill node id. */
+  /** 0-100 mastery per skill node id, driven by question-page outcomes. */
   masteryByNode: Record<string, number>;
   lessonProgress: Record<string, LessonProgress>;
   xpEarned: number;
@@ -195,15 +208,57 @@ export interface UserStats {
   lastStudyDate: string | null;
 }
 
-/** Result of completing one activity — what the UI celebrates. */
-export interface ActivityCompletionResult {
-  outcome: ActivityOutcome;
+/** Result of completing one page — what the UI celebrates. */
+export interface PageCompletionResult {
+  outcome: PageOutcome;
   xpAwarded: number;
-  /** New mastery value (0-100) for the activity's skill node. */
+  /** New mastery value (0-100) for the lesson's skill node. */
   nodeMastery: number;
-  /** True if this completion extended the streak (first activity today). */
+  /** True if this completion extended the streak (first page today). */
   streakExtended: boolean;
   currentStreak: number;
   lessonCompleted: boolean;
   courseCompleted: boolean;
+}
+
+// ---------- Open-ended grading ----------
+
+export type GradeVerdict = "pass" | "partial" | "retry";
+
+export interface OpenEndedGrade {
+  verdict: GradeVerdict;
+  feedback: string;
+  missedKeyPoints: string[];
+}
+
+/** Server response for a grading request; fallback means self-assessment UI. */
+export type GradeResponse =
+  | { ok: true; grade: OpenEndedGrade }
+  | { ok: false; fallback: true };
+
+// ---------- Course generation ----------
+
+export interface WizardAnswers {
+  outcome: string;
+  knowledge: string;
+  time: string;
+  style: string;
+  /** File names only — uploads are accepted and discarded this slice. */
+  sources: string[];
+}
+
+export type GenerationJobStatus =
+  | "queued"
+  | "outlining"
+  | "generating"
+  | "validating"
+  | "failed"
+  | "done";
+
+/** What the wizard polls. `content` is populated once status is "done". */
+export interface GenerationJobView {
+  id: string;
+  status: GenerationJobStatus;
+  error: string | null;
+  content: CourseContent | null;
 }
