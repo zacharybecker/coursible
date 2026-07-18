@@ -11,7 +11,7 @@ import { wizardAnswersSchema } from "@/lib/validation/wizard-answers";
 import { getModelClient } from "@/lib/generation/client";
 import { createGenerationJob, runGenerationJob } from "@/lib/generation/jobs";
 
-export const maxDuration = 800;
+export const maxDuration = 300;
 
 export async function POST(request: Request): Promise<Response> {
   const session = await auth.api.getSession({ headers: request.headers });
