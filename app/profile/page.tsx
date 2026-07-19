@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Flame, LogOut, Trophy, Zap } from "lucide-react";
 import type { UserStats } from "@/lib/types";
-import { getUserStats } from "@/lib/data/actions";
+import { fetchUserStatsShared } from "@/lib/data/client-reads";
 import { authClient, signOut } from "@/lib/auth-client";
 import { useAppStore } from "@/lib/store/app-store";
 import { XpBar } from "@/components/gamification/xp-bar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -19,10 +20,28 @@ export default function ProfilePage() {
   const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
-    getUserStats().then(setStats);
+    let cancelled = false;
+    fetchUserStatsShared(dataVersion)
+      .then((s) => !cancelled && setStats(s))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [dataVersion]);
 
-  if (!stats) return null;
+  if (!stats) {
+    return (
+      <div className="space-y-6" aria-busy="true" aria-label="Loading profile">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-20 w-full" />
+        <div className="grid grid-cols-3 gap-3">
+          <Skeleton className="h-24" />
+          <Skeleton className="h-24" />
+          <Skeleton className="h-24" />
+        </div>
+      </div>
+    );
+  }
 
   const tiles = [
     { icon: Flame, label: "Current streak", value: `${stats.currentStreak} days` },

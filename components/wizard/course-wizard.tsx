@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, FileText, Sparkles, TriangleAlert, Upload, X } from "lucide-react";
-import type { CourseContent, GenerationJobStatus, WizardAnswers } from "@/lib/types";
-import { getGenerationJob } from "@/lib/data/actions";
+import type { CourseContent, GenerationJobStatus, GenerationJobView, WizardAnswers } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,8 +89,9 @@ export function CourseWizard() {
     if (step !== "generating" || !jobId || jobError) return;
     let cancelled = false;
     const interval = setInterval(async () => {
-      const job = await getGenerationJob(jobId).catch(() => null);
-      if (cancelled || !job) return;
+      const res = await fetch(`/api/generation/${jobId}`).catch(() => null);
+      if (cancelled || !res || !res.ok) return;
+      const job = (await res.json()) as GenerationJobView;
       if (job.status === "failed") {
         setJobError(job.error ?? "Something went wrong during generation.");
       } else if (job.status === "done" && job.content) {

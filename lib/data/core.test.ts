@@ -18,6 +18,7 @@ import {
   getCourseById,
   getCourseProgress,
   getCourses,
+  getCourseView,
   getStarterCatalog,
   getUserStats,
   setCourseStatus,
@@ -148,6 +149,17 @@ describe("completePage — the core loop", () => {
     expect(statsAfterSecond.xpToday).toBe(statsAfterFirst.xpToday);
   });
 
+  it("recovers when the user_stats row is missing (pre-hook account)", async () => {
+    // Simulate an account whose create hook never ran / failed.
+    await db.delete(schema.userStats).where(eq(schema.userStats.userId, ALICE));
+    const result = await completePage(db, ALICE, courseId, "l1", "l1-p3", "correct");
+    expect(result?.xpAwarded).toBe(10);
+    expect(result?.streakExtended).toBe(true);
+    const stats = await getUserStats(db, ALICE);
+    expect(stats.totalXp).toBe(10);
+    expect(stats.currentStreak).toBe(1);
+  });
+
   it("enforces completion uniqueness at the DB level", async () => {
     await db.insert(schema.pageCompletions).values({
       courseId,
@@ -267,6 +279,47 @@ describe("multi-user isolation", () => {
     expect(await duplicateCourse(db, BOB, course.id)).toBeNull();
     const bobStats = await getUserStats(db, BOB);
     expect(bobStats.totalXp).toBe(0);
+  });
+});
+
+describe("getCourseView", () => {
+  it("returns course and progress together for the owner", async () => {
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    await completePage(db, ALICE, course.id, "l1", "l1-p3", "correct");
+    const view = await getCourseView(db, ALICE, course.id);
+    expect(view?.course.id).toBe(course.id);
+    expect(view?.course.lessons.length).toBe(2);
+    expect(view?.progress?.xpEarned).toBe(10);
+  });
+
+  it("returns null for a course the user does not own", async () => {
+    const course = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    expect(await getCourseView(db, BOB, course.id)).toBeNull();
+  });
+});
+
+describe("cohort member counts", () => {
+  it("counts every member course in one grouped query", async () => {
+    const owned = await addCourseToLibrary(db, ALICE, fixtureCourse, "starter");
+    const joined = await addCourseToLibrary(db, BOB, fixtureCourse, "shared");
+    await db.insert(schema.cohorts).values({
+      id: "cohort-count",
+      name: "Study Group",
+      contentId: owned.contentId,
+      ownerId: ALICE,
+    });
+    await db
+      .update(schema.courses)
+      .set({ cohortId: "cohort-count" })
+      .where(eq(schema.courses.id, owned.id));
+    await db
+      .update(schema.courses)
+      .set({ cohortId: "cohort-count" })
+      .where(eq(schema.courses.id, joined.id));
+
+    const view = await getCourseById(db, ALICE, owned.id);
+    expect(view?.cohort?.name).toBe("Study Group");
+    expect(view?.cohort?.memberCount).toBe(2);
   });
 });
 

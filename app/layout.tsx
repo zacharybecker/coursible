@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { MobileNav, TopNav } from "@/components/shell/app-nav";
-import { CelebrationToast } from "@/components/gamification/celebration-toast";
+import { CelebrationToastMount } from "@/components/gamification/celebration-toast-mount";
 
 const geistSans = Geist({
   // globals.css maps --font-sans into the Tailwind theme.
@@ -41,7 +41,7 @@ export default function RootLayout({
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-24 pt-6 md:pb-12">
           {children}
         </main>
-        <CelebrationToast />
+        <CelebrationToastMount />
       </body>
     </html>
   );

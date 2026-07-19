@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { Course, CourseProgress } from "@/lib/types";
-import { getAllProgress, getCourses } from "@/lib/data/actions";
+import { getLibrary } from "@/lib/data/actions";
 import { useAppStore } from "@/lib/store/app-store";
 
 export interface LibraryData {
@@ -29,8 +29,8 @@ export function useLibrary(): LibraryData {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([getCourses(), getAllProgress()])
-      .then(([courses, progress]) => {
+    getLibrary()
+      .then(({ courses, progress }) => {
         if (cancelled) return;
         const progressByCourse: Record<string, CourseProgress> = {};
         for (const p of progress) progressByCourse[p.courseId] = p;

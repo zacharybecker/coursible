@@ -18,6 +18,7 @@ export default function CatalogPage() {
   const [catalog, setCatalog] = useState<CourseContent[]>([]);
   const [query, setQuery] = useState("");
   const [startingId, setStartingId] = useState<string | null>(null);
+  const [startError, setStartError] = useState(false);
 
   useEffect(() => {
     getStarterCatalog().then(setCatalog);
@@ -35,10 +36,18 @@ export default function CatalogPage() {
   }, [catalog, query]);
 
   async function startCourse(content: CourseContent) {
+    setStartError(false);
     setStartingId(content.contentId);
-    const course = await addCourseToLibrary(content, "starter");
-    bump();
-    router.push(`/courses/${course.id}`);
+    try {
+      const course = await addCourseToLibrary(content, "starter");
+      bump();
+      router.push(`/courses/${course.id}`);
+      // Leave the button in its "Adding…" state through navigation; the page unmounts.
+    } catch {
+      // Reset so the button isn't stuck on "Adding…" forever.
+      setStartError(true);
+      setStartingId(null);
+    }
   }
 
   return (
@@ -58,6 +67,12 @@ export default function CatalogPage() {
         className="max-w-sm"
         aria-label="Search starter courses"
       />
+
+      {startError && (
+        <p role="alert" className="text-sm text-destructive">
+          Couldn&rsquo;t add that course. Check your connection and try again.
+        </p>
+      )}
 
       {visible.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">

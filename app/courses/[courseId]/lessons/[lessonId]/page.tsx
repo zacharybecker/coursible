@@ -3,7 +3,9 @@
 import { use, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import type { Course, CourseProgress } from "@/lib/types";
-import { getCourseById, getCourseProgress } from "@/lib/data/actions";
+import { getCourseView } from "@/lib/data/actions";
+import { InlineError } from "@/components/ui/inline-error";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PagePlayer } from "@/components/lesson/page-player";
 
 export default function LessonPage({
@@ -14,17 +16,46 @@ export default function LessonPage({
   const { courseId, lessonId } = use(params);
   const [course, setCourse] = useState<Course | null | undefined>(undefined);
   const [progress, setProgress] = useState<CourseProgress | null>(null);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   // Loaded once per lesson visit on purpose — mid-lesson repository writes
   // must not reset the player.
   useEffect(() => {
-    Promise.all([getCourseById(courseId), getCourseProgress(courseId)]).then(([c, p]) => {
-      setCourse(c);
-      setProgress(p);
-    });
-  }, [courseId, lessonId]);
+    let cancelled = false;
+    getCourseView(courseId)
+      .then((view) => {
+        if (cancelled) return;
+        setError(false);
+        setCourse(view ? view.course : null);
+        setProgress(view?.progress ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [courseId, lessonId, attempt]);
 
-  if (course === undefined) return null;
+  if (error) {
+    return (
+      <InlineError
+        onRetry={() => {
+          setError(false);
+          setAttempt((n) => n + 1);
+        }}
+      />
+    );
+  }
+  if (course === undefined) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-4" aria-busy="true" aria-label="Loading lesson">
+        <Skeleton className="h-2.5 w-full" />
+        <Skeleton className="h-72 w-full" />
+      </div>
+    );
+  }
   const lesson = course?.lessons.find((l) => l.id === lessonId);
   if (!course || !lesson) notFound();
 

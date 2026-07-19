@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Circle, CircleDot, Clock, Lock, Play, Share2, Users } from "lucide-react";
 import type { Course, CourseProgress } from "@/lib/types";
-import { getCourseById, getCourseProgress } from "@/lib/data/actions";
+import { getCourseView } from "@/lib/data/actions";
 import { computeAverageMastery, computeCourseCompletion } from "@/lib/data/derive";
 import { useAppStore } from "@/lib/store/app-store";
 import { getNodeState, SkillTree } from "@/components/skill-map/skill-tree";
@@ -13,6 +13,8 @@ import { MasteryRing } from "@/components/gamification/mastery-ring";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { InlineError } from "@/components/ui/inline-error";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ShareCourseDialog } from "@/components/sharing/share-course-dialog";
 
 export default function CourseDetailPage({
@@ -24,14 +26,24 @@ export default function CourseDetailPage({
   const dataVersion = useAppStore((s) => s.dataVersion);
   const [course, setCourse] = useState<Course | null | undefined>(undefined);
   const [progress, setProgress] = useState<CourseProgress | null>(null);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([getCourseById(courseId), getCourseProgress(courseId)]).then(([c, p]) => {
-      setCourse(c);
-      setProgress(p);
-      // Default selection: first non-complete, unlocked node.
-      if (c) {
+    let cancelled = false;
+    getCourseView(courseId)
+      .then((view) => {
+        if (cancelled) return;
+        setError(false);
+        if (!view) {
+          setCourse(null);
+          return;
+        }
+        const { course: c, progress: p } = view;
+        setCourse(c);
+        setProgress(p);
+        // Default selection: first non-complete, unlocked node.
         setSelectedNodeId((prev) => {
           if (prev && c.skillNodes.some((n) => n.id === prev)) return prev;
           const next =
@@ -41,16 +53,39 @@ export default function CourseDetailPage({
             }) ?? c.skillNodes[0];
           return next?.id ?? null;
         });
-      }
-    });
-  }, [courseId, dataVersion]);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [courseId, dataVersion, attempt]);
 
   const selectedNode = useMemo(
     () => course?.skillNodes.find((n) => n.id === selectedNodeId) ?? null,
     [course, selectedNodeId],
   );
 
-  if (course === undefined) return null;
+  if (error) {
+    return (
+      <InlineError
+        onRetry={() => {
+          setError(false);
+          setAttempt((n) => n + 1);
+        }}
+      />
+    );
+  }
+  if (course === undefined) {
+    return (
+      <div className="space-y-6" aria-busy="true" aria-label="Loading course">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-4 w-80" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+    );
+  }
   if (course === null) notFound();
 
   const completion = computeCourseCompletion(course, progress);

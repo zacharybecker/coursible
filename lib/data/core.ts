@@ -6,7 +6,7 @@
 // isn't yours is indistinguishable from one that doesn't exist (null result,
 // no writes) — existence is never leaked.
 
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import * as schema from "@/lib/db/schema";
 import {
@@ -107,16 +107,18 @@ function utcDay(offsetDays = 0): string {
 async function loadCohorts(db: Db, cohortIds: string[]): Promise<Map<string, Cohort>> {
   const result = new Map<string, Cohort>();
   if (cohortIds.length === 0) return result;
-  const rows = await db
-    .select()
-    .from(schema.cohorts)
-    .where(inArray(schema.cohorts.id, cohortIds));
-  for (const row of rows) {
-    const members = await db
-      .select({ id: schema.courses.id })
+  const [rows, memberCounts] = await Promise.all([
+    db.select().from(schema.cohorts).where(inArray(schema.cohorts.id, cohortIds)),
+    // One grouped count instead of a query per cohort (no N+1).
+    db
+      .select({ cohortId: schema.courses.cohortId, members: count() })
       .from(schema.courses)
-      .where(eq(schema.courses.cohortId, row.id));
-    result.set(row.id, { id: row.id, name: row.name, memberCount: members.length });
+      .where(inArray(schema.courses.cohortId, cohortIds))
+      .groupBy(schema.courses.cohortId),
+  ]);
+  const countByCohort = new Map(memberCounts.map((c) => [c.cohortId, c.members]));
+  for (const row of rows) {
+    result.set(row.id, { id: row.id, name: row.name, memberCount: countByCohort.get(row.id) ?? 0 });
   }
   return result;
 }
@@ -178,6 +180,43 @@ export async function getCourseProgress(
     .from(schema.pageCompletions)
     .where(eq(schema.pageCompletions.courseId, courseId));
   return toProgress(progressRow, found.contentRow, completions);
+}
+
+/**
+ * Course + its progress in a single owned-course load. The detail and lesson
+ * pages need both; going through getCourseById + getCourseProgress ran the
+ * owned-course join twice per page.
+ */
+export async function getCourseView(
+  db: Db,
+  userId: string,
+  courseId: string,
+): Promise<{ course: Course; progress: CourseProgress | null } | null> {
+  const found = await loadOwnedCourse(db, userId, courseId);
+  if (!found) return null;
+  const { courseRow, contentRow } = found;
+  const [cohorts, progressRow] = await Promise.all([
+    courseRow.cohortId ? loadCohorts(db, [courseRow.cohortId]) : Promise.resolve(null),
+    db
+      .select()
+      .from(schema.courseProgress)
+      .where(eq(schema.courseProgress.courseId, courseId))
+      .then((r) => r[0]),
+  ]);
+  const course = toCourse(
+    courseRow,
+    contentRow,
+    courseRow.cohortId ? cohorts?.get(courseRow.cohortId) : undefined,
+  );
+  let progress: CourseProgress | null = null;
+  if (progressRow) {
+    const completions = await db
+      .select()
+      .from(schema.pageCompletions)
+      .where(eq(schema.pageCompletions.courseId, courseId));
+    progress = toProgress(progressRow, contentRow, completions);
+  }
+  return { course, progress };
 }
 
 export async function getAllProgress(db: Db, userId: string): Promise<CourseProgress[]> {
@@ -381,6 +420,10 @@ export async function completePage(
         })
         .where(eq(schema.courseProgress.courseId, courseId));
 
+      // Guarantee a stats row exists: the create hook can be missing for
+      // pre-hook accounts or if it failed, and destructuring undefined here
+      // would throw (→ 500 on a user's first completion).
+      await tx.insert(schema.userStats).values({ userId }).onConflictDoNothing();
       const [stats] = await tx
         .select()
         .from(schema.userStats)

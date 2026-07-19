@@ -104,40 +104,53 @@ export const verification = pgTable(
 // ---------- App tables ----------
 
 /** Immutable controlled-JSON course content; `is_starter` rows form the catalog. */
-export const courseContent = pgTable("course_content", {
-  contentId: text("content_id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  outcome: text("outcome").notNull(),
-  tags: jsonb("tags").$type<string[]>().notNull(),
-  estimatedHours: integer("estimated_hours").notNull(),
-  skillNodes: jsonb("skill_nodes").$type<SkillNode[]>().notNull(),
-  lessons: jsonb("lessons").$type<Lesson[]>().notNull(),
-  schemaVersion: integer("schema_version").default(2).notNull(),
-  concepts: jsonb("concepts").$type<Concept[]>().notNull(),
-  isStarter: boolean("is_starter").default(false).notNull(),
-  createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
-  /** Pre-provisioned for slice-3 publish-updates. */
-  version: integer("version").default(1).notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
+export const courseContent = pgTable(
+  "course_content",
+  {
+    contentId: text("content_id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    outcome: text("outcome").notNull(),
+    tags: jsonb("tags").$type<string[]>().notNull(),
+    estimatedHours: integer("estimated_hours").notNull(),
+    skillNodes: jsonb("skill_nodes").$type<SkillNode[]>().notNull(),
+    lessons: jsonb("lessons").$type<Lesson[]>().notNull(),
+    schemaVersion: integer("schema_version").default(2).notNull(),
+    concepts: jsonb("concepts").$type<Concept[]>().notNull(),
+    isStarter: boolean("is_starter").default(false).notNull(),
+    createdBy: text("created_by").references(() => user.id, { onDelete: "set null" }),
+    /** Pre-provisioned for slice-3 publish-updates. */
+    version: integer("version").default(1).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  // The catalog query filters on is_starter on every catalog load.
+  (table) => [index("course_content_is_starter_idx").on(table.isStarter)],
+);
 
 /** Minimal pre-provision for slice-3 sharing/cohorts. */
-export const cohorts = pgTable("cohorts", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  contentId: text("content_id")
-    .notNull()
-    .references(() => courseContent.contentId),
-  ownerId: text("owner_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+export const cohorts = pgTable(
+  "cohorts",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    contentId: text("content_id")
+      .notNull()
+      .references(() => courseContent.contentId),
+    ownerId: text("owner_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  // Foreign keys are not auto-indexed in Postgres.
+  (table) => [
+    index("cohorts_content_id_idx").on(table.contentId),
+    index("cohorts_owner_id_idx").on(table.ownerId),
+  ],
+);
 
 /** A course instance in a user's library. */
 export const courses = pgTable(
@@ -155,7 +168,11 @@ export const courses = pgTable(
     cohortId: text("cohort_id").references(() => cohorts.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [index("courses_user_id_status_idx").on(table.userId, table.status)],
+  (table) => [
+    index("courses_user_id_status_idx").on(table.userId, table.status),
+    // Cohort member counts group by cohort_id (FKs are not auto-indexed).
+    index("courses_cohort_id_idx").on(table.cohortId),
+  ],
 );
 
 /**

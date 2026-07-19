@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
 import type { UserStats } from "@/lib/types";
-import { getUserStats } from "@/lib/data/actions";
+import { fetchUserStatsShared } from "@/lib/data/client-reads";
 import { useSession } from "@/lib/auth-client";
 import { useAppStore } from "@/lib/store/app-store";
 import { StreakBadge } from "@/components/gamification/streak-badge";
@@ -20,7 +20,7 @@ export function HeaderStats() {
     // would just bounce off requireUser()'s redirect.
     if (!userId) return;
     let cancelled = false;
-    getUserStats()
+    fetchUserStatsShared(dataVersion)
       .then((s) => {
         if (!cancelled) setStats(s);
       })

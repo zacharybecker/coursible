@@ -4,6 +4,7 @@
 // from the session (never from the client), validates inputs with Zod, and
 // delegates to lib/data/core (and lib/generation for AI-backed actions).
 
+import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -15,7 +16,6 @@ import type {
   CourseProgress,
   CourseSource,
   CourseStatus,
-  GenerationJobView,
   GradeResponse,
   PageCompletionResult,
   PageOutcome,
@@ -24,12 +24,15 @@ import type {
 import { courseContentSchema } from "@/lib/validation/course-content";
 import { getModelClient } from "@/lib/generation/client";
 import { gradeWithFallback } from "@/lib/generation/grading";
-import { getGenerationJobView } from "@/lib/generation/jobs";
 import * as core from "./core";
+
+// Memoized for the lifetime of a request so multiple reads in one Server
+// Component / action render resolve the session once, not per call.
+const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
 
 /** Authoritative auth check: session → user id. Redirects when signed out. */
 async function requireUser(): Promise<string> {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) redirect("/signin");
   return session.user.id;
 }
@@ -57,9 +60,34 @@ export async function getCourseProgress(courseId: string): Promise<CourseProgres
   return core.getCourseProgress(db, userId, idSchema.parse(courseId));
 }
 
+/** Course + progress in one round-trip (one session lookup, one owned-course load). */
+export async function getCourseView(
+  courseId: string,
+): Promise<{ course: Course; progress: CourseProgress | null } | null> {
+  const userId = await requireUser();
+  return core.getCourseView(db, userId, idSchema.parse(courseId));
+}
+
 export async function getAllProgress(): Promise<CourseProgress[]> {
   const userId = await requireUser();
   return core.getAllProgress(db, userId);
+}
+
+/**
+ * The whole library dashboard in one round-trip. Client pages dispatch Server
+ * Actions sequentially, so bundling the two reads here (run in parallel
+ * server-side) collapses two round-trips and two session lookups into one.
+ */
+export async function getLibrary(): Promise<{
+  courses: Course[];
+  progress: CourseProgress[];
+}> {
+  const userId = await requireUser();
+  const [courses, progress] = await Promise.all([
+    core.getCourses(db, userId),
+    core.getAllProgress(db, userId),
+  ]);
+  return { courses, progress };
 }
 
 export async function getUserStats(): Promise<UserStats> {
@@ -70,11 +98,6 @@ export async function getUserStats(): Promise<UserStats> {
 export async function getStarterCatalog(): Promise<CourseContent[]> {
   await requireUser();
   return core.getStarterCatalog(db);
-}
-
-export async function getGenerationJob(jobId: string): Promise<GenerationJobView | null> {
-  const userId = await requireUser();
-  return getGenerationJobView(db, userId, idSchema.parse(jobId));
 }
 
 // ---------- writes ----------

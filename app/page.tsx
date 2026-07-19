@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Compass, GraduationCap } from "lucide-react";
 import type { CourseStatus, UserStats } from "@/lib/types";
-import { getUserStats } from "@/lib/data/actions";
+import { fetchUserStatsShared } from "@/lib/data/client-reads";
 import { useLibrary } from "@/lib/hooks/use-library";
 import { useAppStore } from "@/lib/store/app-store";
 import { CourseCard } from "@/components/dashboard/course-card";
@@ -26,7 +26,13 @@ export default function MyLearningPage() {
   const [tab, setTab] = useState<CourseStatus>("active");
 
   useEffect(() => {
-    getUserStats().then(setStats);
+    let cancelled = false;
+    fetchUserStatsShared(dataVersion)
+      .then((s) => !cancelled && setStats(s))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [dataVersion]);
 
   const visible = courses.filter((c) => c.status === tab);
