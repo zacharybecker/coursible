@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   pull_request:
 
 jobs:
@@ -31,3 +31,29 @@ jobs:
           BETTER_AUTH_SECRET: ci-build-secret
           BETTER_AUTH_URL: http://localhost:3000
           MOONSHOT_API_KEY: ci-build-key
+
+  # Apply pending Drizzle migrations to production. Runs only after the CI job
+  # passes, and only on a push to master (skipped on PRs). Migration and the
+  # Vercel deploy fire independently, so keep migrations backward-compatible
+  # (expand/contract) — new code may briefly run against the old schema.
+  migrate:
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    # Never run two migration passes at once (queued master pushes serialize).
+    concurrency:
+      group: migrate-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
